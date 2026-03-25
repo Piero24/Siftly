@@ -1,0 +1,113 @@
+/* ─────────────────────────────────────────────
+   table.css — Job applications table
+   ───────────────────────────────────────────── */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.applications-card {
+  background: var(--surface-solid);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+}
+
+.job-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table-header {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 12px;
+  text-align: center;
+}
+
+.table-cell {
+  padding: 16px 12px;
+  vertical-align: middle;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-icon-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Fixed column widths */
+.job-table col.col-select { width: 44px; }
+.job-table col.col-icon { width: 48px; }
+.job-table col.col-company { width: 150px; }
+.job-table col.col-sector { width: 120px; }
+.job-table col.col-position { width: 190px; }
+.job-table col.col-country { width: 90px; }
+.job-table col.col-city { width: 120px; }
+.job-table col.col-work { width: 110px; }
+.job-table col.col-salary { width: 120px; }
+.job-table col.col-cv { width: 36px; }
+.job-table col.col-date { width: 120px; }
+.job-table col.col-status { width: 135px; }
+.job-table col.col-links { width: 110px; }
+
+.table-cell.col-select {
+  text-align: center;
+}
+
+.table-cell.col-icon {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.table-cell.col-cv {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.table-icon-cell {
+  justify-content: center;
+}
+
+.table-cell.col-company .table-ellipsis {
+  display: block;
+  width: 100%;
+}
+
+/* ── Animated row hover ── */
+.job-row {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.job-row:hover {
+  background: var(--row-hover-bg) !important;
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-0.5px);
+  z-index: 1;
+}
+
+.job-row td:first-child { border-top-left-radius:    12px; border-bottom-left-radius:  12px; }
+.job-row td:last-child  { border-top-right-radius:   12px; border-bottom-right-radius: 12px; }
+
+.job-row:active {
+  transform: translateY(0);
+  background: var(--surface-subtle) !important;
+}

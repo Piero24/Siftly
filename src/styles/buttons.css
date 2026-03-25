@@ -1,0 +1,295 @@
+/* ─────────────────────────────────────────────
+   buttons.css — All button variants and link icons
+   ───────────────────────────────────────────── */
+
+/* ── Base Apple-style button ── */
+.btn-apple {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  backdrop-filter: blur(10px);
+}
+
+.btn-apple svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+.btn-apple:hover  { background: var(--surface-solid); transform: scale(0.98); }
+.btn-apple:active { background: var(--input-bg-active); transform: scale(0.95); }
+
+/* ── Variants ── */
+.btn-primary { background: var(--apple-blue); color: white; border: none; }
+.btn-primary:hover { background: #006ae6; }
+
+.btn-outline { background: transparent; border: 1px solid var(--border-strong); color: var(--text-secondary); }
+.btn-outline:hover { background: var(--surface-solid); color: var(--text-primary); }
+
+.btn-destructive {
+  background: rgba(255, 59, 48, 0.08);
+  color: #FF3B30;
+  border: 1px solid rgba(255, 59, 48, 0.15);
+}
+.btn-destructive:hover {
+  background: #FF3B30; color: white; border-color: #FF3B30;
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+.btn-destructive:active { transform: scale(0.95); opacity: 0.9; }
+
+.btn-apple:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-apple:disabled:hover {
+  transform: none;
+}
+
+/* ── Applications table toolbar / bulk actions ── */
+.applications-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.applications-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.applications-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selection-toggle-btn {
+  padding: 9px 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-width: 1px;
+  box-shadow: var(--shadow-soft);
+}
+
+.selection-toggle-btn.is-active {
+  background: rgba(0, 122, 255, 0.12);
+  color: #0063cf;
+  border: 1px solid rgba(0, 122, 255, 0.22);
+  box-shadow: none;
+}
+
+.bulk-actions-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: bulkRowReveal 160ms ease-out;
+}
+
+.bulk-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.bulk-actions-left {
+  flex: 1 1 0;
+  justify-content: flex-start;
+}
+
+.bulk-actions-center {
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+.bulk-actions-right {
+  flex: 1 1 0;
+  justify-content: flex-end;
+}
+
+.bulk-actions-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-subtle);
+}
+
+.bulk-actions-status {
+  min-width: 130px;
+}
+
+.bulk-actions-btn {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-color: var(--border-strong);
+  background: var(--surface-solid);
+  color: var(--text-secondary);
+}
+
+.bulk-actions-btn:hover:not(:disabled) {
+  background: var(--input-bg-active);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.bulk-actions-btn.btn-destructive {
+  background: rgba(255, 59, 48, 0.12);
+  border-color: rgba(255, 59, 48, 0.24);
+  color: #ff3b30;
+}
+
+.bulk-actions-btn.btn-destructive:hover:not(:disabled) {
+  background: rgba(255, 59, 48, 0.18);
+  border-color: rgba(255, 59, 48, 0.45);
+  color: #d70015;
+  box-shadow: none;
+}
+
+.filter-actions-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  animation: bulkRowReveal 160ms ease-out;
+}
+
+.filter-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.filter-actions-left {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+}
+
+.filter-actions-center {
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.filter-actions-right {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+.filter-select {
+  min-width: 210px;
+}
+
+.filter-summary {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1180px) {
+  .bulk-actions-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filter-actions-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .bulk-actions-group {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+
+  .filter-actions-group {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+}
+
+@keyframes bulkRowReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Link icon (table / modal) ── */
+.link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.link-icon svg { width: 14px; height: 14px; stroke-width: 2; }
+.link-icon:hover { color: var(--apple-blue); transform: scale(1.1); }
+
+/* ── Row action buttons (edit/delete in table) ── */
+.row-action-btn {
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+}
+.row-action-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+.row-action-btn:hover { background: rgba(0,0,0,0.08); transform: scale(1.05); }
+.row-action-btn.delete:hover {
+  background: rgba(255, 59, 48, 0.1); color: #ff3b30; border-color: rgba(255, 59, 48, 0.2);
+}

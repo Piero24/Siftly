@@ -1,0 +1,27 @@
+/**
+ * glass.css — CSS manifest for Lumina Job Tracker
+ *
+ * This file acts as the single import point.
+ * All styles are split into focused, maintainable modules:
+ *
+ *  tokens.css    — CSS custom properties (colours, shadows, fonts)
+ *  base.css      — Resets, body, .glass-container, flag-icons
+ *  buttons.css   — .btn-apple and all variants, link/row action icons
+ *  badges.css    — Status, work-type, company icon, country, star, referral
+ *  navbar.css    — Sticky navbar and search bar
+ *  table.css     — Job table headers, cells and row hover
+ *  modal.css     — Job detail modal overlay, sections, keyframes
+ *  settings.css  — Settings view cards and controls
+ *  forms.css     — New application form: inputs, ComboBox, StarPicker, salary toggle
+ */
+
+@import './tokens.css';
+@import './base.css';
+@import './buttons.css';
+@import './badges.css';
+@import './navbar.css';
+@import './table.css';
+@import './modal.css';
+@import './settings.css';
+@import './forms.css';
+@import './dashboard.css';

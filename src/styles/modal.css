@@ -1,0 +1,186 @@
+/* ─────────────────────────────────────────────
+   modal.css — Job detail modal (view/edit mode)
+   ───────────────────────────────────────────── */
+
+/* ── Overlay ── */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: var(--overlay-scrim);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 24px 56px;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ── Sheet ── */
+.modal-content {
+  width: 90%; max-width: 800px; max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-medium);
+  padding: 40px;
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; flex-direction: column; gap: 32px;
+}
+
+.modal-content::-webkit-scrollbar       { width: 8px; }
+.modal-content::-webkit-scrollbar-track { background: transparent; }
+.modal-content::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 10px; }
+
+/* ── Close button ── */
+.modal-close-btn {
+  position: absolute;
+  top: 24px; right: 24px;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-subtle);
+  border: none; border-radius: 50%;
+  color: var(--text-secondary);
+  cursor: pointer; transition: all 0.2s; z-index: 10;
+}
+.modal-close-btn:hover {
+  background: var(--input-bg-hover);
+  color: var(--text-primary);
+  transform: rotate(90deg);
+}
+.modal-close-btn svg { width: 14px; height: 14px; }
+
+/* ── Header (company + rating) ── */
+.modal-header { display: flex; justify-content: space-between; align-items: center; }
+.modal-header-left { display: flex; align-items: center; gap: 16px; }
+.modal-company-info { display: flex; align-items: center; gap: 12px; }
+.modal-company-name {
+  font-size: 22px; font-weight: 600;
+  text-transform: capitalize; letter-spacing: -0.5px;
+}
+
+/* ── Hero (title + meta row + status) ── */
+.modal-hero {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 24px;
+}
+.modal-hero-left  { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.modal-job-title  {
+  font-size: 38px; font-weight: 800;
+  margin: 0; letter-spacing: -1px; line-height: 1.1;
+  color: var(--text-primary);
+}
+.modal-status-box { margin-top: 6px; }
+
+.modal-meta-row { display: flex; align-items: center; gap: 12px; }
+.modal-separator { color: var(--text-secondary); opacity: 0.3; }
+.modal-city-pill { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+.modal-sector-tag {
+  font-size: 13px; font-weight: 600; color: var(--apple-blue);
+  background: rgba(0, 122, 255, 0.05);
+  padding: 4px 10px; border-radius: 8px;
+}
+
+/* ── Details grid (salary / date / type) ── */
+.modal-details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 24px;
+  background: var(--surface-elevated);
+  backdrop-filter: blur(5px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+}
+
+.detail-item  { display: flex; flex-direction: column; gap: 6px; }
+.detail-label {
+  font-size: 12px; font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.detail-label svg { width: 14px; height: 14px; color: var(--apple-blue); }
+.detail-value { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+
+/* ── Sections ── */
+.modal-section { display: flex; flex-direction: column; gap: 12px; }
+.section-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.modal-description-box,
+.modal-notes-box {
+  font-size: 15px; line-height: 1.6; color: var(--text-primary);
+  background: var(--surface-subtle);
+  padding: 20px; border-radius: 14px;
+  max-height: 200px; overflow-y: auto;
+}
+.modal-notes-box {
+  background: rgba(0, 122, 255, 0.03);
+  border-left: 4px solid var(--apple-blue);
+  color: var(--text-primary);
+}
+
+/* ── Referral grid ── */
+.modal-referral-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+  background: rgba(52, 199, 89, 0.03);
+  border: 1px solid rgba(52, 199, 89, 0.1);
+  border-radius: 18px;
+}
+
+/* ── Links section ── */
+.modal-links-section h3 {
+  font-size: 14px; font-weight: 600;
+  margin-bottom: 16px; color: var(--text-secondary);
+}
+.modal-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.modal-link-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  text-decoration: none; color: var(--text-primary);
+  font-size: 13px; font-weight: 500;
+  transition: all 0.2s;
+}
+.modal-link-card:hover {
+  border-color: var(--apple-blue);
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-2px);
+}
+.modal-link-card svg { width: 16px; height: 16px; color: var(--apple-blue); }
+
+/* ── Footer ── */
+.modal-footer {
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--divider);
+}
+
+/* ── Keyframes ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}

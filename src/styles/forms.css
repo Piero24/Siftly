@@ -1,0 +1,168 @@
+/* ─────────────────────────────────────────────
+   forms.css — New Application form modal
+   Covers the full-screen form, inputs, selects,
+   textareas, ComboBox, StarPicker, salary toggle.
+   ───────────────────────────────────────────── */
+
+/* ══ Modal shell ══ */
+.new-app-modal {
+  max-width: 720px; width: 95vw; max-height: 90vh;
+  display: flex; flex-direction: column;
+  padding: 0; overflow: hidden;
+}
+
+.new-app-modal-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--divider);
+  flex-shrink: 0;
+}
+
+.new-app-modal-title   { font-size: 22px; font-weight: 700; margin: 0 0 4px; color: var(--text-primary); }
+.new-app-modal-subtitle { font-size: 13px; color: var(--text-secondary); margin: 0; }
+
+.new-app-form-body {
+  flex: 1; overflow-y: auto; min-height: 0;
+  padding: 24px 32px;
+  display: flex; flex-direction: column; gap: 28px;
+}
+
+.new-app-modal-footer {
+  display: flex; justify-content: flex-end; gap: 12px;
+  padding: 20px 32px;
+  border-top: 1px solid var(--divider);
+  flex-shrink: 0;
+  background: var(--surface-elevated);
+}
+
+/* ══ Section layout ══ */
+.form-section { display: flex; flex-direction: column; gap: 14px; }
+
+.form-section-header {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--apple-blue);
+  border-bottom: 1px solid color-mix(in srgb, var(--apple-blue) 22%, transparent);
+  padding-bottom: 8px;
+}
+.form-section-header h3 {
+  font-size: 12px; font-weight: 600; margin: 0;
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid-1 { display: grid; grid-template-columns: 1fr;     gap: 12px; }
+
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-secondary);
+  display: flex; align-items: center; gap: 5px;
+}
+
+.required { color: #FF3B30; }
+
+/* ══ Input / Select / Textarea ══ */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%; box-sizing: border-box;
+  padding: 10px 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  font-size: 14px; font-family: inherit;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  -webkit-appearance: none; appearance: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  background: var(--input-bg-active);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: var(--placeholder); }
+
+.form-select {
+  background-image: url('../assets/select-chevron.svg');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px; cursor: pointer;
+}
+
+.form-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+.input-error {
+  border-color: #FF3B30 !important;
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.08) !important;
+}
+
+.error-msg { font-size: 11px; color: #FF3B30; font-weight: 500; }
+
+/* ══ ComboBox autocomplete ══ */
+.combobox-wrapper { position: relative; }
+
+.combobox-dropdown {
+  position: absolute;
+  top: calc(100% + 4px); left: 0; right: 0;
+  z-index: 9999;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow-medium), var(--shadow-soft);
+  max-height: 220px; overflow-y: auto;
+  list-style: none; margin: 0; padding: 6px;
+}
+
+.combobox-option {
+  padding: 9px 12px; border-radius: 9px;
+  font-size: 14px; cursor: pointer;
+  color: var(--text-primary); transition: background 0.12s;
+  user-select: none;
+}
+.combobox-option:hover,
+.combobox-option--active {
+  background: rgba(0, 122, 255, 0.08);
+  color: var(--apple-blue); font-weight: 500;
+}
+
+/* ══ StarPicker ══ */
+.star-picker { display: flex; align-items: center; gap: 2px; padding: 4px 0; }
+
+.star-picker-btn {
+  background: none; border: none;
+  padding: 4px; cursor: pointer;
+  color: #D1D1D6;
+  transition: color 0.15s, transform 0.12s;
+  display: inline-flex; align-items: center; line-height: 1;
+}
+.star-picker-btn--filled       { color: #FFCC00; }
+.star-picker-btn--filled svg   { fill: #FFCC00; stroke: none; }
+.star-picker-btn:hover         { transform: scale(1.2); }
+
+.star-picker-label { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+
+/* ══ Salary type toggle ══ */
+.salary-type-toggle {
+  display: inline-flex;
+  background: var(--surface-muted);
+  border-radius: 10px; padding: 3px; gap: 2px;
+  margin-bottom: 4px;
+}
+
+.salary-toggle-btn {
+  padding: 5px 16px; border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  cursor: pointer; background: transparent;
+  color: var(--text-secondary); transition: all 0.18s;
+}
+.salary-toggle-btn.active {
+  background: var(--surface-solid);
+  color: var(--apple-blue);
+  box-shadow: var(--shadow-soft);
+}

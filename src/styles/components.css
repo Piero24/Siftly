@@ -1,0 +1,116 @@
+/* ═══════════════════════════════════════════════
+   COMBOBOX AUTOCOMPLETE
+   ═══════════════════════════════════════════════ */
+
+.combobox-wrapper {
+  position: relative;
+}
+
+.combobox-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  max-height: 220px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+}
+
+.combobox-option {
+  padding: 9px 12px;
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.12s;
+  user-select: none;
+}
+
+.combobox-option:hover,
+.combobox-option--active {
+  background: rgba(0, 122, 255, 0.08);
+  color: var(--apple-blue);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   STAR PICKER
+   ═══════════════════════════════════════════════ */
+
+.star-picker {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+}
+
+.star-picker-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #D1D1D6;
+  transition: color 0.15s, transform 0.12s;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.star-picker-btn--filled {
+  color: #FFCC00;
+}
+
+.star-picker-btn--filled svg {
+  fill: #FFCC00;
+  stroke: none;
+}
+
+.star-picker-btn:hover {
+  transform: scale(1.2);
+}
+
+.star-picker-label {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════════
+   SALARY TYPE TOGGLE
+   ═══════════════════════════════════════════════ */
+
+.salary-type-toggle {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.salary-toggle-btn {
+  padding: 5px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.18s;
+}
+
+.salary-toggle-btn.active {
+  background: white;
+  color: var(--apple-blue);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,51 @@
+{
+  "name": "siftly",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write \"docs-site/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"docs-site/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
+    "docs:dev": "npm --prefix docs-site run start",
+    "docs:build": "npm --prefix docs-site run build",
+    "docs:serve": "npm --prefix docs-site run serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Your job search control panel",
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/chrome": "^0.1.38",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@everapi/freecurrencyapi-js": "^1.0.1",
+    "country-state-city": "^3.2.1",
+    "flag-icons": "^7.5.0",
+    "i18n-iso-countries": "^7.14.0",
+    "lucide-react": "^0.577.0",
+    "prop-types": "^15.8.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-simple-maps": "^3.0.0",
+    "react-tooltip": "^5.30.0",
+    "recharts": "^3.8.0"
+  }
+}

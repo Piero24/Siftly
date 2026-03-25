@@ -1,0 +1,117 @@
+.popup-shell {
+  width: 348px;
+  padding: 16px;
+  gap: 10px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  margin: 0 auto;
+}
+
+.popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.popup-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.popup-logo {
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.popup-heading-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.popup-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.popup-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.popup-section-label {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popup-actions-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.popup-action-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.popup-action-btn {
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 11px 12px;
+  width: 100%;
+  min-height: 42px;
+}
+
+.popup-soon-pill {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: var(--apple-blue);
+  background: color-mix(in srgb, var(--apple-blue) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--apple-blue) 26%, transparent);
+}
+
+.popup-settings-top {
+  background: var(--surface-solid);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.popup-settings-top:hover {
+  color: var(--apple-blue);
+  border-color: color-mix(in srgb, var(--apple-blue) 30%, var(--border-subtle));
+}

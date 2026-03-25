@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Siftly",
+  "version": "1.0.0",
+  "description": "Professional job application tracker for LinkedIn.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": ["https://www.linkedin.com/*"],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Siftly"
+  },
+  "background": {
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["assets/content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/dashboard/index.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

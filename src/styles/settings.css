@@ -1,0 +1,206 @@
+/* ─────────────────────────────────────────────
+   settings.css — Settings view and controls
+   ───────────────────────────────────────────── */
+
+.settings-container { max-width: 1000px; margin: 0 auto; }
+.settings-title { font-size: 32px; font-weight: 700; margin-bottom: 32px; color: var(--text-primary); }
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 24px;
+}
+
+.settings-card {
+  padding: 24px;
+  background: var(--surface-elevated);
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.settings-card-header {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--apple-blue);
+}
+.settings-card-header svg { width: 22px; height: 22px; }
+.settings-card-header h3 { margin: 0; font-size: 18px; font-weight: 600; color: var(--text-primary); }
+
+.settings-card-content { display: flex; flex-direction: column; gap: 16px; }
+
+.setting-item { display: flex; justify-content: space-between; align-items: center; }
+.setting-item label { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+
+/* ── Apple-style select ── */
+.apple-select {
+  background: var(--input-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-primary);
+  outline: none; cursor: pointer; transition: all 0.2s;
+}
+.apple-select:hover { background: var(--input-bg-hover); }
+
+/* ── Theme toggle ── */
+.theme-toggle-group {
+  display: flex;
+  background: var(--surface-muted);
+  padding: 3px; border-radius: 10px; gap: 2px;
+}
+
+.theme-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border: none; background: none;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-secondary); cursor: pointer;
+  border-radius: 7px; transition: all 0.2s;
+}
+.theme-btn svg { width: 14px; height: 14px; }
+.theme-btn.active {
+  background: var(--surface-solid);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── Support section ── */
+.support-actions { display: flex; gap: 12px; }
+
+/* ── CV Profiles card ── */
+.cv-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.cv-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cv-name-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cv-color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cv-color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cv-color-dot:hover {
+  transform: scale(1.08);
+}
+
+.cv-color-dot.selected {
+  box-shadow: 0 0 0 2px var(--surface-solid), 0 0 0 4px rgba(0, 122, 255, 0.45);
+}
+
+.cv-form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cv-profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cv-profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cv-profile-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cv-profile-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.cv-profile-name {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Toggle Switch ── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--input-bg-hover);
+  transition: .3s;
+  border-radius: 24px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--surface-solid);
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: var(--shadow-soft);
+}
+input:checked + .toggle-slider {
+  background-color: #34c759;
+}
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+@media (max-width: 900px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-profile-item {
+    flex-wrap: wrap;
+  }
+
+  .cv-form-actions {
+    justify-content: flex-start;
+  }
+}
