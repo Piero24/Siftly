@@ -45,6 +45,11 @@ export {
   Sigma as SumIcon,
   Video as VideoIcon,
   MapPin as MapPinIcon,
+  Bold as BoldIcon,
+  Italic as ItalicIcon,
+  Underline as UnderlineIcon,
+  List as ListIcon,
+  Quote as QuoteIcon,
 } from 'lucide-react';
 
 export type { LucideIcon } from 'lucide-react';

@@ -10,7 +10,7 @@ describe('Navbar', () => {
 
     render(<Navbar currentView="dashboard" onViewChange={onViewChange} />);
 
-    expect(screen.getByText('Lumina')).toBeInTheDocument();
+    expect(screen.getByText('Siftly')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dashboard' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Applications' })).toBeInTheDocument();
   });

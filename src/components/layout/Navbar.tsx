@@ -5,8 +5,7 @@
 import React from 'react';
 import { SettingsIcon, UserIcon } from '../common/Icons';
 import { APP_INFO } from '../../config/app';
-
-type ViewType = 'dashboard' | 'table' | 'interviewing' | 'settings';
+import { ViewType } from '../../types/ui';
 
 interface NavbarProps {
   currentView: ViewType;

@@ -40,7 +40,7 @@ const JobRow: React.FC<{
   onStatusChange:  (id: string, s: JobStatus) => void;
   onRowClick:      (app: JobApplication) => void;
 }> = ({ app, displayCurrency, cvProfiles, selectorMode, isSelected, onToggleRowSelection, onStatusChange, onRowClick }) => {
-  const salary = useSalary(app.salary, displayCurrency);
+  const salary = useSalary(app.salary, displayCurrency, true);
   const cvProfile = cvProfiles.find((profile) => profile.id === app.cvProfileId);
 
   return (
@@ -155,7 +155,7 @@ export const JobTable: React.FC<JobTableProps> = ({
       </colgroup>
       <thead>
         <tr style={{ borderBottom: '1px solid var(--border-strong)' }}>
-          {HEADERS.map((h) => <th key={h} className="table-header">{h}</th>)}
+          {HEADERS.map((h, index) => <th key={`${h}-${index}`} className="table-header">{h}</th>)}
         </tr>
       </thead>
       <tbody>

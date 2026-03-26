@@ -18,7 +18,7 @@ import {
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
-import { CVProfile, JobApplication } from '../../types/job';
+import { JobApplication } from '../../types/job';
 import {
   CircleIcon, SendIcon, UsersIcon, GiftIcon, CheckCircleIcon, XCircleIcon, BriefcaseIcon, ClockIcon
 } from '../common/Icons';
@@ -35,6 +35,7 @@ import {
 } from '../../lib/analytics';
 import { CompanyIcon } from './CompanyIcon';
 import { WorkTypeBadge } from './WorkTypeBadge';
+import { useSettings } from '../../context/SettingsContext';
 
 // Natural Earth 110m topojson hosted on jsDelivr (no bundling needed)
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -117,12 +118,20 @@ const SectionHeader: React.FC<{ title: string; subtitle?: string }> = ({ title, 
 
 interface DashboardViewProps {
   applications: JobApplication[];
-  cvProfiles: CVProfile[];
-  defaultTimeRange?: 'today' | 'total' | '7d' | '30d' | '1y';
-  resolvedTheme?: 'light' | 'dark';
 }
 
-export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvProfiles, defaultTimeRange = 'total', resolvedTheme = 'light' }) => {
+const TIME_RANGE_OPTIONS: Array<{ value: 'today' | 'total' | '7d' | '30d' | '1y'; label: string }> = [
+  { value: 'today', label: 'Today' },
+  { value: 'total', label: 'Total' },
+  { value: '7d', label: 'Last Week' },
+  { value: '30d', label: 'Last Month' },
+  { value: '1y', label: 'Last Year' },
+];
+
+export const DashboardView: React.FC<DashboardViewProps> = ({
+  applications,
+}) => {
+  const { cvProfiles, defaultTimeRange, resolvedTheme } = useSettings();
   const [tooltipContent, setTooltipContent] = useState('');
   const [isMapInteractive, setIsMapInteractive] = useState(false);
   const [timeRange, setTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>(defaultTimeRange);
@@ -130,7 +139,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
 
   const filteredApplications = useMemo(() => {
     if (timeRange === 'total') return applications;
-    
+
     const now = new Date();
     // Normalize `now` to start of day for 'today' comparison if we just want today's apps.
     // Or just check diffDays <= 0 or diffDays < 1. Let's use start of day logic:
@@ -139,15 +148,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
     return applications.filter(app => {
       if (!app.date) return false;
       const appDate = new Date(app.date);
-      
+
       if (timeRange === 'today') {
-         const appDay = new Date(appDate.getFullYear(), appDate.getMonth(), appDate.getDate());
-         return appDay.getTime() === today.getTime();
+        const appDay = new Date(appDate.getFullYear(), appDate.getMonth(), appDate.getDate());
+        return appDay.getTime() === today.getTime();
       }
 
       const diffTime = Math.abs(now.getTime() - appDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
+
       if (timeRange === '7d') return diffDays <= 7;
       if (timeRange === '30d') return diffDays <= 30;
       if (timeRange === '1y') return diffDays <= 365;
@@ -156,7 +165,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
   }, [applications, timeRange]);
 
   const activeStats = useMemo(() => getStatusCounts(filteredApplications), [filteredApplications]);
-  const continents = useMemo(() => getContinentStats(applications), [applications]);
+  const continents = useMemo(() => getContinentStats(filteredApplications), [filteredApplications]);
   const allContinentStats = useMemo(() => {
     const counts = new Map(continents.map((stat) => [stat.name, stat.count]));
     return CONTINENT_ORDER.map((name) => ({
@@ -164,22 +173,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
       count: counts.get(name as any) ?? 0,
     }));
   }, [continents]);
-  const workTypes = useMemo(() => getWorkTypeStats(applications), [applications]);
-  const cvStats = useMemo(() => getCvStats(applications, cvProfiles), [applications, cvProfiles]);
-  const employmentTypes = useMemo(() => getEmploymentTypeStats(applications), [applications]);
+  const workTypes = useMemo(() => getWorkTypeStats(filteredApplications), [filteredApplications]);
+  const cvStats = useMemo(() => getCvStats(filteredApplications, cvProfiles), [filteredApplications, cvProfiles]);
+  const employmentTypes = useMemo(() => getEmploymentTypeStats(filteredApplications), [filteredApplications]);
   const countryMap = useMemo(() => {
     const m = new Map<string, number>();
-    getCountryStats(applications).forEach(({ code, count }) => m.set(code.toUpperCase(), count));
+    getCountryStats(filteredApplications).forEach(({ code, count }) => m.set(code.toUpperCase(), count));
     return m;
-  }, [applications]);
-  const topApps = useMemo(() => getTopCompaniesByApplications(applications, 8), [applications]);
-  const topRej = useMemo(() => getTopCompaniesByRejections(applications, 8), [applications]);
-  const topCities = useMemo(() => getTopCitiesByApplications(applications, 8), [applications]);
+  }, [filteredApplications]);
+  const topApps = useMemo(() => getTopCompaniesByApplications(filteredApplications, 8), [filteredApplications]);
+  const topRej = useMemo(() => getTopCompaniesByRejections(filteredApplications, 8), [filteredApplications]);
+  const topCities = useMemo(() => getTopCitiesByApplications(filteredApplications, 8), [filteredApplications]);
 
   const CustomYAxisTick = ({ x, y, payload }: any) => {
     if (!payload?.value) return null;
     const stat = topApps.find((a: any) => a.name === payload.value) || topRej.find((a: any) => a.name === payload.value);
-    
+
     return (
       <g transform={`translate(${x},${y})`}>
         <foreignObject x={-125} y={-12} width={115} height={24}>
@@ -205,41 +214,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
   return (
     <div className="db-root">
 
+      {/* ── Dashboard Time Filter ── */}
+      <div className="db-time-filter-row">
+        <div className="db-time-filter-shell">
+          <div className="db-time-nav" role="tablist" aria-label="Dashboard time range selector">
+            {TIME_RANGE_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                className={`db-time-btn ${timeRange === opt.value ? 'active' : ''}`}
+                onClick={() => setTimeRange(opt.value)}
+                role="tab"
+                aria-selected={timeRange === opt.value}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* ── 1. KPI Overview Card ── */}
       <section className="db-section">
         <div className="db-chart-card db-overview-card glass-container" style={{ padding: '12px 20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <h3 className="db-chart-title" style={{ fontSize: '15px', marginBottom: '0' }}>Overview</h3>
-            <div className="db-time-nav" style={{ display: 'flex', flexDirection: 'row', padding: '4px', borderRadius: '8px', gap: '2px', background: 'var(--surface-muted)', border: '1px solid var(--border-subtle)' }}>
-              {[
-                { value: 'today', label: 'Today' },
-                { value: 'total', label: 'Total' },
-                { value: '7d', label: 'Last Week' },
-                { value: '30d', label: 'Last Month' },
-                { value: '1y', label: 'Last Year' }
-              ].map(opt => (
-                <button
-                  key={opt.value}
-                  className={`db-time-btn ${timeRange === opt.value ? 'active' : ''}`}
-                  onClick={() => setTimeRange(opt.value as any)}
-                  style={{
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    border: 'none',
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    background: timeRange === opt.value ? 'var(--surface-solid)' : 'transparent',
-                    boxShadow: timeRange === opt.value ? 'var(--shadow-soft)' : 'none',
-                    color: timeRange === opt.value ? 'var(--text-primary)' : 'var(--text-secondary)',
-                    transition: 'all 0.2s ease',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="db-kpi-grid" style={{ padding: 0, justifyContent: 'center', gap: '12px', overflowX: 'auto', flexWrap: 'nowrap' }}>
@@ -266,9 +264,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
             <div className="db-map-card glass-container" onMouseLeave={() => setIsMapInteractive(false)}>
               <div className="db-map-interactive-area">
                 {!isMapInteractive && (
-                  <div 
-                    className="db-map-overlay" 
-                    onClick={() => setIsMapInteractive(true)} 
+                  <div
+                    className="db-map-overlay"
+                    onClick={() => setIsMapInteractive(true)}
                   />
                 )}
                 <div className="db-map-viewport">
@@ -289,8 +287,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications, cvPr
                             const hoverFill = isDark ? '#5AC8FA' : '#007AFF';
                             const pressFill = isDark ? '#2f8fbf' : '#005bb5';
                             return (
-                              <Geography 
-                                key={geo.rsmKey} 
+                              <Geography
+                                key={geo.rsmKey}
                                 geography={geo}
                                 data-tooltip-id="my-tooltip"
                                 onMouseEnter={() => {

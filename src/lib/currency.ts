@@ -47,15 +47,21 @@ export async function convertCurrency(
 /**
  * Format a number as a currency string.
  * Example: formatCurrency(180000, "USD") → "$180,000"
+ * With compact: true → "$180k"
  */
-export function formatCurrency(amount: number, currency: string): string {
+export function formatCurrency(amount: number, currency: string, compact: boolean = false): string {
   try {
     return new Intl.NumberFormat('en', {
       style:    'currency',
       currency: currency.toUpperCase(),
       maximumFractionDigits: 0,
-    }).format(amount);
+      ...(compact ? { notation: 'compact', compactDisplay: 'short' } : {}),
+    }).format(amount).toLowerCase(); // toLowerCase for "k" instead of "K"
   } catch {
-    return `${currency} ${amount.toLocaleString()}`;
+    let formatted = amount.toLocaleString();
+    if (compact && amount >= 1000) {
+      formatted = `${(amount / 1000).toFixed(0)}k`;
+    }
+    return `${currency} ${formatted}`;
   }
 }

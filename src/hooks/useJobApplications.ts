@@ -14,20 +14,45 @@ const INITIAL_APPLICATIONS: JobApplication[] = [
     country: 'US',
     city: 'Mountain View',
     workType: 'hybrid',
+    employmentType: 'permanent',
     status: 'interviewing',
-    salary: { amount: 200000, currency: 'USD' },
+    salary: { amount: 220000, currency: 'USD', ...({ max: 280000 } as any) },
     date: '2024-03-20',
-    links: { job: '#', linkedin: '#', website: 'https://google.com' },
-    description: 'Build the future of Search and AI on massive-scale distributed systems with world-class engineers.',
+    links: { job: 'https://careers.google.com', linkedin: 'https://linkedin.com/company/google', website: 'https://google.com' },
+    description: '### The Role\nBuild the future of Search and AI on massive-scale distributed systems with world-class engineers.\n\n**Requirements:**\n- 5+ years of distributed systems\n- `C++` and `Go` expertise\n- Passion for AI',
     rating: 4.8,
-    notes: 'Focus on distributed systems and ML integration during the next interview.',
+    notes: 'Focus on **distributed systems** and *ML integration* during the next interview. Make sure to review the Paxos algorithm.',
+    phoneScreens: 1,
+    interviews: 2,
+    recruiter: {
+      name: 'Alice Johnson',
+      email: 'alice.hr@google.com',
+      phone: '+1 650-253-0000'
+    },
     referral: {
       referrer: 'Sarah Chen',
       date: '2024-03-10',
-      note: 'Former colleague from Stanford.',
+      note: 'Former colleague from Stanford. She already spoke to the hiring manager.',
       link: 'https://careers.google.com/ref/sarah-chen',
       code: 'SARAH-G24',
     },
+    rounds: [
+      {
+        id: 'r1',
+        roundNumber: 1,
+        date: '2024-03-22T10:00:00Z',
+        interviewerName: 'Bob Smith',
+        meetingLink: 'https://meet.google.com/abc-defg-hij'
+      },
+      {
+        id: 'r2',
+        roundNumber: 2,
+        date: '2024-03-28T14:30:00Z',
+        interviewerName: 'Dr. Jane Doe',
+        interviewerContact: 'jane@google.com',
+        location: 'Building 43, Mountain View Campus'
+      }
+    ]
   },
   {
     id: '2',
@@ -37,13 +62,28 @@ const INITIAL_APPLICATIONS: JobApplication[] = [
     country: 'US',
     city: 'Cupertino',
     workType: 'onsite',
-    status: 'applied',
+    employmentType: 'fixed-term',
+    status: 'offer',
     salary: { amount: 185000, currency: 'USD' },
     date: '2024-03-19',
     links: { job: '#', linkedin: '#', website: 'https://apple.com' },
-    description: 'Craft high-fidelity user interfaces for the next generation of iOS and macOS applications.',
+    description: 'Craft high-fidelity user interfaces for the next generation of iOS and macOS applications.\n\nEverything must be pixel-perfect.',
     rating: 4.9,
-    notes: 'Apple cares deeply about accessibility and pixel-perfect design.',
+    notes: 'Apple cares deeply about accessibility.\n\nEmphasize my work on **WCAG** standards and *smooth animations*.',
+    phoneScreens: 2,
+    interviews: 4,
+    recruiter: {
+      name: 'Tim Cook (proxy)',
+    },
+    rounds: [
+      {
+        id: 'a1',
+        roundNumber: 1,
+        date: '2024-03-21T09:00:00Z',
+        interviewerName: 'Design Lead',
+        location: 'Apple Park'
+      }
+    ]
   },
   {
     id: '3',
@@ -53,8 +93,9 @@ const INITIAL_APPLICATIONS: JobApplication[] = [
     country: 'IT',
     city: 'Maranello',
     workType: 'onsite',
-    status: 'offer',
-    salary: { amount: 105000, currency: 'EUR' },
+    employmentType: 'permanent',
+    status: 'applied',
+    salary: { amount: 105000, currency: 'EUR', ...({ max: 130000 } as any) },
     date: '2024-03-18',
     links: { job: '#', linkedin: '#', website: 'https://ferrari.com' },
     description: 'Define the digital ecosystem of the most iconic automotive brand.',
@@ -75,13 +116,18 @@ const INITIAL_APPLICATIONS: JobApplication[] = [
     country: 'SE',
     city: 'Stockholm',
     workType: 'remote',
+    employmentType: 'permanent',
     status: 'pending',
     salary: { amount: 900000, currency: 'SEK' },
     date: '2024-03-17',
     links: { job: '#', linkedin: '#', website: 'https://spotify.com' },
-    description: 'Build the platform that powers music discovery for millions of users.',
+    description: 'Build the platform that powers music discovery for millions of users.\n\n`Java` and `Go` are the primary languages. Focus on high-throughput data pipelines.',
     rating: 4.6,
-    notes: 'Java and Go are the primary languages. Focus on high-throughput data pipelines.',
+    notes: '- Scalability\n- Low latency\n- Redis & Cassandra',
+    recruiter: {
+      name: 'Johan Svensson',
+      email: 'johan@spotify.com'
+    }
   },
 ];
 

@@ -4,6 +4,7 @@
  * Supports live currency conversion via useSalary hook.
  */
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import {
   XIcon, TrashIcon, EditIcon,
   DollarIcon, CalendarIcon, ClockIcon,
@@ -64,32 +65,30 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
         </div>
 
         {/* ── Hero: Title + Meta + Status ── */}
-        <div className="modal-hero">
-          <div className="modal-hero-left">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <EmploymentTypeBadge type={job.employmentType} />
-            </div>
-            <h1 className="modal-job-title">{job.position}</h1>
-            {/* Order: Sector • Country • City • Work Type */}
-            <div className="modal-meta-row">
-              <span className="modal-sector-tag">{job.sector}</span>
-              <span className="modal-separator">•</span>
-              <CountryDisplay code={job.country} />
-              <span className="modal-city-pill">{job.city}</span>
-              <span className="modal-separator">•</span>
-              <WorkTypeBadge type={job.workType} />
+        <div className="modal-hero" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <EmploymentTypeBadge type={job.employmentType} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', width: '100%', gap: '16px' }}>
+            <h1 className="modal-job-title" style={{ margin: 0, lineHeight: 1 }}>{job.position}</h1>
+            <div className="modal-status-box" style={{ marginTop: '4px', flexShrink: 0 }}>
+              <StatusDropdown
+                status={job.status}
+                onChange={(s) => onStatusChange(job.id, s)}
+              />
             </div>
           </div>
-          <div className="modal-status-box">
-            <StatusDropdown
-              status={job.status}
-              onChange={(s) => onStatusChange(job.id, s)}
-            />
+          {/* Order: Sector • Country • City */}
+          <div className="modal-meta-row" style={{ marginTop: '4px' }}>
+            <span className="modal-sector-tag">{job.sector}</span>
+            <span className="modal-separator">•</span>
+            <CountryDisplay code={job.country} />
+            <span className="modal-city-pill">{job.city}</span>
           </div>
         </div>
 
-        {/* ── Details Grid ── */}
-        <div className="modal-details-grid">
+        {/* ── Highlight Row ── */}
+        <div className="modal-highlight-row">
           <div className="detail-item">
             <div className="detail-label"><DollarIcon size={14} /> Salary</div>
             <div className="detail-value">{formattedSalary}</div>
@@ -100,168 +99,186 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
           </div>
           <div className="detail-item">
             <div className="detail-label"><ClockIcon size={14} /> Work Type</div>
-            <div className="detail-value" style={{ textTransform: 'capitalize' }}>{job.workType}</div>
+            <div className="detail-value"><WorkTypeBadge type={job.workType} /></div>
           </div>
           <div className="detail-item">
             <div className="detail-label"><BookOpenIcon size={14} /> Employment</div>
-            <div className="detail-value" style={{ textTransform: 'capitalize' }}>
+            <div className="detail-value employment-type-value">
               {job.employmentType ? job.employmentType.replace('-', ' ') : 'permanent'}
             </div>
           </div>
-          <div className="detail-item">
-            <div className="detail-label"><BookOpenIcon size={14} /> CV Profile</div>
-            <div className="detail-value" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              {cvProfile ? (
-                <>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: cvProfile.color, display: 'inline-block' }} />
-                  {cvProfile.name}
-                </>
-              ) : 'None'}
-            </div>
-          </div>
-          <div className="detail-item">
-            <div className="detail-label"><ClockIcon size={14} /> Phone Screens</div>
-            <div className="detail-value">{job.phoneScreens || 0}</div>
-          </div>
-          <div className="detail-item">
-            <div className="detail-label"><BookOpenIcon size={14} /> Interviews</div>
-            <div className="detail-value">{job.interviews || 0}</div>
-          </div>
         </div>
 
-        {/* ── Job Description ── */}
-        <section className="modal-section">
-          <h3 className="section-title">Job Description</h3>
-          <div className="modal-description-box">
-            {job.description || 'No description provided.'}
+        {/* ── Structured Body Layout ── */}
+        <div className="modal-body-layout">
+          
+          {/* ── Main Column ── */}
+          <div className="modal-main-column">
+            {/* ── Job Description ── */}
+            <section className="modal-section">
+              <h3 className="section-title">Job Description</h3>
+              <div className="modal-description-box markdown-body">
+                {job.description ? <ReactMarkdown>{job.description}</ReactMarkdown> : 'No description provided.'}
+              </div>
+            </section>
+
+            {/* ── User Notes ── */}
+            {job.notes && (
+              <section className="modal-section">
+                <h3 className="section-title">My Notes</h3>
+                <div className="modal-notes-box markdown-body"><ReactMarkdown>{job.notes}</ReactMarkdown></div>
+              </section>
+            )}
+
+            {/* ── Interview Rounds ── */}
+            {job.rounds && job.rounds.length > 0 && (
+              <section className="modal-section">
+                <h3 className="section-title">Interview Rounds</h3>
+                <div className="modal-rounds-container">
+                  {[...job.rounds].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(r => (
+                    <div key={r.id} className="modal-round-card">
+                      <div className="modal-round-header">
+                        <h4 className="modal-round-title"><ClockIcon size={14} /> Round #{r.roundNumber}</h4>
+                        <span className="modal-round-subtitle">{r.date ? new Date(r.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : 'TBD'}</span>
+                      </div>
+                      {(r.interviewerName || r.interviewerContact) && (
+                        <div className="modal-round-detail" style={{ marginTop: '4px' }}>
+                          <UserPlusIcon size={14} />
+                          <span>{r.interviewerName || 'Unknown Contact'} {r.interviewerContact && `(${r.interviewerContact})`}</span>
+                        </div>
+                      )}
+                      {(r.meetingLink || r.location) && (
+                        <div className="modal-round-detail" style={{ gap: '12px' }}>
+                          {r.meetingLink && (
+                            <a href={r.meetingLink} target="_blank" rel="noreferrer" className="modal-round-link">
+                              <VideoIcon size={14} style={{ color: '#AF52DE' }} /> Join Meeting
+                            </a>
+                          )}
+                          {r.location && (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                              <MapPinIcon size={14} style={{ color: '#FF3B30' }} /> {r.location}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
-        </section>
 
-        {/* ── User Notes ── */}
-        {job.notes && (
-          <section className="modal-section">
-            <h3 className="section-title">My Notes</h3>
-            <div className="modal-notes-box">{job.notes}</div>
-          </section>
-        )}
-
-        {/* ── Interview Rounds ── */}
-        {job.rounds && job.rounds.length > 0 && (
-          <section className="modal-section">
-            <h3 className="section-title">Interview Rounds</h3>
-            <div className="modal-referral-grid" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {[...job.rounds].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(r => (
-                <div key={r.id} style={{ display: 'flex', flexDirection: 'column', background: 'var(--surface-muted)', padding: '12px', borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h4 style={{ margin: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}><ClockIcon size={12} /> Round #{r.roundNumber}</h4>
-                    <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{r.date ? new Date(r.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : 'TBD'}</span>
-                  </div>
-                  {(r.interviewerName || r.interviewerContact) && (
-                    <div style={{ marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <UserPlusIcon size={12} style={{ color: 'var(--text-secondary)' }} />
-                      <span>{r.interviewerName || 'Unknown Contact'} {r.interviewerContact && `(${r.interviewerContact})`}</span>
-                    </div>
-                  )}
-                  {(r.meetingLink || r.location) && (
-                    <div style={{ marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {r.meetingLink && (
-                        <a href={r.meetingLink} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--text-primary)', textDecoration: 'none' }}>
-                          <VideoIcon size={12} style={{ color: '#AF52DE' }} /> Join Meeting
-                        </a>
-                      )}
-                      {r.location && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
-                          <MapPinIcon size={12} style={{ color: '#FF3B30' }} /> {r.location}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
+          {/* ── Sidebar Column ── */}
+          <div className="modal-side-column">
+            
+            {/* ── Quick Links ── */}
+            <div className="modal-side-card" style={{ background: 'transparent', border: 'none', padding: 0 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {job.links?.job && (
+                  <a href={job.links.job} className="sidebar-link-btn" target="_blank" rel="noreferrer">
+                    <div className="sidebar-link-left"><LinkIcon size={16} /> Job Post</div>
+                    <span style={{ color: 'var(--text-secondary)' }}>↗</span>
+                  </a>
+                )}
+                {job.links?.linkedin && (
+                  <a href={job.links.linkedin} className="sidebar-link-btn" target="_blank" rel="noreferrer">
+                    <div className="sidebar-link-left"><LinkedinIcon size={16} /> LinkedIn</div>
+                    <span style={{ color: 'var(--text-secondary)' }}>↗</span>
+                  </a>
+                )}
+                {job.links?.website && (
+                  <a href={job.links.website} className="sidebar-link-btn" target="_blank" rel="noreferrer">
+                    <div className="sidebar-link-left"><GlobeIcon size={16} /> Website</div>
+                    <span style={{ color: 'var(--text-secondary)' }}>↗</span>
+                  </a>
+                )}
+              </div>
             </div>
-          </section>
-        )}
 
-        {/* ── Recruiter Info ── */}
-        {job.recruiter && (
-          <section className="modal-section">
-            <h3 className="section-title">HR / Recruiter Contact</h3>
-            <div className="modal-referral-grid">
-              <div className="detail-item">
-                <div className="detail-label"><UserPlusIcon size={14} /> Name</div>
-                <div className="detail-value">{job.recruiter.name}</div>
+            {/* ── Application Tracking ── */}
+            <div className="modal-side-card">
+              <h3 className="side-card-title">Tracking</h3>
+              <div className="side-detail-row">
+                <span className="side-detail-label"><BookOpenIcon size={14} /> CV Profile</span>
+                <span className="side-detail-value">
+                  {cvProfile ? (
+                    <>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: cvProfile.color }} />
+                      {cvProfile.name}
+                    </>
+                  ) : <span style={{ color: 'var(--text-secondary)' }}>None</span>}
+                </span>
               </div>
-              {job.recruiter.email && (
-                <div className="detail-item">
-                  <div className="detail-label"><GlobeIcon size={14} /> Email</div>
-                  <div className="detail-value">{job.recruiter.email}</div>
-                </div>
-              )}
-              {job.recruiter.phone && (
-                <div className="detail-item">
-                  <div className="detail-label"><ClockIcon size={14} /> Phone</div>
-                  <div className="detail-value">{job.recruiter.phone}</div>
-                </div>
-              )}
+              <div className="side-detail-row">
+                <span className="side-detail-label"><ClockIcon size={14} /> Phone Screens</span>
+                <span className="side-detail-value">{job.phoneScreens || 0}</span>
+              </div>
+              <div className="side-detail-row">
+                <span className="side-detail-label"><BookOpenIcon size={14} /> Interviews</span>
+                <span className="side-detail-value">{job.interviews || 0}</span>
+              </div>
             </div>
-          </section>
-        )}
 
-        {/* ── Referral Info ── */}
-        {job.referral && (
-          <section className="modal-section">
-            <h3 className="section-title">Referral Information</h3>
-            <div className="modal-referral-grid">
-              <div className="detail-item">
-                <div className="detail-label"><UserPlusIcon size={14} /> Referrer</div>
-                <div className="detail-value">{job.referral.referrer}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label"><CalendarIcon size={14} /> Date</div>
-                <div className="detail-value">{job.referral.date}</div>
-              </div>
-
-              <div className="detail-item">
-                <div className="detail-label"><EditIcon size={14} /> Note</div>
-                <div className="detail-value">{job.referral.note}</div>
-              </div>
-              {job.referral.link && (
-                <div className="detail-item">
-                  <div className="detail-label"><LinkIcon size={14} /> Referral Link</div>
-                  <div className="detail-value">
-                    <a href={job.referral.link} className="referral-link" target="_blank" rel="noreferrer">
-                      Open Link ↗
-                    </a>
-                  </div>
+            {/* ── HR / Recruiter Contact ── */}
+            {job.recruiter && (
+              <div className="modal-side-card">
+                <h3 className="side-card-title">HR / Recruiter</h3>
+                <div className="side-detail-row">
+                  <span className="side-detail-label"><UserPlusIcon size={14} /> Name</span>
+                  <span className="side-detail-value">{job.recruiter.name}</span>
                 </div>
-              )}
-              {job.referral.code && (
-                <div className="detail-item">
-                  <div className="detail-label"><GlobeIcon size={14} /> Referral Code</div>
-                  <div className="detail-value">
-                    <span
-                      className="referral-code-pill"
-                      title="Click to copy"
-                      onClick={() => navigator.clipboard.writeText(job.referral!.code!)}
-                    >
-                      {job.referral.code}
+                {job.recruiter.email && (
+                  <div className="side-detail-row">
+                    <span className="side-detail-label"><GlobeIcon size={14} /> Email</span>
+                    <span className="side-detail-value">
+                       <a href={`mailto:${job.recruiter.email}`} style={{ color: 'var(--apple-blue)', textDecoration: 'none' }}>Email ↗</a>
                     </span>
                   </div>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+                )}
+                {job.recruiter.phone && (
+                  <div className="side-detail-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                    <span className="side-detail-label"><ClockIcon size={14} /> Phone</span>
+                    <span className="side-detail-value">{job.recruiter.phone}</span>
+                  </div>
+                )}
+              </div>
+            )}
 
-        {/* ── Quick Links ── */}
-        <section className="modal-links-section">
-          <h3 className="section-title">Quick Links</h3>
-          <div className="modal-links-grid">
-            <a href={job.links.job}      className="modal-link-card" target="_blank" rel="noreferrer"><LinkIcon    size={16} /><span>Job Post</span></a>
-            <a href={job.links.linkedin} className="modal-link-card" target="_blank" rel="noreferrer"><LinkedinIcon size={16} /><span>LinkedIn</span></a>
-            <a href={job.links.website}  className="modal-link-card" target="_blank" rel="noreferrer"><GlobeIcon   size={16} /><span>Website</span></a>
+            {/* ── Referral Info ── */}
+            {job.referral && (
+              <div className="modal-side-card">
+                <h3 className="side-card-title">Referral Info</h3>
+                <div className="side-detail-row">
+                  <span className="side-detail-label"><UserPlusIcon size={14} /> Referrer</span>
+                  <span className="side-detail-value">{job.referral.referrer}</span>
+                </div>
+                {(job.referral.date || job.referral.note) && (
+                  <div className="side-detail-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '6px' }}>
+                    <span className="side-detail-label"><CalendarIcon size={14} /> {job.referral.date}</span>
+                    {job.referral.note && <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>"{job.referral.note}"</span>}
+                  </div>
+                )}
+                {(job.referral.link || job.referral.code) && (
+                  <div className="side-detail-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                    <span className="side-detail-label"><LinkIcon size={14} /> Details</span>
+                    <span className="side-detail-value" style={{ display: 'flex', gap: '8px' }}>
+                      {job.referral.code && (
+                        <span className="copyable-pill" title="Click to copy" onClick={() => navigator.clipboard.writeText(job.referral!.code!)}>
+                          {job.referral.code}
+                        </span>
+                      )}
+                      {job.referral.link && (
+                        <a href={job.referral.link} target="_blank" rel="noreferrer" style={{ color: 'var(--apple-blue)', textDecoration: 'none', fontSize: '13px' }}>
+                          Link ↗
+                        </a>
+                      )}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </section>
+        </div>
 
         {/* ── Footer ── */}
         <div className="modal-footer">

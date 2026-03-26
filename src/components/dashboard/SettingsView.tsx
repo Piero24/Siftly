@@ -5,40 +5,40 @@
  */
 import React from 'react';
 import { GlobeIcon, SunIcon, MoonIcon, LifeBuoyIcon, BookOpenIcon, MailIcon, ClockIcon, LaptopIcon } from '../common/Icons';
-import { CVProfile } from '../../types/job';
 import { APP_INFO } from '../../config/app';
-
-type ThemeMode = 'light' | 'dark' | 'system';
-type ResolvedTheme = 'light' | 'dark';
+import { useSettings } from '../../context/SettingsContext';
+import { SettingsCard } from '../common/SettingsCard';
+import { SegmentedToggle } from '../common/SegmentedToggle';
 
 const CV_COLORS = ['#007AFF', '#34C759', '#FF9500', '#FF3B30', '#AF52DE', '#5AC8FA', '#FF2D55', '#8E8E93'];
 
-interface SettingsViewProps {
-  language: string;
-  setLanguage: (lang: string) => void;
-  currency: string;
-  setCurrency: (curr: string) => void;
-  theme: ThemeMode;
-  setTheme: (theme: ThemeMode) => void;
-  resolvedTheme: ResolvedTheme;
-  autoNoResponse: boolean;
-  setAutoNoResponse: (val: boolean) => void;
-  autoNoResponseDays: number;
-  setAutoNoResponseDays: (val: number) => void;
-  defaultTimeRange: 'today' | 'total' | '7d' | '30d' | '1y';
-  setDefaultTimeRange: (val: 'today' | 'total' | '7d' | '30d' | '1y') => void;
-  cvProfiles: CVProfile[];
-  setCvProfiles: React.Dispatch<React.SetStateAction<CVProfile[]>>;
-}
+export const SettingsView: React.FC = () => {
+  const {
+    language,
+    setLanguage,
+    currency,
+    setCurrency,
+    theme,
+    setTheme,
+    resolvedTheme,
+    autoNoResponse,
+    setAutoNoResponse,
+    autoNoResponseDays,
+    setAutoNoResponseDays,
+    defaultTimeRange,
+    setDefaultTimeRange,
+    cvProfiles,
+    setCvProfiles,
+  } = useSettings();
 
-export const SettingsView: React.FC<SettingsViewProps> = ({
-  language, setLanguage, currency, setCurrency, theme, setTheme,
-  resolvedTheme,
-  autoNoResponse, setAutoNoResponse, autoNoResponseDays, setAutoNoResponseDays,
-  defaultTimeRange, setDefaultTimeRange, cvProfiles, setCvProfiles,
-}) => {
   const [newCvName, setNewCvName] = React.useState('');
   const [newCvColor, setNewCvColor] = React.useState(CV_COLORS[0]);
+
+  const themeOptions: Array<{ value: 'light' | 'dark' | 'system'; label: string; icon: React.ReactNode }> = [
+    { value: 'light', label: 'Light', icon: <SunIcon size={14} /> },
+    { value: 'dark', label: 'Dark', icon: <MoonIcon size={14} /> },
+    { value: 'system', label: 'System', icon: <LaptopIcon size={14} /> },
+  ];
 
   const addCvProfile = () => {
     const name = newCvName.trim();
@@ -60,12 +60,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
     <div className="settings-grid">
       {/* Automation Section */}
-      <section className="settings-card glass-container">
-        <div className="settings-card-header">
-          <ClockIcon size={22} />
-          <h3>Automation</h3>
-        </div>
-        <div className="settings-card-content">
+      <SettingsCard icon={<ClockIcon size={22} />} title="Automation">
           <div className="setting-item">
             <label>Auto-mark "No Response"</label>
             <label className="toggle-switch">
@@ -93,16 +88,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
             </div>
           )}
-        </div>
-      </section>
+      </SettingsCard>
 
       {/* Localization Section */}
-      <section className="settings-card glass-container">
-        <div className="settings-card-header">
-          <GlobeIcon size={22} />
-          <h3>Localization</h3>
-        </div>
-        <div className="settings-card-content">
+      <SettingsCard icon={<GlobeIcon size={22} />} title="Localization">
           <div className="setting-item">
             <label>App Language</label>
             <select value={language} onChange={(e) => setLanguage(e.target.value)} className="apple-select">
@@ -121,36 +110,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <option value="SEK">SEK (kr)</option>
             </select>
           </div>
-        </div>
-      </section>
+      </SettingsCard>
 
       {/* Appearance Section */}
-      <section className="settings-card glass-container">
-        <div className="settings-card-header">
-          {theme === 'system' ? <LaptopIcon size={22} /> : resolvedTheme === 'light' ? <SunIcon size={22} /> : <MoonIcon size={22} />}
-          <h3>Appearance & Dashboard</h3>
-        </div>
-        <div className="settings-card-content">
+      <SettingsCard
+        icon={theme === 'system' ? <LaptopIcon size={22} /> : resolvedTheme === 'light' ? <SunIcon size={22} /> : <MoonIcon size={22} />}
+        title="Appearance & Dashboard"
+      >
           <div className="setting-item">
             <label>Visual Theme</label>
-            <div className="theme-toggle-group">
-              <button className={`theme-btn ${theme === 'light' ? 'active' : ''}`} onClick={() => setTheme('light')}>
-                <SunIcon size={14} /> Light
-              </button>
-              <button className={`theme-btn ${theme === 'dark' ? 'active' : ''}`} onClick={() => setTheme('dark')}>
-                <MoonIcon size={14} /> Dark
-              </button>
-              <button className={`theme-btn ${theme === 'system' ? 'active' : ''}`} onClick={() => setTheme('system')}>
-                <LaptopIcon size={14} /> System
-              </button>
-            </div>
+            <SegmentedToggle value={theme} options={themeOptions} onChange={setTheme} />
           </div>
 
           <div className="setting-item">
             <label>Default Time Range</label>
             <select 
               value={defaultTimeRange} 
-              onChange={(e) => setDefaultTimeRange(e.target.value as any)} 
+              onChange={(e) => setDefaultTimeRange(e.target.value as 'today' | 'total' | '7d' | '30d' | '1y')} 
               className="apple-select"
             >
               <option value="today">Today</option>
@@ -160,16 +136,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <option value="1y">Last Year</option>
             </select>
           </div>
-        </div>
-      </section>
+      </SettingsCard>
 
       {/* Support Section */}
-      <section className="settings-card glass-container">
-        <div className="settings-card-header">
-          <LifeBuoyIcon size={22} />
-          <h3>Support &amp; Community</h3>
-        </div>
-        <div className="settings-card-content">
+      <SettingsCard icon={<LifeBuoyIcon size={22} />} title="Support & Community">
           <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
             Need help or have a suggestion? We're here for you.
           </p>
@@ -184,16 +154,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div style={{ marginTop: '16px', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
             Version {APP_INFO.version}
           </div>
-        </div>
-      </section>
+      </SettingsCard>
 
       {/* CV Profiles Section */}
-      <section className="settings-card glass-container">
-        <div className="settings-card-header">
-          <BookOpenIcon size={22} />
-          <h3>CV Profiles</h3>
-        </div>
-        <div className="settings-card-content">
+      <SettingsCard icon={<BookOpenIcon size={22} />} title="CV Profiles">
           <div className="cv-form-grid">
             <div className="cv-form-field">
               <label htmlFor="cv-name-input">CV Name</label>
@@ -242,8 +206,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
             ))}
           </div>
-        </div>
-      </section>
+      </SettingsCard>
     </div>
   </div>
   );

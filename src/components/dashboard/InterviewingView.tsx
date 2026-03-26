@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { JobApplication, JobStatus, InterviewRound } from '../../types/job';
-import { CompanyIcon }    from './CompanyIcon';
+import { CompanyIcon } from './CompanyIcon';
 import { EmploymentTypeBadge } from './EmploymentTypeBadge';
 import { StatusDropdown } from './StatusDropdown';
-import { PhoneIcon, CodeIcon, SumIcon, UserIcon, MailIcon, VideoIcon, MapPinIcon } from '../common/Icons';
+import { PhoneIcon, CodeIcon, SumIcon, UserIcon, MailIcon, VideoIcon, MapPinIcon, FilterIcon, UsersIcon, XCircleIcon, CheckCircleIcon, TrashIcon } from '../common/Icons';
+import { SearchBar } from './SearchBar';
+import { useInterviewingFilters } from '../../hooks/useInterviewingFilters';
+import { INTERVIEWING_FILTER_FIELDS, INTERVIEWING_STATUS_OPTIONS } from '../../config/interviewingFilterConfig';
 
 interface InterviewingViewProps {
-  applications:    JobApplication[];
-  onStatusChange:  (id: string, newStatus: JobStatus) => void;
-  onRowClick:      (app: JobApplication) => void;
+  applications: JobApplication[];
+  onStatusChange: (id: string, newStatus: JobStatus) => void;
+  onRowClick: (app: JobApplication) => void;
+  onDelete: (id: string) => void;
 }
 
 const HEADERS = [
-  '', 'Company', 'Position', 'Recruiter Contact',
+  'Company', 'Position', 'Recruiter Contact',
   'Phone Screens', 'Interviews', 'Total Rounds', 'Date', 'Status', 'Next Round'
 ];
 
@@ -20,7 +24,7 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
   const sorted = rounds ? [...rounds].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) : [];
   const now = new Date().getTime();
   const nextIndex = sorted.findIndex(r => r.date && new Date(r.date).getTime() > now);
-  
+
   if (!rounds || rounds.length === 0) {
     return <span style={{ color: 'var(--text-secondary)' }}>-</span>;
   }
@@ -35,10 +39,10 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
   }
 
   const r = sorted[nextIndex];
-  
+
   return (
-    <div style={{ 
-      display: 'inline-flex', 
+    <div style={{
+      display: 'inline-flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-start',
@@ -53,7 +57,7 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
         {r.meetingLink && <VideoIcon size={12} style={{ color: '#AF52DE', flexShrink: 0 }} />}
         {r.location && <MapPinIcon size={12} style={{ color: '#FF3B30', flexShrink: 0 }} />}
       </div>
-      
+
       {(r.interviewerName || r.interviewerContact) && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', marginTop: '4px' }}>
           {r.interviewerName && (
@@ -82,10 +86,13 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
 };
 
 const InterviewRow: React.FC<{
-  app:             JobApplication;
-  onStatusChange:  (id: string, s: JobStatus) => void;
-  onRowClick:      (app: JobApplication) => void;
-}> = ({ app, onStatusChange, onRowClick }) => {
+  app: JobApplication;
+  selectorMode: boolean;
+  isSelected: boolean;
+  onToggleSelection: (id: string) => void;
+  onStatusChange: (id: string, s: JobStatus) => void;
+  onRowClick: (app: JobApplication) => void;
+}> = ({ app, selectorMode, isSelected, onToggleSelection, onStatusChange, onRowClick }) => {
   const phoneScreens = app.phoneScreens || 0;
   const interviews = app.interviews || 0;
   const totalRounds = phoneScreens + interviews;
@@ -94,8 +101,21 @@ const InterviewRow: React.FC<{
     <tr
       className="job-row"
       style={{ borderBottom: '1px solid var(--divider)', cursor: 'pointer' }}
-      onClick={() => onRowClick(app)}
+      onClick={() => {
+        if (selectorMode) onToggleSelection(app.id);
+        else onRowClick(app);
+      }}
     >
+      <td className="table-cell col-select" onClick={(e) => e.stopPropagation()}>
+        {selectorMode && (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelection(app.id)}
+          />
+        )}
+      </td>
+
       <td className="table-cell col-icon">
         <div className="table-icon-cell">
           <CompanyIcon name={app.company} logo={app.logo} website={app.links?.website} linkedin={app.links?.linkedin} />
@@ -178,8 +198,53 @@ const InterviewRow: React.FC<{
 };
 
 export const InterviewingView: React.FC<InterviewingViewProps> = ({
-  applications, onStatusChange, onRowClick,
+  applications, onStatusChange, onRowClick, onDelete
 }) => {
+  const {
+    searchTerm,
+    setSearchTerm,
+    showFilterRow,
+    filterField,
+    setFilterField,
+    filterValue,
+    setFilterValue,
+    filterValueOptions,
+    filteredApplications,
+    toggleFilterRow,
+    clearFilters,
+  } = useInterviewingFilters(applications);
+
+  const [selectorMode, setSelectorMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<JobStatus>('applied');
+
+  const toggleSelectorMode = () => {
+    setSelectorMode((prev) => !prev);
+    setSelectedIds(new Set());
+  };
+
+  const toggleRowSelection = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleBulkStatus = () => {
+    if (selectedIds.size === 0) return;
+    [...selectedIds].forEach((id) => onStatusChange(id, bulkStatus));
+    setSelectedIds(new Set());
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    if (!window.confirm(`Delete ${selectedIds.size} selected applications?`)) return;
+    [...selectedIds].forEach((id) => onDelete(id));
+    setSelectedIds(new Set());
+  };
+
   if (applications.length === 0) {
     return (
       <div className="glass-container applications-card" style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '40px', textAlign: 'center' }}>
@@ -192,12 +257,96 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
   return (
     <div className="glass-container applications-card" style={{ maxWidth: '1400px', width: '100%', margin: '0 auto' }}>
       <div className="applications-toolbar">
-        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0 }}>Interviewing Pipeline</h2>
+        <div className="applications-toolbar-left">
+          <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>Interviewing Pipeline</h2>
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
+        </div>
+        <div className="applications-toolbar-right">
+          <button className={`btn-apple selection-toggle-btn ${showFilterRow ? 'is-active' : ''}`} onClick={toggleFilterRow}><FilterIcon size={14} />Filters</button>
+          <button className={`btn-apple selection-toggle-btn ${selectorMode ? 'is-active' : ''}`} onClick={toggleSelectorMode}><UsersIcon size={14} />{selectorMode ? 'Exit Selection' : 'Select Rows'}</button>
+        </div>
       </div>
+
+      {showFilterRow && (
+        <div className="filter-actions-bar">
+          <div className="filter-actions-group filter-actions-left">
+            <span className="bulk-actions-count">Filter</span>
+            <select
+              className="apple-select bulk-actions-status filter-select"
+              value={filterField}
+              onChange={(e) => {
+                setFilterField(e.target.value as 'company' | 'position' | 'date' | 'nextRound');
+                setFilterValue('');
+              }}
+            >
+              <option value="">Filter by...</option>
+              {INTERVIEWING_FILTER_FIELDS.map((field) => (
+                <option key={field.value} value={field.value}>{field.label}</option>
+              ))}
+            </select>
+
+            <select
+              className="apple-select bulk-actions-status filter-select"
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+              disabled={!filterField}
+            >
+              <option value="">Value...</option>
+              {filterValueOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-actions-group filter-actions-right">
+            <button
+              className="btn-apple btn-outline bulk-actions-btn"
+              onClick={clearFilters}
+              disabled={!filterField && !filterValue}
+            >
+              <XCircleIcon size={14} /> Clear Filter
+            </button>
+          </div>
+        </div>
+      )}
+
+      {selectorMode && (
+        <div className="bulk-actions-bar">
+          <div className="bulk-actions-group bulk-actions-left">
+            <span className="bulk-actions-count">{selectedIds.size} selected</span>
+            <select className="apple-select bulk-actions-status" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value as JobStatus)}>
+              {INTERVIEWING_STATUS_OPTIONS.map((statusOption) => (
+                <option key={statusOption.value} value={statusOption.value}>{statusOption.label}</option>
+              ))}
+            </select>
+            <button className="btn-apple btn-outline bulk-actions-btn" disabled={selectedIds.size === 0} onClick={handleBulkStatus}><CheckCircleIcon size={14} />Change Status</button>
+          </div>
+
+          <div className="bulk-actions-group bulk-actions-right">
+            <button className="btn-apple btn-destructive bulk-actions-btn" disabled={selectedIds.size === 0} onClick={handleBulkDelete}><TrashIcon size={14} />Delete Selected</button>
+          </div>
+        </div>
+      )}
+
       <div className="table-responsive">
         <table className="job-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+          <colgroup>
+            <col className="col-select" />
+            <col className="col-icon" />
+            <col className="col-company" />
+            <col className="col-position" />
+            <col className="col-recruiter" />
+            <col className="col-phonescreens" />
+            <col className="col-interviews" />
+            <col className="col-totalrounds" />
+            <col className="col-date" />
+            <col className="col-status" />
+            <col className="col-nextround" />
+          </colgroup>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border-strong)' }}>
+              <th className="table-header col-select"></th>
+              <th className="table-header col-icon"></th>
               {HEADERS.map((h, i) => (
                 <th key={i} className="table-header" style={h === 'Phone Screens' || h === 'Interviews' || h === 'Total Rounds' || h === 'Recruiter Contact' || h === 'Next Round' ? { textAlign: 'center' } : {}}>
                   {h}
@@ -206,10 +355,13 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
             </tr>
           </thead>
           <tbody>
-            {applications.map((app) => (
+            {filteredApplications.map((app) => (
               <InterviewRow
                 key={app.id}
                 app={app}
+                selectorMode={selectorMode}
+                isSelected={selectedIds.has(app.id)}
+                onToggleSelection={toggleRowSelection}
                 onStatusChange={onStatusChange}
                 onRowClick={onRowClick}
               />

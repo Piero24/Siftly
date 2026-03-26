@@ -15,6 +15,7 @@ import {
 } from '../common/Icons';
 import { ComboBox } from '../common/ComboBox';
 import { StarPicker } from '../common/StarPicker';
+import { MarkdownEditor } from '../common/MarkdownEditor';
 import { getAllCountryOptions, getCitiesForCountry } from '../../lib/geo';
 import type { ComboBoxItem } from '../common/ComboBox';
 import { CVProfile, EmploymentType, JobApplication, JobStatus, WorkType, InterviewRound } from '../../types/job';
@@ -23,14 +24,14 @@ interface NewApplicationModalProps {
   initialData?: JobApplication;
   cvProfiles: CVProfile[];
   onClose: () => void;
-  onSave:  (app: JobApplication) => void;
+  onSave: (app: JobApplication) => void;
 }
 
-const CURRENCIES = ['USD', 'EUR', 'GBP', 'SEK', 'CHF', 'JPY', 'CAD', 'AUD', 'JPY', 'INR'];
+const CURRENCIES = ['USD', 'EUR', 'GBP', 'SEK', 'CHF', 'JPY', 'CAD', 'AUD', 'INR'];
 const WORK_TYPES: { value: WorkType; label: string }[] = [
-  { value: 'remote',  label: 'Remote'  },
-  { value: 'onsite',  label: 'On-Site' },
-  { value: 'hybrid',  label: 'Hybrid'  },
+  { value: 'remote', label: 'Remote' },
+  { value: 'onsite', label: 'On-Site' },
+  { value: 'hybrid', label: 'Hybrid' },
 ];
 const EMPLOYMENT_TYPES: { value: EmploymentType; label: string }[] = [
   { value: 'permanent', label: 'Permanent' },
@@ -38,50 +39,50 @@ const EMPLOYMENT_TYPES: { value: EmploymentType; label: string }[] = [
   { value: 'fixed-term', label: 'Fixed-Term' },
 ];
 const STATUSES: { value: JobStatus; label: string }[] = [
-  { value: 'pending',      label: 'Pending'      },
-  { value: 'applied',      label: 'Applied'      },
+  { value: 'pending', label: 'Pending' },
+  { value: 'applied', label: 'Applied' },
   { value: 'interviewing', label: 'Interviewing' },
-  { value: 'offer',        label: 'Offer'        },
-  { value: 'accepted',     label: 'Accepted'     },
-  { value: 'rejected',     label: 'Rejected'     },
-  { value: 'no-response',  label: 'No Response'  },
+  { value: 'offer', label: 'Offer' },
+  { value: 'accepted', label: 'Accepted' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'no-response', label: 'No Response' },
 ];
 
 type SalaryType = 'single' | 'range';
 
 type FormState = {
-  company:        string;
-  sector:         string;
-  position:       string;
-  workType:       WorkType;
+  company: string;
+  sector: string;
+  position: string;
+  workType: WorkType;
   employmentType: EmploymentType;
-  cvProfileId:    string;
-  country:        string;
-  city:           string;
-  status:         JobStatus;
-  date:           string;
-  salaryType:     SalaryType;
-  salaryAmount:   string;
-  salaryMin:      string;
-  salaryMax:      string;
+  cvProfileId: string;
+  country: string;
+  city: string;
+  status: JobStatus;
+  date: string;
+  salaryType: SalaryType;
+  salaryAmount: string;
+  salaryMin: string;
+  salaryMax: string;
   salaryCurrency: string;
-  jobUrl:         string;
-  linkedinUrl:    string;
-  websiteUrl:     string;
-  description:    string;
-  rating:         number;
-  notes:          string;
-  referrer:       string;
-  referralDate:   string;
-  referralNote:   string;
-  referralLink:   string;
-  referralCode:   string;
-  recruiterName:  string;
+  jobUrl: string;
+  linkedinUrl: string;
+  websiteUrl: string;
+  description: string;
+  rating: number;
+  notes: string;
+  referrer: string;
+  referralDate: string;
+  referralNote: string;
+  referralLink: string;
+  referralCode: string;
+  recruiterName: string;
   recruiterEmail: string;
   recruiterPhone: string;
-  phoneScreens:   number;
-  interviews:     number;
-  rounds:         InterviewRound[];
+  phoneScreens: number;
+  interviews: number;
+  rounds: InterviewRound[];
 };
 
 const DEFAULT: FormState = {
@@ -167,9 +168,9 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
 
   const validate = (): boolean => {
     const errs: Partial<Record<keyof FormState, string>> = {};
-    if (!form.company.trim())  errs.company  = 'Required';
+    if (!form.company.trim()) errs.company = 'Required';
     if (!form.position.trim()) errs.position = 'Required';
-    if (!form.country)         errs.country  = 'Required';
+    if (!form.country) errs.country = 'Required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -184,47 +185,47 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
     // The type stores amount as the lower bound; the display hook will show it correctly
     const salaryAmount = form.salaryType === 'single'
       ? parseFloat(form.salaryAmount) || 0
-      : parseFloat(form.salaryMin)    || 0;
+      : parseFloat(form.salaryMin) || 0;
 
     const salaryMax = form.salaryType === 'range' ? parseFloat(form.salaryMax) || null : null;
 
     const app: JobApplication = {
-      id:       initialData ? initialData.id : Date.now().toString(),
-      company:  form.company.trim(),
-      sector:   form.sector.trim() || 'General',
+      id: initialData ? initialData.id : Date.now().toString(),
+      company: form.company.trim(),
+      sector: form.sector.trim() || 'General',
       position: form.position.trim(),
       workType: form.workType,
       employmentType: form.employmentType,
       cvProfileId: form.cvProfileId || undefined,
-      country:  form.country,
-      city:     form.city.trim(),
-      status:   form.status,
-      date:     form.date,
+      country: form.country,
+      city: form.city.trim(),
+      status: form.status,
+      date: form.date,
       salary: {
-        amount:   salaryAmount,
+        amount: salaryAmount,
         currency: form.salaryCurrency,
         ...(salaryMax !== null ? { max: salaryMax } : {}),
       } as any,
       links: {
-        job:      form.jobUrl      || '#',
+        job: form.jobUrl || '#',
         linkedin: form.linkedinUrl || '#',
-        website:  form.websiteUrl  || '#',
+        website: form.websiteUrl || '#',
       },
       description: form.description.trim() || undefined,
-      rating:      form.rating > 0 ? form.rating : undefined,
-      notes:       form.notes.trim() || undefined,
+      rating: form.rating > 0 ? form.rating : undefined,
+      notes: form.notes.trim() || undefined,
       phoneScreens: form.phoneScreens > 0 ? Number(form.phoneScreens) : undefined,
-      interviews:   form.interviews > 0 ? Number(form.interviews) : undefined,
-      rounds:       form.rounds.length > 0 ? [...form.rounds] : undefined,
+      interviews: form.interviews > 0 ? Number(form.interviews) : undefined,
+      rounds: form.rounds.length > 0 ? [...form.rounds] : undefined,
       referral: hasReferral ? {
         referrer: form.referrer.trim(),
-        date:     form.referralDate,
-        note:     form.referralNote.trim(),
-        link:     form.referralLink.trim() || undefined,
-        code:     form.referralCode.trim() || undefined,
+        date: form.referralDate,
+        note: form.referralNote.trim(),
+        link: form.referralLink.trim() || undefined,
+        code: form.referralCode.trim() || undefined,
       } : undefined,
       recruiter: hasRecruiter ? {
-        name:  form.recruiterName.trim(),
+        name: form.recruiterName.trim(),
         email: form.recruiterEmail.trim() || undefined,
         phone: form.recruiterPhone.trim() || undefined,
       } : undefined,
@@ -409,7 +410,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
             <SectionHeader icon={<BookOpenIcon size={16} />} title="Details" />
             <div className="form-field">
               <label>Job Description</label>
-              <textarea className="form-textarea" rows={4} placeholder="Paste the job description or your key observations…" value={form.description} onChange={set('description')} />
+              <MarkdownEditor rows={4} placeholder="Paste the job description or your key observations…" value={form.description} onChange={set('description')} />
             </div>
             <div className="form-field">
               <label>Company Rating</label>
@@ -417,7 +418,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
             </div>
             <div className="form-field">
               <label>Personal Notes</label>
-              <textarea className="form-textarea" rows={3} placeholder="Interview tips, contacts, gut feelings…" value={form.notes} onChange={set('notes')} />
+              <MarkdownEditor rows={3} placeholder="Interview tips, contacts, gut feelings…" value={form.notes} onChange={set('notes')} />
             </div>
           </section>
 
@@ -440,7 +441,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
                 <label>Recruiter Phone</label>
                 <input type="tel" className="form-input" placeholder="e.g. +1 555-0100" value={form.recruiterPhone} onChange={set('recruiterPhone')} />
               </div>
-              
+
               <div className="form-field" style={{ gridColumn: '1 / -1', margin: '16px 0 8px 0' }}>
                 <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)' }}>Referral (Who referred you)</h4>
               </div>
@@ -469,9 +470,9 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
           {/* ── Interview Rounds ── */}
           <section className="form-section" style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '24px' }}>
             <SectionHeader icon={<ClockIcon size={16} />} title="Interview Rounds" />
-            
+
             {form.rounds.map((round, index) => (
-              <div key={round.id} style={{ background: 'var(--surface-muted)', padding: '16px', borderRadius: '12px', marginBottom: '16px', position: 'relative', border: '1px solid var(--border-subtle)' }}>
+              <div key={round.id} className="modal-round-card" style={{ marginBottom: '16px' }}>
                 <button type="button" onClick={() => setForm(p => ({ ...p, rounds: p.rounds.filter(r => r.id !== round.id) }))} style={{ position: 'absolute', top: '12px', right: '12px', background: 'var(--bg-app)', border: '1px solid var(--border-subtle)', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)', boxShadow: 'var(--shadow-soft)' }}>
                   <XIcon size={12} />
                 </button>
@@ -527,7 +528,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({ initia
                 </div>
               </div>
             ))}
-            
+
             <button type="button" className="btn-apple btn-outline" style={{ width: '100%', marginTop: '4px' }} onClick={() => setForm(p => ({ ...p, rounds: [...p.rounds, { id: Date.now().toString() + Math.random().toString(36).substring(7), roundNumber: p.rounds.length + 1, date: '' }] }))}>
               + Add Interview Round
             </button>
