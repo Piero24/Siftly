@@ -236,10 +236,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ── 1. KPI Overview Card ── */}
       <section className="db-section">
         <div className="db-chart-card db-overview-card glass-container" style={{ padding: '12px 20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <h3 className="db-chart-title" style={{ fontSize: '15px', marginBottom: '0' }}>Overview</h3>
-          </div>
-
           <div className="db-kpi-grid" style={{ padding: 0, justifyContent: 'center', gap: '12px', overflowX: 'auto', flexWrap: 'nowrap' }}>
             {STATUS_CONFIG.map(({ key, label, color, Icon }) => (
               <div key={key} className="db-kpi-item">
@@ -272,7 +268,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="db-map-viewport">
                   <ComposableMap
                     projection="geoMercator"
-                    projectionConfig={{ scale: 140, center: [10, 20] }}
+                    projectionConfig={{ scale: 186, center: [10, 20] }}
                     style={{ width: '100%', height: '100%', pointerEvents: isMapInteractive ? 'auto' : 'none', outline: 'none' }}
                   >
                     <ZoomableGroup zoom={1}>
