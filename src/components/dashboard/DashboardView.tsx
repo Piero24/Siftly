@@ -191,12 +191,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
     return (
       <g transform={`translate(${x},${y})`}>
-        <foreignObject x={-125} y={-12} width={115} height={24}>
+        <foreignObject x={-90} y={-12} width={112} height={24}>
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px' }}>
             <div style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <CompanyIcon name={payload.value} logo={stat?.logo} website={stat?.website} linkedin={stat?.linkedin} size={20} />
             </div>
-            <span style={{ fontSize: '11px', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left', flex: 1 }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left', maxWidth: '84px' }}>
               {payload.value}
             </span>
           </div>
@@ -393,10 +393,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={topApps} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 8 }}>
+                <BarChart data={topApps} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" horizontal={false} />
                   <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickLine={false} axisLine={false} allowDecimals={false} />
-                  <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} tickLine={false} axisLine={false} width={130} />
+                  <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} tickLine={false} axisLine={false} width={120} />
                   <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={22}>
                     {topApps.map((_, i) => (
                       <Cell key={i} fill={isDark ? `rgba(90,200,250,${0.88 - i * 0.08})` : `rgba(0,122,255,${0.9 - i * 0.09})`} />
@@ -416,10 +416,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={topRej} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 8 }}>
+                <BarChart data={topRej} layout="vertical" margin={{ top: 4, right: 48, bottom: 4, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" horizontal={false} />
                   <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickLine={false} axisLine={false} allowDecimals={false} />
-                  <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} tickLine={false} axisLine={false} width={130} />
+                  <YAxis type="category" dataKey="name" tick={<CustomYAxisTick />} tickLine={false} axisLine={false} width={120} />
                   <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={22}>
                     {topRej.map((_, i) => (
                       <Cell key={i} fill={isDark ? `rgba(255,105,97,${0.92 - i * 0.08})` : `rgba(255,59,48,${0.9 - i * 0.09})`} />

@@ -19,6 +19,8 @@
 .job-table {
   width: 100%;
   table-layout: fixed;
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .table-header {
@@ -33,6 +35,8 @@
   padding: 16px 12px;
   vertical-align: middle;
   text-align: center;
+  font-size: 13px;
+  font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -54,19 +58,26 @@
 }
 
 /* Fixed column widths */
-.job-table col.col-select { width: 44px; }
-.job-table col.col-icon { width: 48px; }
-.job-table col.col-company { width: 150px; }
-.job-table col.col-sector { width: 120px; }
-.job-table col.col-position { width: 190px; }
-.job-table col.col-country { width: 90px; }
-.job-table col.col-city { width: 120px; }
-.job-table col.col-work { width: 110px; }
-.job-table col.col-salary { width: 120px; }
-.job-table col.col-cv { width: 36px; }
-.job-table col.col-date { width: 120px; }
-.job-table col.col-status { width: 135px; }
-.job-table col.col-links { width: 110px; }
+.job-table col.col-select { width: 40px; }
+.job-table col.col-icon { width: 44px; }
+.job-table col.col-company { width: 128px; }
+.job-table col.col-sector { width: 88px; }
+.job-table col.col-position { width: 168px; }
+.job-table col.col-country { width: 74px; }
+.job-table col.col-city { width: 108px; }
+.job-table col.col-work { width: 94px; }
+.job-table col.col-salary { width: 112px; }
+.job-table col.col-cv { width: 32px; }
+.job-table col.col-date { width: 100px; }
+.job-table col.col-status { width: 124px; }
+.job-table col.col-links { width: 96px; }
+
+/* Interviewing table specific widths */
+.job-table col.col-recruiter { width: 180px; }
+.job-table col.col-phonescreens { width: 80px; }
+.job-table col.col-interviews { width: 80px; }
+.job-table col.col-totalrounds { width: 88px; }
+.job-table col.col-nextround { width: 190px; }
 
 .table-cell.col-select {
   text-align: center;
@@ -89,6 +100,32 @@
 .table-cell.col-company .table-ellipsis {
   display: block;
   width: 100%;
+}
+
+.table-cell.col-company,
+.table-cell.col-position {
+  font-size: 13px;
+}
+
+.table-cell.col-status {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.table-cell.col-recruiter,
+.table-cell.col-nextround {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.table-cell.col-company {
+  font-weight: 500;
+}
+
+.table-cell.col-position {
+  font-weight: 600;
 }
 
 /* ── Animated row hover ── */

@@ -11,6 +11,12 @@ body {
   min-height: 100vh;
 }
 
+html,
+body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 .glass-container {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);

@@ -31,7 +31,7 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
 
   if (nextIndex === -1) {
     return (
-      <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-secondary)', padding: '12px 0' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '52px', color: 'var(--text-secondary)', padding: '6px 0' }}>
         <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--accent-success, #34C759)' }}>Done 🎉</span>
         <span style={{ fontSize: '11px' }}>{sorted.length} round{sorted.length > 1 ? 's' : ''} finished</span>
       </div>
@@ -42,13 +42,14 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
 
   return (
     <div style={{
-      display: 'inline-flex',
+      display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-start',
+      minHeight: '52px',
       color: 'var(--text-primary)',
       lineHeight: 1.3,
-      padding: '8px 0',
+      padding: '6px 0',
       textAlign: 'left'
     }}>
       <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600 }}>
@@ -63,19 +64,19 @@ const NextRoundDisplay: React.FC<{ rounds: InterviewRound[] }> = ({ rounds }) =>
           {r.interviewerName && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)' }}>
               <UserIcon size={10} style={{ flexShrink: 0 }} />
-              <span className="table-ellipsis" style={{ maxWidth: '180px' }} title={r.interviewerName}>{r.interviewerName}</span>
+              <span className="table-ellipsis" style={{ maxWidth: '162px' }} title={r.interviewerName}>{r.interviewerName}</span>
             </div>
           )}
           {r.interviewerContact && (
             r.interviewerContact.includes('@') ? (
               <a href={`mailto:${r.interviewerContact}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '11px', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()} title={r.interviewerContact}>
                 <MailIcon size={10} style={{ flexShrink: 0 }} />
-                <span className="table-ellipsis" style={{ maxWidth: '180px' }}>{r.interviewerContact}</span>
+                <span className="table-ellipsis" style={{ maxWidth: '162px' }}>{r.interviewerContact}</span>
               </a>
             ) : (
               <a href={`tel:${r.interviewerContact}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '11px', textDecoration: 'none' }} onClick={(e) => e.stopPropagation()} title={r.interviewerContact}>
                 <PhoneIcon size={10} style={{ flexShrink: 0 }} />
-                <span className="table-ellipsis" style={{ maxWidth: '180px' }}>{r.interviewerContact}</span>
+                <span className="table-ellipsis" style={{ maxWidth: '162px' }}>{r.interviewerContact}</span>
               </a>
             )
           )}
@@ -144,12 +145,14 @@ const InterviewRow: React.FC<{
             </div>
             {app.recruiter.email && (
               <a href={`mailto:${app.recruiter.email}`} style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '11px', textDecoration: 'none', cursor: 'pointer' }} onClick={(e) => e.stopPropagation()}>
-                <MailIcon size={10} /> {app.recruiter.email}
+                <MailIcon size={10} />
+                <span className="table-ellipsis" style={{ maxWidth: '140px' }} title={app.recruiter.email}>{app.recruiter.email}</span>
               </a>
             )}
             {app.recruiter.phone && (
               <a href={`tel:${app.recruiter.phone}`} style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '11px', textDecoration: 'none', cursor: 'pointer' }} onClick={(e) => e.stopPropagation()}>
-                <PhoneIcon size={10} /> {app.recruiter.phone}
+                <PhoneIcon size={10} />
+                <span className="table-ellipsis" style={{ maxWidth: '140px' }} title={app.recruiter.phone}>{app.recruiter.phone}</span>
               </a>
             )}
           </div>
@@ -190,7 +193,7 @@ const InterviewRow: React.FC<{
         />
       </td>
 
-      <td className="table-cell" style={{ textAlign: 'center', verticalAlign: 'middle', width: '220px' }} onClick={(e) => e.stopPropagation()}>
+      <td className="table-cell col-nextround" style={{ textAlign: 'center', verticalAlign: 'middle', width: '190px' }} onClick={(e) => e.stopPropagation()}>
         <NextRoundDisplay rounds={app.rounds || []} />
       </td>
     </tr>

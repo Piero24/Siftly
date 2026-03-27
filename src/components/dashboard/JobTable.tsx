@@ -71,8 +71,8 @@ const JobRow: React.FC<{
         </div>
       </td>
 
-      <td className="table-cell col-company" style={{ fontWeight: 500 }}>
-        <span className="table-ellipsis" title={app.company}>
+      <td className="table-cell col-company" style={{ fontWeight: 500, fontSize: '13px', lineHeight: 1.35 }}>
+        <span className="table-ellipsis" style={{ fontSize: '13px', lineHeight: 1.35 }} title={app.company}>
           {app.company.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
         </span>
       </td>
@@ -81,10 +81,10 @@ const JobRow: React.FC<{
         <span className="table-ellipsis" title={app.sector}>{app.sector}</span>
       </td>
 
-      <td className="table-cell col-position" style={{ fontWeight: 600 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+      <td className="table-cell col-position" style={{ fontWeight: 600, fontSize: '13px', lineHeight: 1.35 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', lineHeight: 1.35 }}>
           <EmploymentTypeBadge type={app.employmentType} compact />
-          <span className="table-ellipsis" title={app.position}>{app.position}</span>
+          <span className="table-ellipsis" style={{ fontSize: '13px', lineHeight: 1.35 }} title={app.position}>{app.position}</span>
         </div>
       </td>
 

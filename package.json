@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "VITE_BUILD_TARGET=extension vite",
+    "dev:web": "VITE_BUILD_TARGET=web vite",
+    "build": "VITE_BUILD_TARGET=extension vite build",
+    "build:extension": "VITE_BUILD_TARGET=extension vite build",
+    "build:web": "VITE_BUILD_TARGET=web vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
@@ -27,13 +30,14 @@
     "@types/chrome": "^0.1.38",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/coverage-v8": "^2.1.8",
-    "jsdom": "^22.1.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "jsdom": "^27.0.1",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "vite": "^6.4.1",
-    "vitest": "^2.1.8"
+    "vitest": "^4.1.2"
   },
   "dependencies": {
     "@everapi/freecurrencyapi-js": "^1.0.1",
@@ -45,8 +49,17 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.13.2",
     "react-simple-maps": "^3.0.0",
     "react-tooltip": "^5.30.0",
     "recharts": "^3.8.0"
+  },
+  "overrides": {
+    "d3-color": "^3.1.0",
+    "d3-interpolate": "^3.0.1",
+    "d3-transition": "^3.0.1",
+    "d3-zoom": "^3.0.0",
+    "picomatch": "^4.0.4",
+    "brace-expansion": "^5.0.5"
   }
 }

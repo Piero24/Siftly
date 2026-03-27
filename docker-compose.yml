@@ -1,0 +1,13 @@
+services:
+  siftly-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        # Change this when deploying behind a subpath, e.g. /Siftly/
+        VITE_BASE_PATH: /
+    image: siftly-web:latest
+    container_name: siftly-web
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
