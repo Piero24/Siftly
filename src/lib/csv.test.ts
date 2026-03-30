@@ -25,9 +25,9 @@ describe('csv library', () => {
     // Header check
     expect(lines[0]).toContain('company,logo,sector,position');
     // Data check
-    expect(lines[1]).toContain('Acme Corp,Technology,Senior Engineer,US,New York');
-    expect(lines[1]).toContain('120000,USD');
-    expect(lines[1]).toContain('applied');
+    expect(lines[1]).toContain(
+      'test-123,Acme Corp,logo.png,Technology,Senior Engineer,,US,New York,remote,,applied,120000,USD,2026-03-01,https://job.com,https://li.com,https://web.com,,,,,,,,,,'
+    );
   });
 
   it('parses valid CSV with exact headers correctly', () => {

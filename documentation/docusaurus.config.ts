@@ -126,7 +126,10 @@ const config: Config = {
               label: 'Changelog',
               href: 'https://github.com/Piero24/Siftly/blob/main/CHANGELOG.md',
             },
-            { label: 'License (Prosperity-3.0.0)', href: 'https://github.com/Piero24/Siftly/blob/main/LICENSE' },
+            {
+              label: 'License (Prosperity-3.0.0)',
+              href: 'https://github.com/Piero24/Siftly/blob/main/LICENSE',
+            },
           ],
         },
       ],

@@ -8,20 +8,26 @@ import { SettingsProvider } from '../context/SettingsContext';
 import { UIProvider } from '../context/UIContext';
 import { SelectionProvider } from '../context/SelectionContext';
 import { TableFilterProvider } from '../context/TableFilterContext';
+import { AuthProvider } from '../context/AuthContext';
+import { ToastProvider } from '../context/ToastContext';
 
 const renderTableApp = () => {
   window.location.hash = '#table';
 
   return render(
-    <SettingsProvider>
-      <UIProvider>
-        <SelectionProvider>
-          <TableFilterProvider>
-            <App />
-          </TableFilterProvider>
-        </SelectionProvider>
-      </UIProvider>
-    </SettingsProvider>
+    <AuthProvider>
+      <ToastProvider>
+        <SettingsProvider>
+          <UIProvider>
+            <SelectionProvider>
+              <TableFilterProvider>
+                <App />
+              </TableFilterProvider>
+            </SelectionProvider>
+          </UIProvider>
+        </SettingsProvider>
+      </ToastProvider>
+    </AuthProvider>
   );
 };
 
@@ -50,7 +56,7 @@ describe('App integration (table flow)', () => {
     await user.selectOptions(fieldSelect, 'status');
     await user.selectOptions(valueSelect, 'interviewing');
 
-    expect(screen.getByText('Google')).toBeInTheDocument();
+    expect(await screen.findByText('Google')).toBeInTheDocument();
     expect(screen.queryByText('Apple')).not.toBeInTheDocument();
   });
 
@@ -60,10 +66,10 @@ describe('App integration (table flow)', () => {
 
     await user.click(screen.getByRole('button', { name: /select rows/i }));
 
-    const checkboxes = screen.getAllByRole('checkbox');
+    const checkboxes = await screen.findAllByRole('checkbox');
     await user.click(checkboxes[0]);
 
-    expect(screen.getByText('1 selected')).toBeInTheDocument();
+    expect(await screen.findByText('1 selected')).toBeInTheDocument();
 
     const bulkBar = screen.getByText('1 selected').closest('.bulk-actions-bar');
     if (!bulkBar) throw new Error('Bulk actions bar not found');
@@ -78,7 +84,7 @@ describe('App integration (table flow)', () => {
     const user = userEvent.setup();
     renderTableApp();
 
-    await user.click(screen.getByText('Google'));
+    await user.click(await screen.findByText('Google'));
 
     expect(screen.getByRole('button', { name: /edit details/i })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /edit details/i }));
