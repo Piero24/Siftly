@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/Piero24/Siftly/discussions
+    about: Ask questions or share ideas in GitHub Discussions
+  - name: 📖 Documentation
+    url: https://piero24.github.io/Siftly/
+    about: Check the documentation before opening an issue

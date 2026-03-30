@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'documentation/**'
   workflow_dispatch:
 
 permissions:
@@ -40,10 +42,7 @@ jobs:
 
       - name: Install docs dependencies
         run: npm ci
-        working-directory: docs-site
-
-      - name: Run tests before deploy
-        run: npm run test:run
+        working-directory: documentation
 
       - name: Build docs
         run: npm run docs:build
@@ -51,7 +50,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs-site/build
+          path: documentation/build
 
       - name: Deploy to GitHub Pages
         id: deployment

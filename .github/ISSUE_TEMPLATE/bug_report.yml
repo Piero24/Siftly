@@ -1,0 +1,81 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior in Siftly
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the sections below.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Where are you running Siftly?
+      options:
+        - Chrome Extension
+        - Self-Hosted (Docker)
+        - Self-Hosted (CasaOS)
+        - Development (Local)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Siftly Version
+      description: Check Settings → Support for the version number.
+      placeholder: e.g. 1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      description: A clear description of what the bug is.
+      placeholder: When I click the "Add Application" button, the modal doesn't open...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Step-by-step instructions to reproduce the issue.
+      value: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / Console Logs
+      description: If applicable, add screenshots or browser console output.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
