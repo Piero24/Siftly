@@ -22,10 +22,10 @@ sidebar_position: 3
 ## Data flow
 
 1. Domain state is split by provider:
-	- `SettingsProvider` for theme/localization/defaults.
-	- `UIProvider` for view + modal navigation state.
-	- `SelectionProvider` for row-selection and bulk actions.
-	- `TableFilterProvider` for table search and filter-row controls.
+   - `SettingsProvider` for theme/localization/defaults.
+   - `UIProvider` for view + modal navigation state.
+   - `SelectionProvider` for row-selection and bulk actions.
+   - `TableFilterProvider` for table search and filter-row controls.
 2. App orchestrates composition and delegates feature logic to hooks.
 3. Derived analytics remain in pure utilities (`src/lib/analytics.ts`).
 4. Feature screens consume provider state + dedicated hooks.

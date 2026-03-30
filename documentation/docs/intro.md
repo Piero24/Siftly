@@ -1,33 +1,47 @@
 ---
 sidebar_position: 1
+slug: /intro
 ---
 
-# Lumina Job Tracker Documentation
+# Welcome to Siftly
 
-This site contains the documentation skeleton for Lumina Job Tracker.
+**Siftly** is a professional job application tracker designed to give you full control over your job search. Available as a **Chrome extension** and a **self-hosted web app**, it combines powerful analytics with a clean, modern interface.
 
-## What is included
+## What is Siftly?
 
-- Local development setup
-- Architecture overview
-- Theme and settings behavior
-- CI and deployment notes
+Siftly helps you:
 
-## Quick navigation
+- **Track applications** — Log every job you apply to with company, position, salary, status, and more.
+- **Manage interviews** — Track interview rounds, interviewer details, and meeting links.
+- **Analyze your search** — Interactive dashboard with charts, world map, KPIs, and funnel analysis.
+- **Import from LinkedIn** — One-click scraping from LinkedIn job pages (coming soon).
+- **Stay organized** — CSV import/export, multiple CV profiles, and automatic "no response" detection.
 
-- Start with [Getting Started](./getting-started.md)
-- Review [Architecture](./architecture.md)
-- Read [Theming and Settings](./theming-and-settings.md)
+## How It Works
 
-## Audience
+Siftly runs in two modes depending on how you deploy it:
 
-These docs are aimed at contributors working on:
+| Mode                     | Storage           | Authentication                | Best For          |
+| ------------------------ | ----------------- | ----------------------------- | ----------------- |
+| **Chrome Extension**     | Cloud (Supabase)  | OAuth (Google, GitHub, Apple) | Multi-device sync |
+| **Self-Hosted (Docker)** | Local (IndexedDB) | Simple profile creation       | Full privacy      |
 
-- Extension dashboard and popup UI
-- Data model and analytics helpers
-- Styling system and theme management
-- Build/test/CI workflows
+Both modes share the same codebase and feature set.
 
-## Versioning note
+## Quick Start
 
-This is an initial skeleton and can be expanded per module as features stabilize.
+- **Chrome Extension** → [Install the extension](./getting-started/chrome-extension)
+- **Self-Hosted** → [Docker setup guide](./getting-started/docker)
+- **Development** → [Local development setup](./getting-started/installation)
+
+## For Developers
+
+If you're contributing to Siftly or building on top of it:
+
+- [Architecture overview](./developer/architecture)
+- [Project structure](./developer/project-structure)
+- [Contributing guide](./developer/contributing)
+
+## License
+
+Siftly is open source under the [MIT License](https://github.com/Piero24/Siftly/blob/main/LICENSE).

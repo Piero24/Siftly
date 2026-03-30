@@ -1,0 +1,48 @@
+---
+sidebar_position: 4
+---
+
+# Configuration
+
+## Environment Variables
+
+Siftly is configured via Vite environment variables in the `.env` file.
+
+| Variable                 | Type               | Default     | Description                               |
+| ------------------------ | ------------------ | ----------- | ----------------------------------------- |
+| `VITE_SUPABASE_URL`      | `string`           | —           | Supabase project URL                      |
+| `VITE_SUPABASE_ANON_KEY` | `string`           | —           | Supabase anonymous key                    |
+| `VITE_ALLOW_LOCAL_ONLY`  | `boolean`          | `false`     | Allow skipping login                      |
+| `VITE_DEBUG_MODE`        | `boolean`          | `false`     | Enable debug toolbar and auth bypass      |
+| `VITE_BUILD_TARGET`      | `web \| extension` | `extension` | Build target (determines deployment mode) |
+| `VITE_BASE_PATH`         | `string`           | `/`         | Base URL path for web builds              |
+
+## Deployment Modes
+
+The combination of `VITE_BUILD_TARGET` and `VITE_DEBUG_MODE` determines the **deployment mode**:
+
+| Build Target | Debug Mode | Deployment Mode | Storage           | Auth          |
+| ------------ | ---------- | --------------- | ----------------- | ------------- |
+| `extension`  | `false`    | `extension`     | Remote (Supabase) | OAuth         |
+| `web`        | `false`    | `web`           | Local (IndexedDB) | Local profile |
+| any          | `true`     | `dev`           | Switchable        | All methods   |
+
+See [Deployment Modes](../developer/deployment-modes) for details.
+
+## Supabase Setup
+
+To enable cloud storage and OAuth authentication:
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Run the schema SQL from `supabase/supabase-schema.sql` in the SQL Editor
+3. Copy the project URL and anon key to your `.env` file
+4. Configure OAuth providers in Supabase → Authentication → Providers
+
+## Feature Flags
+
+Feature visibility is controlled in `src/config/features.ts`. Features can be toggled for:
+
+- Authentication methods
+- Dashboard sections
+- Settings sections
+- Debug tools
