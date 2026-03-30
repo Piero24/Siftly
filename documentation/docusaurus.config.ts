@@ -2,34 +2,28 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
 const config: Config = {
-  title: 'Lumina Job Tracker Docs',
-  tagline: 'Product and engineering documentation',
+  title: 'Siftly Docs',
+  tagline: 'Your job search control panel — comprehensive documentation for users and developers.',
   favicon: 'img/favicon.ico',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: true,
   },
 
-  // Set the production url of your site here
-  url: 'https://pietrobon.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/lumina-job-tracker/',
+  url: 'https://piero24.github.io',
+  baseUrl: '/Siftly/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'pietrobon',
-  projectName: 'lumina-job-tracker',
+  organizationName: 'Piero24',
+  projectName: 'Siftly',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -41,7 +35,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/pietrobon/lumina-job-tracker/tree/main/docs-site/',
+          editUrl: 'https://github.com/Piero24/Siftly/tree/main/documentation/',
         },
         blog: {
           showReadingTime: true,
@@ -49,8 +43,9 @@ const config: Config = {
             type: ['rss', 'atom'],
             xslt: true,
           },
-          editUrl: 'https://github.com/pietrobon/lumina-job-tracker/tree/main/docs-site/',
-          // Useful options to enforce blogging best practices
+          editUrl: 'https://github.com/Piero24/Siftly/tree/main/documentation/',
+          blogTitle: 'Siftly Blog',
+          blogDescription: 'Updates, changelogs, and announcements from the Siftly team.',
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
@@ -63,25 +58,39 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/siftly-social-card.png',
     colorMode: {
+      defaultMode: 'dark',
       respectPrefersColorScheme: true,
     },
+    announcementBar: {
+      id: 'beta_notice',
+      content:
+        '🚀 Siftly is in active development. <a href="/Siftly/docs/intro">Check the docs</a> for the latest updates!',
+      backgroundColor: '#007AFF',
+      textColor: '#ffffff',
+      isCloseable: true,
+    },
     navbar: {
-      title: 'Lumina Docs',
+      title: 'Siftly',
       logo: {
-        alt: 'Lumina logo',
+        alt: 'Siftly logo',
         src: 'img/logo.svg',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'docsSidebar',
           position: 'left',
           label: 'Documentation',
         },
         {
-          href: 'https://github.com/pietrobon/lumina-job-tracker',
+          to: '/blog',
+          label: 'Blog',
+          position: 'left',
+        },
+        {
+          href: 'https://github.com/Piero24/Siftly',
           label: 'GitHub',
           position: 'right',
         },
@@ -91,42 +100,42 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Documentation',
           items: [
+            { label: 'Getting Started', to: '/docs/intro' },
+            { label: 'User Guide', to: '/docs/category/user-guide' },
+            { label: 'Developer Guide', to: '/docs/category/developer-guide' },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            { label: 'GitHub Discussions', href: 'https://github.com/Piero24/Siftly/discussions' },
+            { label: 'Issues', href: 'https://github.com/Piero24/Siftly/issues' },
             {
-              label: 'Getting Started',
-              to: '/docs/intro',
+              label: 'Contributing',
+              href: 'https://github.com/Piero24/Siftly/blob/main/CONTRIBUTING.md',
             },
           ],
         },
         {
           title: 'Project',
           items: [
+            { label: 'Repository', href: 'https://github.com/Piero24/Siftly' },
             {
-              label: 'Repository',
-              href: 'https://github.com/pietrobon/lumina-job-tracker',
+              label: 'Changelog',
+              href: 'https://github.com/Piero24/Siftly/blob/main/CHANGELOG.md',
             },
-            {
-              label: 'Issues',
-              href: 'https://github.com/pietrobon/lumina-job-tracker/issues',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Main App',
-              href: 'https://github.com/pietrobon/lumina-job-tracker',
-            },
+            { label: 'License (Prosperity-3.0.0)', href: 'https://github.com/Piero24/Siftly/blob/main/LICENSE' },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Lumina Job Tracker`,
+      copyright: `Copyright © ${new Date().getFullYear()} Siftly — Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['bash', 'yaml', 'json', 'sql', 'docker'],
     },
   } satisfies Preset.ThemeConfig,
 };

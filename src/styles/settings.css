@@ -64,7 +64,7 @@
 }
 
 /* ── Support section ── */
-.support-actions { display: flex; gap: 12px; }
+.support-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
 /* ── CV Profiles card ── */
 .cv-form-grid {

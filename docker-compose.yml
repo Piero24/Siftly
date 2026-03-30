@@ -6,8 +6,20 @@ services:
       args:
         # Change this when deploying behind a subpath, e.g. /Siftly/
         VITE_BASE_PATH: /
+        # Supabase — leave empty to disable remote sync and run local-only
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+        # Allow users to skip login in Docker (local-only mode)
+        VITE_ALLOW_LOCAL_ONLY: 'true'
     image: siftly-web:latest
     container_name: siftly-web
     ports:
-      - "8080:8080"
+      - '8080:8080'
     restart: unless-stopped
+    x-casaos:
+      title: Siftly
+      icon: https://raw.githubusercontent.com/Piero24/Siftly/main/public/logo.png
+      port_map: '8080'
+      scheme: http
+      index: /
+      description: 'Siftly — A professional, minimalist job application tracker.'

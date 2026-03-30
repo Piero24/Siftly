@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { JobApplication, JobStatus, InterviewRound } from '../../types/job';
+import { JobApplication, JobStatus, InterviewRound, CVProfile } from '../../types/job';
 import { CompanyIcon } from './CompanyIcon';
 import { EmploymentTypeBadge } from './EmploymentTypeBadge';
 import { StatusDropdown } from './StatusDropdown';
@@ -10,6 +10,9 @@ import { INTERVIEWING_FILTER_FIELDS, INTERVIEWING_STATUS_OPTIONS } from '../../c
 
 interface InterviewingViewProps {
   applications: JobApplication[];
+  displayCurrency: string;
+  cvProfiles: CVProfile[];
+  visibleColumns: string[];
   onStatusChange: (id: string, newStatus: JobStatus) => void;
   onRowClick: (app: JobApplication) => void;
   onDelete: (id: string) => void;
@@ -201,7 +204,7 @@ const InterviewRow: React.FC<{
 };
 
 export const InterviewingView: React.FC<InterviewingViewProps> = ({
-  applications, onStatusChange, onRowClick, onDelete
+  applications, displayCurrency: _, cvProfiles: __, visibleColumns: ___, onStatusChange, onRowClick, onDelete
 }) => {
   const {
     searchTerm,

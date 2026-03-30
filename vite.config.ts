@@ -31,7 +31,14 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: 'jsdom',
       setupFiles: ['./src/test/setup.ts'],
-      css: true,
+      css: false,
+      deps: {
+        optimizer: {
+          web: {
+            include: ['@csstools/css-calc', '@asamuzakjp/css-color'],
+          },
+        },
+      },
       coverage: {
         provider: 'v8',
         reporter: ['text', 'html'],

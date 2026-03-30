@@ -21,10 +21,7 @@ const makeApp = (overrides: Partial<JobApplication>): JobApplication => ({
 
 describe('useInterviewingFilters', () => {
   it('builds company options and filters by selected company', () => {
-    const applications = [
-      makeApp({ company: 'Beta' }),
-      makeApp({ company: 'Acme' }),
-    ];
+    const applications = [makeApp({ company: 'Beta' }), makeApp({ company: 'Acme' })];
 
     const { result, rerender } = renderHook(({ apps }) => useInterviewingFilters(apps), {
       initialProps: { apps: applications },

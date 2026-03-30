@@ -1,0 +1,306 @@
+/* ── Login Page ──────────────────────────────────────── */
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-app);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient orbs */
+.login-page::before,
+.login-page::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.35;
+  pointer-events: none;
+  animation: orbFloat 12s ease-in-out infinite alternate;
+}
+.login-page::before {
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #007AFF, #5AC8FA);
+  top: -120px;
+  left: -100px;
+}
+.login-page::after {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #AF52DE, #FF2D55);
+  bottom: -80px;
+  right: -60px;
+  animation-delay: -6s;
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, -30px) scale(1.12); }
+}
+
+/* Glass card */
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 40px;
+  border-radius: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: center;
+  animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardIn {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 2px 8px rgba(0, 122, 255, 0.25));
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 36px;
+  line-height: 1.5;
+}
+
+/* Provider buttons */
+.login-providers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Google button */
+.login-btn--google:hover {
+  border-color: #4285F4;
+  box-shadow: 0 4px 16px rgba(66, 133, 244, 0.15);
+}
+
+/* GitHub button */
+.login-btn--github:hover {
+  border-color: #24292e;
+  box-shadow: 0 4px 16px rgba(36, 41, 46, 0.15);
+}
+
+/* Apple button */
+.login-btn--apple:hover {
+  border-color: #333;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+/* Local-only link */
+.login-local-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.login-local-btn:hover {
+  color: var(--accent);
+  background: var(--bg-hover);
+}
+
+/* Loading spinner */
+.login-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+.login-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Dark-mode overrides for provider icons */
+[data-theme="dark"] .login-btn--apple svg {
+  fill: #fff;
+}
+
+/* ── Profile Form (web mode) ── */
+.login-profile-form {
+  text-align: left;
+}
+
+.login-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  text-align: center;
+}
+
+.login-section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.login-field {
+  margin-bottom: 16px;
+}
+
+.login-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.login-optional {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.login-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.login-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
+}
+
+.login-field input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.login-form-error {
+  font-size: 13px;
+  color: #FF3B30;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.login-btn--profile {
+  background: var(--accent, #007AFF);
+  color: #fff;
+  border-color: transparent;
+  margin-top: 4px;
+}
+
+.login-btn--profile:hover {
+  background: #0068da;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.25);
+}
+
+.login-dev-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 20px 0 0;
+  padding: 8px 12px;
+  background: rgba(50, 215, 75, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(50, 215, 75, 0.2);
+  text-align: center;
+}

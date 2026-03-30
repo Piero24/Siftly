@@ -17,7 +17,7 @@ interface UIContextValue {
 type RoutingMode = 'hash' | 'path';
 
 const isValidView = (value: string): value is ViewType => (
-  value === 'settings' || value === 'table' || value === 'interviewing' || value === 'dashboard'
+  value === 'settings' || value === 'table' || value === 'interviewing' || value === 'dashboard' || value === 'account'
 );
 
 const getViewFromHash = (): ViewType => {

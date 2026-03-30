@@ -21,17 +21,20 @@ const renderTableApp = () => {
           </TableFilterProvider>
         </SelectionProvider>
       </UIProvider>
-    </SettingsProvider>,
+    </SettingsProvider>
   );
 };
 
 describe('App integration (table flow)', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ rates: { USD: 1, EUR: 0.92, SEK: 10.2 } }),
-    }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ rates: { USD: 1, EUR: 0.92, SEK: 10.2 } }),
+      })
+    );
   });
 
   it('supports filtering by status through toolbar controls', async () => {

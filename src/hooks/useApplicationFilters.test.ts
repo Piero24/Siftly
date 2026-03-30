@@ -32,13 +32,15 @@ describe('useApplicationFilters', () => {
       makeApp({ company: 'Acme' }),
     ];
 
-    const { result } = renderHook(() => useApplicationFilters({
-      applications,
-      cvProfiles,
-      filterField: 'company',
-      filterValue: '',
-      searchedApplications: applications,
-    }));
+    const { result } = renderHook(() =>
+      useApplicationFilters({
+        applications,
+        cvProfiles,
+        filterField: 'company',
+        filterValue: '',
+        searchedApplications: applications,
+      })
+    );
 
     expect(result.current.filterValueOptions).toEqual([
       { value: 'Acme', label: 'Acme' },
@@ -48,17 +50,21 @@ describe('useApplicationFilters', () => {
 
   it('includes special options for referrer link filtering', () => {
     const applications = [
-      makeApp({ referral: { referrer: 'A', date: '2026-01-01', note: 'n', link: 'https://x.com/ref' } }),
+      makeApp({
+        referral: { referrer: 'A', date: '2026-01-01', note: 'n', link: 'https://x.com/ref' },
+      }),
       makeApp({ referral: { referrer: 'B', date: '2026-01-02', note: 'n' } }),
     ];
 
-    const { result } = renderHook(() => useApplicationFilters({
-      applications,
-      cvProfiles,
-      filterField: 'referrerLink',
-      filterValue: '',
-      searchedApplications: applications,
-    }));
+    const { result } = renderHook(() =>
+      useApplicationFilters({
+        applications,
+        cvProfiles,
+        filterField: 'referrerLink',
+        filterValue: '',
+        searchedApplications: applications,
+      })
+    );
 
     expect(result.current.filterValueOptions).toEqual([
       { value: '__has__', label: 'Has Referrer Link' },
@@ -72,13 +78,15 @@ describe('useApplicationFilters', () => {
     const withoutProfile = makeApp({ cvProfileId: undefined });
     const searchedApplications = [withProfile, withoutProfile];
 
-    const { result } = renderHook(() => useApplicationFilters({
-      applications: searchedApplications,
-      cvProfiles,
-      filterField: 'cvProfile',
-      filterValue: '__none__',
-      searchedApplications,
-    }));
+    const { result } = renderHook(() =>
+      useApplicationFilters({
+        applications: searchedApplications,
+        cvProfiles,
+        filterField: 'cvProfile',
+        filterValue: '__none__',
+        searchedApplications,
+      })
+    );
 
     expect(result.current.filteredApplications).toEqual([withoutProfile]);
   });
@@ -88,13 +96,15 @@ describe('useApplicationFilters', () => {
     const applied = makeApp({ status: 'applied' });
     const searchedApplications = [interviewed, applied];
 
-    const { result } = renderHook(() => useApplicationFilters({
-      applications: searchedApplications,
-      cvProfiles,
-      filterField: 'status',
-      filterValue: 'interviewing',
-      searchedApplications,
-    }));
+    const { result } = renderHook(() =>
+      useApplicationFilters({
+        applications: searchedApplications,
+        cvProfiles,
+        filterField: 'status',
+        filterValue: 'interviewing',
+        searchedApplications,
+      })
+    );
 
     expect(result.current.filteredApplications).toEqual([interviewed]);
   });

@@ -1,4 +1,4 @@
-export type ViewType = 'dashboard' | 'table' | 'interviewing' | 'settings';
+export type ViewType = 'dashboard' | 'table' | 'interviewing' | 'settings' | 'account';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 

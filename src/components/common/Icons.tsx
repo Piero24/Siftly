@@ -48,8 +48,15 @@ export {
   Bold as BoldIcon,
   Italic as ItalicIcon,
   Underline as UnderlineIcon,
-  List as ListIcon,
+  Layout as LayoutIcon,
+  ShieldCheck as PrivacyIcon,
+  Bell as BellIcon,
+  ChevronRight as ChevronRightIcon,
+  Download as DownloadIcon,
+  Upload as UploadIcon,
   Quote as QuoteIcon,
+  List as ListIcon,
+  Github as GithubIcon,
 } from 'lucide-react';
 
 export type { LucideIcon } from 'lucide-react';

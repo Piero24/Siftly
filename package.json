@@ -12,15 +12,15 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "format": "prettier --write \"docs-site/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
-    "format:check": "prettier --check \"docs-site/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
-    "docs:dev": "npm --prefix docs-site run start",
-    "docs:build": "npm --prefix docs-site run build",
-    "docs:serve": "npm --prefix docs-site run serve"
+    "format": "prettier --write \"documentation/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"documentation/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.ts\" \"*.{json,md,yml,yaml}\"",
+    "docs:dev": "npm --prefix documentation run start",
+    "docs:build": "npm --prefix documentation run build",
+    "docs:serve": "npm --prefix documentation run serve"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "Prosperity-3.0.0",
   "description": "Your job search control panel",
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@everapi/freecurrencyapi-js": "^1.0.1",
+    "@supabase/supabase-js": "^2.100.1",
     "country-state-city": "^3.2.1",
     "flag-icons": "^7.5.0",
     "i18n-iso-countries": "^7.14.0",

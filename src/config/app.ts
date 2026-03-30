@@ -1,4 +1,16 @@
 import logoPath from '../assets/logo.svg';
+import { LINKS } from './links';
+
+export const IS_DEBUG = import.meta.env.VITE_DEBUG_MODE === 'true';
+
+export const MOCK_MODE_KEY = 'siftly-use-mock-data';
+
+export const DEBUG_CONFIG = {
+  bypassAuth: IS_DEBUG,
+  verboseLogging: IS_DEBUG,
+  showToolbar: IS_DEBUG,
+  useMockData: typeof window !== 'undefined' ? localStorage.getItem(MOCK_MODE_KEY) === 'true' : false,
+};
 
 export const APP_INFO = {
   name: 'Siftly',
@@ -11,7 +23,9 @@ export const APP_INFO = {
   },
   tagLine: 'Your job search control panel',
   links: {
-    docs: 'https://github.com/pietrobon/siftly', // Replace with actual doc link
-    support: 'mailto:support@example.com' // Replace with actual support email
+    docs: LINKS.docs,
+    support: LINKS.support,
+    github: LINKS.github,
+    community: LINKS.community,
   }
 };

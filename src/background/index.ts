@@ -1,5 +1,9 @@
-console.log('Lumina Background Service Worker Initialized');
+import { logger } from '../lib/logger';
+
+const bgLogger = logger.for('Background');
+
+bgLogger.info('Siftly Background Service Worker Initialized');
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Lumina Job Tracker Extension Installed');
+  bgLogger.info('Siftly Job Tracker Extension Installed');
 });

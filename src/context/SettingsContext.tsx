@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 import { CVProfile } from '../types/job';
 import { ResolvedTheme, ThemeMode } from '../types/ui';
+import { StorageMode } from '../lib/storage';
+import { DEPLOYMENT } from '../config/deploymentMode';
 
 interface SettingsContextValue {
   language: string;
@@ -19,9 +21,21 @@ interface SettingsContextValue {
   setDefaultTimeRange: React.Dispatch<React.SetStateAction<'today' | 'total' | '7d' | '30d' | '1y'>>;
   cvProfiles: CVProfile[];
   setCvProfiles: React.Dispatch<React.SetStateAction<CVProfile[]>>;
+  storageMode: StorageMode;
+  setStorageMode: (mode: StorageMode) => void;
+  notifications: { email: boolean };
+  setNotifications: React.Dispatch<React.SetStateAction<{ email: boolean }>>;
+  privacy: { telemetry: boolean; dataRetention: number };
+  setPrivacy: React.Dispatch<React.SetStateAction<{ telemetry: boolean; dataRetention: number }>>;
+  tableDisplay: { visibleColumns: string[]; defaultSort: string; rowsPerPage: number };
+  setTableDisplay: React.Dispatch<React.SetStateAction<{ visibleColumns: string[]; defaultSort: string; rowsPerPage: number }>>;
 }
 
 const THEME_STORAGE_KEY = 'lumina-theme-mode';
+const STORAGE_MODE_KEY = 'siftly-storage-mode';
+const NOTIFICATIONS_KEY = 'siftly-notifications';
+const PRIVACY_KEY = 'siftly-privacy';
+const TABLE_DISPLAY_KEY = 'siftly-table-display';
 
 const getSystemTheme = (): ResolvedTheme => {
   if (typeof window === 'undefined') return 'light';
@@ -52,6 +66,46 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [cvProfiles, setCvProfiles] = useState<CVProfile[]>([
     { id: 'cv-default', name: 'Default CV', color: '#007AFF' },
   ]);
+
+  // Storage mode is determined by deployment target.
+  // Only editable in dev mode; otherwise locked.
+  const [storageMode, setStorageModeInternal] = useState<StorageMode>(() => {
+    if (!DEPLOYMENT.storageEditable) return DEPLOYMENT.storageMode;
+    if (typeof window === 'undefined') return DEPLOYMENT.storageMode;
+    const stored = window.localStorage.getItem(STORAGE_MODE_KEY);
+    if (stored === 'remote' || stored === 'local' || stored === 'both') return stored;
+    return DEPLOYMENT.storageMode;
+  });
+
+  // Guard: only allow storage mode changes when deployment permits it.
+  const setStorageMode = (mode: StorageMode) => {
+    if (!DEPLOYMENT.storageEditable) return;
+    setStorageModeInternal(mode);
+  };
+
+  const [notifications, setNotifications] = useState(() => {
+    if (typeof window === 'undefined') return { email: false };
+    try {
+      const stored = window.localStorage.getItem(NOTIFICATIONS_KEY);
+      return stored ? JSON.parse(stored) : { email: false };
+    } catch { return { email: false }; }
+  });
+
+  const [privacy, setPrivacy] = useState(() => {
+    if (typeof window === 'undefined') return { telemetry: true, dataRetention: 0 };
+    try {
+      const stored = window.localStorage.getItem(PRIVACY_KEY);
+      return stored ? JSON.parse(stored) : { telemetry: true, dataRetention: 0 };
+    } catch { return { telemetry: true, dataRetention: 0 }; }
+  });
+
+  const [tableDisplay, setTableDisplay] = useState(() => {
+    if (typeof window === 'undefined') return { visibleColumns: ['company', 'position', 'status', 'date'], defaultSort: 'date-desc', rowsPerPage: 20 };
+    try {
+      const stored = window.localStorage.getItem(TABLE_DISPLAY_KEY);
+      return stored ? JSON.parse(stored) : { visibleColumns: ['company', 'position', 'status', 'date'], defaultSort: 'date-desc', rowsPerPage: 20 };
+    } catch { return { visibleColumns: ['company', 'position', 'status', 'date'], defaultSort: 'date-desc', rowsPerPage: 20 }; }
+  });
 
   const resolvedTheme: ResolvedTheme = theme === 'system' ? systemTheme : theme;
 
@@ -86,6 +140,32 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [theme]);
 
+  // Only persist storage mode in dev where it's editable.
+  useEffect(() => {
+    if (!DEPLOYMENT.storageEditable) return;
+    try {
+      window.localStorage.setItem(STORAGE_MODE_KEY, storageMode);
+    } catch { /* ignore */ }
+  }, [storageMode]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
+    } catch { /* ignore */ }
+  }, [notifications]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PRIVACY_KEY, JSON.stringify(privacy));
+    } catch { /* ignore */ }
+  }, [privacy]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(TABLE_DISPLAY_KEY, JSON.stringify(tableDisplay));
+    } catch { /* ignore */ }
+  }, [tableDisplay]);
+
   const value = useMemo<SettingsContextValue>(() => ({
     language,
     setLanguage,
@@ -102,6 +182,14 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setDefaultTimeRange,
     cvProfiles,
     setCvProfiles,
+    storageMode,
+    setStorageMode,
+    notifications,
+    setNotifications,
+    privacy,
+    setPrivacy,
+    tableDisplay,
+    setTableDisplay,
   }), [
     language,
     currency,
@@ -111,6 +199,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     autoNoResponseDays,
     defaultTimeRange,
     cvProfiles,
+    storageMode,
+    notifications,
+    privacy,
+    tableDisplay,
   ]);
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

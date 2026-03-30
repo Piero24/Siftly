@@ -1,11 +1,20 @@
 /**
  * useJobApplications — Custom hook that encapsulates all job application
  * state management, keeping App.tsx as a clean orchestrator.
+ *
+ * Now backed by a pluggable StorageAdapter (remote Supabase, local
+ * IndexedDB, or both) selected via SettingsContext.storageMode.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { JobApplication, JobStatus } from '../types/job';
+import { createAdapter, StorageAdapter, StorageMode } from '../lib/storage';
+import { DEBUG_CONFIG } from '../config/app';
+import { MOCK_APPLICATIONS } from '../lib/mockData';
+import { logger } from '../lib/logger';
 
-const INITIAL_APPLICATIONS: JobApplication[] = [
+const hookLogger = logger.for('useJobApplications');
+
+const SEED_APPLICATIONS: JobApplication[] = [
   {
     id: '1',
     company: 'Google',
@@ -131,9 +140,55 @@ const INITIAL_APPLICATIONS: JobApplication[] = [
   },
 ];
 
-export function useJobApplications(autoNoResponse: boolean = false, autoNoResponseDays: number = 60) {
-  const [applications, setApplications] = useState<JobApplication[]>(INITIAL_APPLICATIONS);
+const SEED_FLAG_KEY = 'siftly-seeded';
 
+export function useJobApplications(
+  autoNoResponse: boolean = false,
+  autoNoResponseDays: number = 60,
+  storageMode: StorageMode = 'remote',
+) {
+  const [applications, setApplications] = useState<JobApplication[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const adapterRef = useRef<StorageAdapter>(createAdapter(storageMode));
+
+  // Re-create adapter when storageMode changes
+  useEffect(() => {
+    adapterRef.current = createAdapter(storageMode);
+    loadData();
+  }, [storageMode]);
+
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+
+    if (DEBUG_CONFIG.useMockData) {
+      hookLogger.info('Mock Mode active! Loading 50+ fake applications.');
+      setApplications(MOCK_APPLICATIONS);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      let data = await adapterRef.current.getAll();
+      // Seed with demo data on first use (local mode only)
+      if (data.length === 0 && storageMode === 'local') {
+        const alreadySeeded = window.localStorage.getItem(SEED_FLAG_KEY);
+        if (!alreadySeeded) {
+          await adapterRef.current.importBatch(SEED_APPLICATIONS);
+          window.localStorage.setItem(SEED_FLAG_KEY, 'true');
+          data = SEED_APPLICATIONS;
+        }
+      }
+      setApplications(data);
+    } catch (err) {
+      hookLogger.error('Failed to load data:', err);
+      // Fallback to seed data so the UI isn't empty
+      setApplications(SEED_APPLICATIONS);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [storageMode]);
+
+  // Auto no-response logic
   useEffect(() => {
     if (!autoNoResponse) return;
 
@@ -146,7 +201,9 @@ export function useJobApplications(autoNoResponse: boolean = false, autoNoRespon
           const diffDays = Math.ceil(Math.abs(now.getTime() - appDate.getTime()) / (1000 * 60 * 60 * 24));
           if (diffDays > autoNoResponseDays) {
             changed = true;
-            return { ...app, status: 'no-response' as JobStatus };
+            const updated = { ...app, status: 'no-response' as JobStatus };
+            adapterRef.current.upsert(updated).catch(err => hookLogger.error('Auto-update failed:', err));
+            return updated;
           }
         }
         return app;
@@ -157,17 +214,26 @@ export function useJobApplications(autoNoResponse: boolean = false, autoNoRespon
 
   const updateStatus = (id: string, status: JobStatus) => {
     setApplications((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status } : app))
+      prev.map((app) => {
+        if (app.id === id) {
+          const updated = { ...app, status };
+          adapterRef.current.upsert(updated).catch(err => hookLogger.error('Status update failed:', err));
+          return updated;
+        }
+        return app;
+      })
     );
   };
 
   const updateApplication = (updatedApp: JobApplication) => {
+    adapterRef.current.upsert(updatedApp).catch(err => hookLogger.error('Update failed:', err));
     setApplications((prev) =>
       prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
     );
   };
 
   const deleteApplication = (id: string) => {
+    adapterRef.current.remove(id).catch(err => hookLogger.error('Delete failed:', err));
     setApplications((prev) => prev.filter((app) => app.id !== id));
   };
 
@@ -184,8 +250,31 @@ export function useJobApplications(autoNoResponse: boolean = false, autoNoRespon
   };
 
   const addApplication = (app: JobApplication) => {
+    adapterRef.current.upsert(app).catch(err => hookLogger.error('Add failed:', err));
     setApplications((prev) => [app, ...prev]);
   };
 
-  return { applications, updateStatus, updateApplication, deleteApplication, filterApplications, addApplication };
+  const importApplications = async (apps: JobApplication[]) => {
+    await adapterRef.current.importBatch(apps);
+    setApplications((prev) => [...apps, ...prev]);
+  };
+
+  const resetAllApplications = async () => {
+    await adapterRef.current.removeAll();
+    setApplications([]);
+  };
+
+  return {
+    applications,
+    isLoading,
+    updateStatus,
+    updateApplication,
+    deleteApplication,
+    filterApplications,
+    addApplication,
+    importApplications,
+    resetAllApplications,
+    reload: loadData,
+  };
 }
+

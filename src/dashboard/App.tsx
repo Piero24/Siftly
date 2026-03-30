@@ -9,6 +9,8 @@ import { NewApplicationModal } from '../components/dashboard/NewApplicationModal
 import { DashboardView } from '../components/dashboard/DashboardView';
 import { SettingsView } from '../components/dashboard/SettingsView';
 import { InterviewingView } from '../components/dashboard/InterviewingView';
+import { AccountView } from '../components/dashboard/AccountView';
+import { DebugToolbar } from '../components/debug/DebugToolbar';
 import { CheckCircleIcon, FilterIcon, GlobeIcon, LinkIcon, LinkedinIcon, TrashIcon, UsersIcon, XCircleIcon } from '../components/common/Icons';
 import { useJobApplications } from '../hooks/useJobApplications';
 import { useApplicationFilters } from '../hooks/useApplicationFilters';
@@ -16,9 +18,11 @@ import { useSettings } from '../context/SettingsContext';
 import { useUI } from '../context/UIContext';
 import { useSelection } from '../context/SelectionContext';
 import { useTableFilters } from '../context/TableFilterContext';
+import { useToast } from '../context/ToastContext';
 import { JobApplication, JobStatus } from '../types/job';
 import { FilterField } from '../types/ui';
 import { FILTER_FIELDS, STATUS_OPTIONS } from '../config/filterConfig';
+import { FEATURES } from '../config/features';
 
 const LINK_KIND_OPTIONS = [
   { value: 'job', label: 'Job Links' },
@@ -32,6 +36,8 @@ const App: React.FC = () => {
     autoNoResponse,
     autoNoResponseDays,
     cvProfiles,
+    storageMode,
+    tableDisplay,
   } = useSettings();
   const {
     currentView,
@@ -64,7 +70,60 @@ const App: React.FC = () => {
     setFilterValue,
   } = useTableFilters();
 
-  const { applications, updateStatus, updateApplication, deleteApplication, filterApplications, addApplication } = useJobApplications(autoNoResponse, autoNoResponseDays);
+  const { showToast } = useToast();
+  const { applications, updateStatus, updateApplication, deleteApplication, filterApplications, addApplication, importApplications, resetAllApplications } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
+
+  // ── Keyboard Shortcuts ──
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input, textarea or contenteditable
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable ||
+        (target.closest('.modal-content') && e.key !== 'Escape')
+      ) {
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case 'n':
+          if (!e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+            setShowNewModal(true);
+            showToast('Adding new application', 'info');
+          }
+          break;
+        case 'd':
+          e.preventDefault();
+          setCurrentView('dashboard');
+          break;
+        case 'a':
+          e.preventDefault();
+          setCurrentView('table');
+          break;
+        case 'i':
+          e.preventDefault();
+          setCurrentView('interviewing');
+          break;
+        case '/':
+          e.preventDefault();
+          const searchInput = document.querySelector('.search-input-field') as HTMLInputElement;
+          if (searchInput) searchInput.focus();
+          break;
+        case 'escape':
+          if (showNewModal) setShowNewModal(false);
+          if (editingJob) setEditingJob(null);
+          if (selectedJob) setSelectedJob(null);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setCurrentView, setShowNewModal, showToast, showNewModal, editingJob, selectedJob, setEditingJob, setSelectedJob]);
+
 
   const handleDelete = (id: string) => {
     deleteApplication(id);
@@ -84,12 +143,14 @@ const App: React.FC = () => {
   const handleNewSave = (app: JobApplication) => {
     addApplication(app);
     setShowNewModal(false);
+    showToast(`Application to ${app.company} added!`, 'success');
   };
 
   const handleEditSave = (app: JobApplication) => {
     updateApplication(app);
     setEditingJob(null);
     if (selectedJob?.id === app.id) setSelectedJob(app); // update modal if open
+    showToast('Application updated.', 'info');
   };
 
   const searchedApplications = filterApplications(searchTerm);
@@ -130,15 +191,19 @@ const App: React.FC = () => {
 
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
+    const count = selectedIds.size;
     if (!window.confirm(`Delete ${selectedIds.size} selected applications?`)) return;
     [...selectedIds].forEach((id) => deleteApplication(id));
     setSelectedIds(new Set());
+    showToast(`Deleted ${count} applications.`, 'info');
   };
 
   const handleBulkStatus = () => {
     if (selectedIds.size === 0) return;
+    const count = selectedIds.size;
     [...selectedIds].forEach((id) => updateStatus(id, bulkStatus));
     setSelectedIds(new Set());
+    showToast(`Updated ${count} applications to ${bulkStatus}.`, 'success');
   };
 
   const handleBulkOpenLinks = (kind: 'job' | 'website' | 'linkedin') => {
@@ -159,12 +224,24 @@ const App: React.FC = () => {
         );
 
       case 'settings':
-        return <SettingsView />;
+        return (
+          <SettingsView
+            applications={applications}
+            onImportCSV={importApplications}
+            onResetAll={resetAllApplications}
+          />
+        );
+
+      case 'account':
+        return <AccountView />;
 
       case 'interviewing':
         return (
           <InterviewingView
             applications={applications.filter(app => app.status === 'interviewing')}
+            displayCurrency={currency}
+            cvProfiles={cvProfiles}
+            visibleColumns={tableDisplay.visibleColumns}
             onStatusChange={handleStatusChange}
             onRowClick={setSelectedJob}
             onDelete={handleDelete}
@@ -287,6 +364,7 @@ const App: React.FC = () => {
               applications={filteredApplications}
               displayCurrency={currency}
               cvProfiles={cvProfiles}
+              visibleColumns={tableDisplay.visibleColumns}
               selectorMode={selectorMode}
               selectedIds={selectedIds}
               onToggleRowSelection={toggleRowSelection}
@@ -336,6 +414,7 @@ const App: React.FC = () => {
           onSave={handleEditSave}
         />
       )}
+      {FEATURES.debug.showToolbar && <DebugToolbar />}
     </div>
   );
 };
