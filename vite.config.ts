@@ -30,13 +30,11 @@ export default defineConfig(({ mode }) => {
     },
     test: {
       environment: 'jsdom',
-      setupFiles: ['./src/test/setup.ts'],
+      setupFiles: ['./src/test/setup.tsx'],
       css: false,
-      deps: {
-        optimizer: {
-          web: {
-            include: ['@csstools/css-calc', '@asamuzakjp/css-color'],
-          },
+      server: {
+        deps: {
+          inline: [/@csstools\/css-calc/, /@asamuzakjp\/css-color/, /react-simple-maps/, /d3-/],
         },
       },
       coverage: {
