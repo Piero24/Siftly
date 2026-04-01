@@ -16,7 +16,7 @@ jobs:
   migrate:
     runs-on: ubuntu-latest
     if: github.event.inputs.confirm == 'MIGRATE'
-    environment: production
+    environment: ${{ vars.DB_MIGRATION_ENVIRONMENT || 'production' }}
 
     steps:
       - name: Checkout
