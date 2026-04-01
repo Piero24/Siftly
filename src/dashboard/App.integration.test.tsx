@@ -11,12 +11,38 @@ import { TableFilterProvider } from '../context/TableFilterContext';
 import { AuthProvider } from '../context/AuthContext';
 import { ToastProvider } from '../context/ToastContext';
 
+vi.mock('../config/app', async () => {
+  const actual = await vi.importActual('../config/app');
+  return {
+    ...(actual as any),
+    DEBUG_CONFIG: {
+      ...(actual as any).DEBUG_CONFIG,
+      bypassAuth: true,
+    },
+  };
+});
+
+vi.mock('../lib/storage', async () => {
+  const { MOCK_APPLICATIONS } = await vi.importActual('../lib/mockData');
+  const actual = await vi.importActual('../lib/storage');
+  return {
+    ...(actual as any),
+    createAdapter: vi.fn(() => ({
+      getAll: vi.fn().mockResolvedValue(MOCK_APPLICATIONS),
+      upsert: vi.fn().mockResolvedValue(undefined),
+      remove: vi.fn().mockResolvedValue(undefined),
+      removeAll: vi.fn().mockResolvedValue(undefined),
+      importBatch: vi.fn().mockResolvedValue(undefined),
+    })),
+  };
+});
+
 const renderTableApp = () => {
   window.location.hash = '#table';
 
   return render(
-    <AuthProvider>
-      <ToastProvider>
+    <ToastProvider>
+      <AuthProvider>
         <SettingsProvider>
           <UIProvider>
             <SelectionProvider>
@@ -26,14 +52,23 @@ const renderTableApp = () => {
             </SelectionProvider>
           </UIProvider>
         </SettingsProvider>
-      </ToastProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
+};
+
+const waitForGoogleRow = async () => {
+  await screen.findAllByText('Google');
+};
+
+const getGoogleCell = async () => {
+  const matches = await screen.findAllByText('Google');
+  return matches[0];
 };
 
 describe('App integration (table flow)', () => {
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -47,16 +82,18 @@ describe('App integration (table flow)', () => {
     const user = userEvent.setup();
     renderTableApp();
 
-    await user.click(screen.getByRole('button', { name: /filters/i }));
+    await waitForGoogleRow();
 
-    const selects = screen.getAllByRole('combobox');
+    await user.click(await screen.findByRole('button', { name: /filters/i }));
+
+    const selects = await screen.findAllByRole('combobox');
     const fieldSelect = selects[0];
     const valueSelect = selects[1];
 
     await user.selectOptions(fieldSelect, 'status');
     await user.selectOptions(valueSelect, 'interviewing');
 
-    expect(await screen.findByText('Google')).toBeInTheDocument();
+    expect(await getGoogleCell()).toBeInTheDocument();
     expect(screen.queryByText('Apple')).not.toBeInTheDocument();
   });
 
@@ -64,7 +101,9 @@ describe('App integration (table flow)', () => {
     const user = userEvent.setup();
     renderTableApp();
 
-    await user.click(screen.getByRole('button', { name: /select rows/i }));
+    await waitForGoogleRow();
+
+    await user.click(await screen.findByRole('button', { name: /select rows/i }));
 
     const checkboxes = await screen.findAllByRole('checkbox');
     await user.click(checkboxes[0]);
@@ -77,14 +116,14 @@ describe('App integration (table flow)', () => {
     await user.selectOptions(bulkSelect, 'rejected');
     await user.click(screen.getByRole('button', { name: /change status/i }));
 
-    expect(screen.getByText('0 selected')).toBeInTheDocument();
+    expect(await screen.findByText('0 selected')).toBeInTheDocument();
   });
 
   it('opens details modal and transitions to edit modal', async () => {
     const user = userEvent.setup();
     renderTableApp();
 
-    await user.click(await screen.findByText('Google'));
+    await user.click(await getGoogleCell());
 
     expect(screen.getByRole('button', { name: /edit details/i })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /edit details/i }));

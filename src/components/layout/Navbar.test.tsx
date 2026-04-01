@@ -4,17 +4,20 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { Navbar } from './Navbar';
 import { AuthProvider } from '../../context/AuthContext';
+import { ToastProvider } from '../../context/ToastContext';
 import { MemoryRouter } from 'react-router-dom';
 describe('Navbar', () => {
   it('renders app name and navigation labels', () => {
     const onViewChange = vi.fn();
 
     render(
-      <AuthProvider>
-        <MemoryRouter>
-          <Navbar currentView="dashboard" onViewChange={onViewChange} />
-        </MemoryRouter>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <MemoryRouter>
+            <Navbar currentView="dashboard" onViewChange={onViewChange} />
+          </MemoryRouter>
+        </AuthProvider>
+      </ToastProvider>
     );
 
     expect(screen.getByText('Siftly')).toBeInTheDocument();
@@ -27,11 +30,13 @@ describe('Navbar', () => {
     const onViewChange = vi.fn();
 
     render(
-      <AuthProvider>
-        <MemoryRouter>
-          <Navbar currentView="dashboard" onViewChange={onViewChange} />
-        </MemoryRouter>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <MemoryRouter>
+            <Navbar currentView="dashboard" onViewChange={onViewChange} />
+          </MemoryRouter>
+        </AuthProvider>
+      </ToastProvider>
     );
 
     await user.click(screen.getByRole('button', { name: 'Applications' }));
