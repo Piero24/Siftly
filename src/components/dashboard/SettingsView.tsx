@@ -95,8 +95,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ applications = [], o
     downloadCSV(csv, `siftly-export-${dateStr}.csv`);
   };
 
-  const handleImportCSV = (apps: JobApplication[]) => {
-    onImportCSV?.(apps);
+  const handleImportCSV = async (apps: JobApplication[]) => {
+    try {
+      await onImportCSV?.(apps);
+      showToast(`Successfully imported ${apps.length} applications.`, 'success');
+    } catch (err: any) {
+      showToast(`Failed to import applications: ${err.message || 'Unknown error'}`, 'error');
+    }
   };
 
   const handleResetAll = async () => {

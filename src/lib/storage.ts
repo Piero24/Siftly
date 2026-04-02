@@ -21,6 +21,13 @@ export interface StorageAdapter {
 }
 
 // ── Supabase ────────────────────────────────────────────
+export class SupabaseUnconfiguredError extends Error {
+  constructor() {
+    super('Supabase client is not configured. Please add your API keys.');
+    this.name = 'SupabaseUnconfiguredError';
+  }
+}
+
 // Maps Supabase snake_case rows to camelCase JobApplication objects.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToApp(row: any): JobApplication {
@@ -105,35 +112,50 @@ function appToRow(app: JobApplication) {
 
 export class SupabaseAdapter implements StorageAdapter {
   async getAll(): Promise<JobApplication[]> {
-    if (!supabase) return [];
+    if (!supabase) throw new SupabaseUnconfiguredError();
     const { data, error } = await supabase.from('job_applications').select('*').order('date', { ascending: false });
-    if (error) { logger.error('[SupabaseAdapter] getAll:', error); return []; }
+    if (error) {
+      logger.error('[SupabaseAdapter] getAll:', error);
+      throw error;
+    }
     return (data ?? []).map(rowToApp);
   }
 
   async upsert(app: JobApplication): Promise<void> {
-    if (!supabase) return;
+    if (!supabase) throw new SupabaseUnconfiguredError();
     const { error } = await supabase.from('job_applications').upsert(appToRow(app));
-    if (error) logger.error('[SupabaseAdapter] upsert:', error);
+    if (error) {
+      logger.error('[SupabaseAdapter] upsert:', error);
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<void> {
-    if (!supabase) return;
+    if (!supabase) throw new SupabaseUnconfiguredError();
     const { error } = await supabase.from('job_applications').delete().eq('id', id);
-    if (error) logger.error('[SupabaseAdapter] remove:', error);
+    if (error) {
+      logger.error('[SupabaseAdapter] remove:', error);
+      throw error;
+    }
   }
 
   async removeAll(): Promise<void> {
-    if (!supabase) return;
+    if (!supabase) throw new SupabaseUnconfiguredError();
     const { error } = await supabase.from('job_applications').delete().neq('id', '');
-    if (error) logger.error('[SupabaseAdapter] removeAll:', error);
+    if (error) {
+      logger.error('[SupabaseAdapter] removeAll:', error);
+      throw error;
+    }
   }
 
   async importBatch(apps: JobApplication[]): Promise<void> {
-    if (!supabase) return;
+    if (!supabase) throw new SupabaseUnconfiguredError();
     const rows = apps.map(appToRow);
     const { error } = await supabase.from('job_applications').upsert(rows);
-    if (error) logger.error('[SupabaseAdapter] importBatch:', error);
+    if (error) {
+      logger.error('[SupabaseAdapter] importBatch:', error);
+      throw error;
+    }
   }
 }
 
@@ -167,27 +189,72 @@ export class DualSyncAdapter implements StorageAdapter {
       // Keep local in sync
       await this.local.importBatch(remoteApps);
       return remoteApps;
-    } catch {
-      // Fallback to local if remote is unavailable
-      logger.warn('[DualSync] Remote unavailable, reading from local');
+    } catch (err) {
+      // Fallback to local if remote is unavailable or unconfigured
+      const isUnconfigured = err instanceof SupabaseUnconfiguredError;
+      logger.warn(`[DualSync] ${isUnconfigured ? 'Remote unconfigured' : 'Remote unavailable'}, reading from local`);
+      
+      if (isUnconfigured) {
+        // We re-throw this specifically if we want the hook to notice it's unconfigured,
+        // BUT the goal here is to NOT crash and just return local data.
+        // If we want the hook to show a Toast but STILL get data, we should let it through.
+        // Actually, to fix your crash, we catch it here and let the local data flow.
+        return this.local.getAll();
+      }
       return this.local.getAll();
     }
   }
 
   async upsert(app: JobApplication): Promise<void> {
-    await Promise.all([this.remote.upsert(app), this.local.upsert(app)]);
+    try {
+      await this.remote.upsert(app);
+    } catch (err) {
+      if (err instanceof SupabaseUnconfiguredError) {
+        logger.warn('[DualSync] Remote unconfigured, skipping remote upsert');
+      } else {
+        throw err;
+      }
+    }
+    await this.local.upsert(app);
   }
 
   async remove(id: string): Promise<void> {
-    await Promise.all([this.remote.remove(id), this.local.remove(id)]);
+    try {
+      await this.remote.remove(id);
+    } catch (err) {
+      if (err instanceof SupabaseUnconfiguredError) {
+        logger.warn('[DualSync] Remote unconfigured, skipping remote remove');
+      } else {
+        throw err;
+      }
+    }
+    await this.local.remove(id);
   }
 
   async removeAll(): Promise<void> {
-    await Promise.all([this.remote.removeAll(), this.local.removeAll()]);
+    try {
+      await this.remote.removeAll();
+    } catch (err) {
+      if (err instanceof SupabaseUnconfiguredError) {
+        logger.warn('[DualSync] Remote unconfigured, skipping remote removeAll');
+      } else {
+        throw err;
+      }
+    }
+    await this.local.removeAll();
   }
 
   async importBatch(apps: JobApplication[]): Promise<void> {
-    await Promise.all([this.remote.importBatch(apps), this.local.importBatch(apps)]);
+    try {
+      await this.remote.importBatch(apps);
+    } catch (err) {
+      if (err instanceof SupabaseUnconfiguredError) {
+        logger.warn('[DualSync] Remote unconfigured, skipping remote importBatch');
+      } else {
+        throw err;
+      }
+    }
+    await this.local.importBatch(apps);
   }
 }
 

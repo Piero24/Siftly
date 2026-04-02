@@ -154,9 +154,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   const isMobile = windowWidth < 768;
   const isSmallMobile = windowWidth < 480;
-  const chartHeight = isMobile ? 220 : 280;
-  const timelineHeight = isMobile ? 200 : 260;
-  const mapHeight = isMobile ? (isSmallMobile ? 300 : 380) : 470;
+  const chartHeight = Math.max(isMobile ? 220 : 280, 1);
+  const timelineHeight = Math.max(isMobile ? 200 : 260, 1);
+  const mapHeight = Math.max(isMobile ? (isSmallMobile ? 300 : 380) : 470, 1);
 
   const filteredApplications = useMemo(() => {
     if (timeRange === 'total') return applications;

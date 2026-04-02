@@ -57,18 +57,27 @@ create index if not exists idx_job_applications_user_id
 -- ── Row-Level Security ───────────────────────────────
 alter table public.job_applications enable row level security;
 
--- Users can only see their own rows
+-- Users can only see their own rows if their PROFILE is active
 create policy "Users can view own applications"
   on public.job_applications for select
-  using (auth.uid() = user_id);
+  using (
+    auth.uid() = user_id 
+    and exists (select 1 from public.profiles where id = auth.uid() and deleted_at is null)
+  );
 
 create policy "Users can insert own applications"
   on public.job_applications for insert
-  with check (auth.uid() = user_id);
+  with check (
+    auth.uid() = user_id 
+    and exists (select 1 from public.profiles where id = auth.uid() and deleted_at is null)
+  );
 
 create policy "Users can update own applications"
   on public.job_applications for update
-  using (auth.uid() = user_id);
+  using (
+    auth.uid() = user_id 
+    and exists (select 1 from public.profiles where id = auth.uid() and deleted_at is null)
+  );
 
 create policy "Users can delete own applications"
   on public.job_applications for delete
@@ -92,23 +101,113 @@ create table if not exists public.user_settings (
 alter table public.user_settings enable row level security;
 
 create policy "Users can view own settings"
-  on public.user_settings for select using (auth.uid() = user_id);
-create policy "Users can insert own settings"
-  on public.user_settings for insert with check (auth.uid() = user_id);
-create policy "Users can update own settings"
-  on public.user_settings for update using (auth.uid() = user_id);
+  on public.user_settings for select 
+  using (
+    auth.uid() = user_id 
+    and exists (select 1 from public.profiles where id = auth.uid() and deleted_at is null)
+  );
 
--- ── Account Deletion RPC ─────────────────────────────
--- Called by the frontend when a user deletes their account.
--- Removes all user data; the auth user itself is deleted via
--- Supabase's admin API or a trigger.
-create or replace function public.delete_user_data()
+create policy "Users can insert own settings"
+  on public.user_settings for insert 
+  with check (auth.uid() = user_id);
+
+create policy "Users can update own settings"
+  on public.user_settings for update 
+  using (
+    auth.uid() = user_id 
+    and exists (select 1 from public.profiles where id = auth.uid() and deleted_at is null)
+  );
+
+-- ── Profiles (Sync from Auth) ────────────────────────
+create table if not exists public.profiles (
+  id              uuid primary key references auth.users(id) on delete cascade,
+  email           text unique,
+  full_name       text,
+  avatar_url      text,
+  is_active       boolean not null default true,
+  deleted_at      timestamptz,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "Users can view own profile"
+  on public.profiles for select using (auth.uid() = id and deleted_at is null);
+
+create policy "Users can update own profile"
+  on public.profiles for update using (auth.uid() = id and deleted_at is null);
+
+-- ── Auth to Profile Sync Trigger ─────────────────────
+-- Automatically creates/updates a profile row when a user signs in.
+-- If the existing profile was deleted, this fresh login creates 
+-- a "Ghost" of the old data by moving it to a backup ID.
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+declare
+  old_profile_id uuid;
+begin
+  -- 1. Check if a DELETED profile already exists for this ID
+  select id into old_profile_id 
+  from public.profiles 
+  where id = new.id and deleted_at is not null;
+
+  -- 2. If it does, "Ghost" the old data by changing its user_id to a random UUID
+  -- This detaches it from the user's active session forever.
+  if old_profile_id is not null then
+    update public.job_applications 
+    set user_id = gen_random_uuid() -- Orphan the data
+    where user_id = new.id;
+    
+    update public.user_settings 
+    set user_id = gen_random_uuid() -- Orphan the settings
+    where user_id = new.id;
+
+    -- Delete the old soft-deleted profile row to make room for a fresh one
+    delete from public.profiles where id = new.id;
+  end if;
+
+  -- 3. Create a brand new fresh profile row
+  insert into public.profiles (id, email, full_name, avatar_url, is_active, deleted_at)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'avatar_url',
+    true,
+    null
+  );
+  
+  return new;
+end;
+$$;
+
+-- Trigger on auth.users (requires manual setup in Supabase SQL editor if not already there)
+-- drop trigger if exists on_auth_user_created on auth.users;
+-- create trigger on_auth_user_created
+--   after insert or update on auth.users
+--   for each row execute procedure public.handle_new_user();
+
+-- ── Account Deletion RPC (Ghosting) ──────────────────
+-- Simply marks the profile as deleted.
+-- Because all RLS policies now check 'exists (profiles where deleted_at is null)',
+-- everything linked to this ID instantly vanishes from the user's view.
+create or replace function public.soft_delete_account()
 returns void
 language plpgsql
 security definer
 as $$
 begin
-  delete from public.job_applications where user_id = auth.uid();
-  delete from public.user_settings    where user_id = auth.uid();
+  update public.profiles
+  set 
+    is_active = false,
+    deleted_at = now()
+  where id = auth.uid();
 end;
 $$;
+
+-- Keep the old one for compatibility if needed, or remove it
+-- drop function if exists public.delete_user_data();

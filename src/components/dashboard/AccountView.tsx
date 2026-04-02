@@ -78,6 +78,19 @@ export const AccountView: React.FC = () => {
             </span>
           </div>
 
+          <div className="setting-item" style={{ borderTop: '1px solid var(--glass-border)', paddingTop: 12 }}>
+            <label>Account Status</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                width: 8, height: 8, borderRadius: '50%',
+                background: (user?.user_metadata?.is_active ?? true) ? 'var(--color-accepted)' : 'var(--color-warning)'
+              }} />
+              <span style={{ fontSize: 14, color: 'var(--text-primary)', fontWeight: 500 }}>
+                {(user?.user_metadata?.is_active ?? true) ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+          </div>
+
           <div style={{ marginTop: 16 }}>
             <button className="btn-apple btn-outline" onClick={signOut}>
               Sign Out

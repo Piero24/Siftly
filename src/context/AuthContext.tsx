@@ -13,6 +13,7 @@ import { DEBUG_CONFIG } from '../config/app';
 import { DEPLOYMENT_MODE, DEPLOYMENT } from '../config/deploymentMode';
 import { getStoredProfile, createProfile, clearProfile, LocalProfile } from '../lib/localAuth';
 import { logger } from '../lib/logger';
+import { useToast } from './ToastContext';
 
 const authLogger = logger.for('Auth');
 
@@ -48,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [localProfile, setLocalProfile] = useState<LocalProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
 
   // Restore session on mount
   useEffect(() => {
@@ -97,13 +99,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (provider: OAuthProvider) => {
     if (!supabase) return;
+    
+    authLogger.info(`Initiating ${provider} sign-in...`);
+    
+    // In Extension mode, the redirect URL MUST be the extension's dashboard page.
+    // If window.location.origin is 'chrome-extension://...', Supabase might not 
+    // allow it if not configured in the dashboard. 
+    // For now, we use the current URL.
+    const redirectTo = window.location.href.split('?')[0];
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: window.location.origin,
+        redirectTo,
+        queryParams: {
+          prompt: 'select_account',
+        },
       },
     });
-    if (error) authLogger.error('signIn error:', error);
+    if (error) {
+      authLogger.error('signIn error:', error);
+      showToast(error.message || 'Failed to sign in. Please try again.', 'error');
+    }
   };
 
   const signOut = async () => {
@@ -111,19 +128,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (localProfile) {
       clearProfile();
       setLocalProfile(null);
+      showToast('Signed out from local profile', 'info');
       return;
     }
     // OAuth sign-out
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
-    if (error) authLogger.error('signOut error:', error);
+    if (error) {
+      authLogger.error('signOut error:', error);
+      showToast('Failed to sign out neatly. Session cleared.', 'warning');
+    } else {
+      showToast('Signed out successfully', 'success');
+    }
     setUser(null);
     setSession(null);
   };
 
   const handleCreateLocalProfile = (name: string, email?: string) => {
-    const profile = createProfile(name, email);
-    setLocalProfile(profile);
+    try {
+      const profile = createProfile(name, email);
+      setLocalProfile(profile);
+      showToast(`Welcome, ${name}! Profile created.`, 'success');
+    } catch (err) {
+      authLogger.error('Failed to create local profile:', err);
+      showToast('Failed to create profile. Check local storage.', 'error');
+    }
   };
 
   const deleteAccount = async () => {
@@ -131,16 +160,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (localProfile) {
       clearProfile();
       setLocalProfile(null);
+      showToast('Local profile and data deleted.', 'info');
       return;
     }
-    // OAuth account deletion
+    // OAuth account soft-deletion (starts 90-day retention period)
     if (!supabase || !session) return;
-    const { error: dataError } = await supabase.rpc('delete_user_data');
+    const { error: dataError } = await supabase.rpc('soft_delete_account');
     if (dataError) {
-      authLogger.error('Failed to delete user data:', dataError);
-      throw new Error('Failed to delete account data. Please try again.');
+      authLogger.error('Failed to initiate account deletion:', dataError);
+      showToast('Failed to schedule account deletion. Please try again.', 'error');
+      throw new Error('Failed to schedule account deletion. Please try again.');
     }
     await supabase.auth.signOut();
+    showToast('Account and data deleted successfully.', 'success');
     setUser(null);
     setSession(null);
   };

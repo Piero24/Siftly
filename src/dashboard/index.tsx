@@ -12,8 +12,8 @@ import { ToastProvider } from '../context/ToastContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <ToastProvider>
+    <ToastProvider>
+      <AuthProvider>
         <SettingsProvider>
           <UIProvider routingMode="hash">
             <SelectionProvider>
@@ -23,7 +23,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </SelectionProvider>
           </UIProvider>
         </SettingsProvider>
-      </ToastProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ToastProvider>
   </React.StrictMode>
 );

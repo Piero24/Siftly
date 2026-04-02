@@ -7,10 +7,11 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { JobApplication, JobStatus } from '../types/job';
-import { createAdapter, StorageAdapter, StorageMode } from '../lib/storage';
+import { createAdapter, StorageAdapter, StorageMode, SupabaseUnconfiguredError } from '../lib/storage';
 import { DEBUG_CONFIG } from '../config/app';
 import { MOCK_APPLICATIONS } from '../lib/mockData';
 import { logger } from '../lib/logger';
+import { useToast } from '../context/ToastContext';
 
 const hookLogger = logger.for('useJobApplications');
 
@@ -149,6 +150,7 @@ export function useJobApplications(
 ) {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
   const adapterRef = useRef<StorageAdapter>(createAdapter(storageMode));
 
   // Re-create adapter when storageMode changes
@@ -181,8 +183,23 @@ export function useJobApplications(
       setApplications(data);
     } catch (err) {
       hookLogger.error('Failed to load data:', err);
-      // Fallback to seed data so the UI isn't empty
-      setApplications(SEED_APPLICATIONS);
+      // In extension/remote mode, we should NOT fallback to local or show confusing messages
+      if (storageMode === 'remote') {
+        if (err instanceof SupabaseUnconfiguredError) {
+          showToast('Supabase client is not configured. Please check your environment variables.', 'error');
+        } else {
+          showToast('Failed to load data from Supabase.', 'error');
+        }
+        setApplications([]); // Clear apps to avoid showing stale/local data
+      } else {
+        // Local mode fallback
+        if (err instanceof SupabaseUnconfiguredError) {
+          showToast('Supabase not configured. Using local fallback.', 'warning');
+        } else {
+          showToast('Connection to database failed. Showing local fallback.', 'error');
+        }
+        setApplications(SEED_APPLICATIONS);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -212,29 +229,43 @@ export function useJobApplications(
     });
   }, [autoNoResponse, autoNoResponseDays]);
 
-  const updateStatus = (id: string, status: JobStatus) => {
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id === id) {
-          const updated = { ...app, status };
-          adapterRef.current.upsert(updated).catch(err => hookLogger.error('Status update failed:', err));
-          return updated;
-        }
-        return app;
-      })
-    );
+  const updateStatus = async (id: string, status: JobStatus) => {
+    try {
+      const updated = applications.find(app => app.id === id);
+      if (!updated) return;
+      const nextApp = { ...updated, status };
+      await adapterRef.current.upsert(nextApp);
+      setApplications((prev) =>
+        prev.map((app) => (app.id === id ? nextApp : app))
+      );
+    } catch (err) {
+      hookLogger.error('Failed to update status:', err);
+      showToast('Failed to update job status in database.', 'error');
+    }
   };
 
-  const updateApplication = (updatedApp: JobApplication) => {
-    adapterRef.current.upsert(updatedApp).catch(err => hookLogger.error('Update failed:', err));
-    setApplications((prev) =>
-      prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
-    );
+  const updateApplication = async (updatedApp: JobApplication) => {
+    try {
+      await adapterRef.current.upsert(updatedApp);
+      setApplications((prev) =>
+        prev.map((app) => (app.id === updatedApp.id ? updatedApp : app))
+      );
+      showToast('Application updated.', 'success');
+    } catch (err) {
+      hookLogger.error('Failed to update app:', err);
+      showToast('Failed to save changes to database.', 'error');
+    }
   };
 
-  const deleteApplication = (id: string) => {
-    adapterRef.current.remove(id).catch(err => hookLogger.error('Delete failed:', err));
-    setApplications((prev) => prev.filter((app) => app.id !== id));
+  const deleteApplication = async (id: string) => {
+    try {
+      await adapterRef.current.remove(id);
+      setApplications((prev) => prev.filter((app) => app.id !== id));
+      showToast('Application deleted.', 'info');
+    } catch (err) {
+      hookLogger.error('Failed to delete app:', err);
+      showToast('Failed to delete from database.', 'error');
+    }
   };
 
   const filterApplications = (term: string): JobApplication[] => {
@@ -249,19 +280,39 @@ export function useJobApplications(
     );
   };
 
-  const addApplication = (app: JobApplication) => {
-    adapterRef.current.upsert(app).catch(err => hookLogger.error('Add failed:', err));
-    setApplications((prev) => [app, ...prev]);
+  const addApplication = async (app: JobApplication) => {
+    try {
+      await adapterRef.current.upsert(app);
+      setApplications((prev) => [app, ...prev]);
+      showToast('New application added!', 'success');
+    } catch (err) {
+      hookLogger.error('Failed to add app:', err);
+      showToast('Failed to save new application.', 'error');
+    }
   };
 
   const importApplications = async (apps: JobApplication[]) => {
-    await adapterRef.current.importBatch(apps);
-    setApplications((prev) => [...apps, ...prev]);
+    try {
+      await adapterRef.current.importBatch(apps);
+      setApplications((prev) => [...apps, ...prev]);
+      showToast(`Imported ${apps.length} applications.`, 'success');
+    } catch (err) {
+      hookLogger.error('Failed to import apps:', err);
+      showToast('Import failed. Check CSV format.', 'error');
+    }
   };
 
   const resetAllApplications = async () => {
-    await adapterRef.current.removeAll();
-    setApplications([]);
+    try {
+      if (confirm('Are you sure? This will delete ALL applications from the current storage!')) {
+        await adapterRef.current.removeAll();
+        setApplications([]);
+        showToast('All data cleared.', 'warning');
+      }
+    } catch (err) {
+      hookLogger.error('Failed to reset apps:', err);
+      showToast('Failed to clear data.', 'error');
+    }
   };
 
   return {

@@ -31,7 +31,7 @@ const AuthGate: React.FC = () => {
   }
 
   return (
-    <ToastProvider>
+    <>
       {FEATURES.debug.showToolbar && (
         <div style={{
           position: 'fixed',
@@ -58,14 +58,16 @@ const AuthGate: React.FC = () => {
           </SelectionProvider>
         </UIProvider>
       </SettingsProvider>
-    </ToastProvider>
+    </>
   );
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <AuthGate />
-    </AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <AuthGate />
+      </AuthProvider>
+    </ToastProvider>
   </React.StrictMode>
 );

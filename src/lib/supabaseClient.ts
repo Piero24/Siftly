@@ -11,12 +11,12 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
 
 let supabase: SupabaseClient | null = null;
 
-if (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('your-project')) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+if (supabaseUrl && supabasePublishableKey && !supabaseUrl.includes('your-project')) {
+  supabase = createClient(supabaseUrl, supabasePublishableKey, {
     auth: {
       autoRefreshToken: true,
       persistSession: true,

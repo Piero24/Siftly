@@ -10,11 +10,13 @@ import { DashboardView } from '../components/dashboard/DashboardView';
 import { SettingsView } from '../components/dashboard/SettingsView';
 import { InterviewingView } from '../components/dashboard/InterviewingView';
 import { AccountView } from '../components/dashboard/AccountView';
+import { LoginPage } from '../components/auth/LoginPage';
 import { DebugToolbar } from '../components/debug/DebugToolbar';
 import { CheckCircleIcon, FilterIcon, GlobeIcon, LinkIcon, LinkedinIcon, TrashIcon, UsersIcon, XCircleIcon } from '../components/common/Icons';
 import { useJobApplications } from '../hooks/useJobApplications';
 import { useApplicationFilters } from '../hooks/useApplicationFilters';
 import { useSettings } from '../context/SettingsContext';
+import { useAuth } from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import { useSelection } from '../context/SelectionContext';
 import { useTableFilters } from '../context/TableFilterContext';
@@ -39,6 +41,7 @@ const App: React.FC = () => {
     storageMode,
     tableDisplay,
   } = useSettings();
+  const { isAuthenticated, user, isLoading: isAuthLoading } = useAuth();
   const {
     currentView,
     setCurrentView,
@@ -71,7 +74,17 @@ const App: React.FC = () => {
   } = useTableFilters();
 
   const { showToast } = useToast();
-  const { applications, updateStatus, updateApplication, deleteApplication, filterApplications, addApplication, importApplications, resetAllApplications } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
+  const {
+    applications,
+    isLoading: isAppsLoading,
+    updateStatus,
+    updateApplication,
+    deleteApplication,
+    filterApplications,
+    addApplication,
+    importApplications,
+    resetAllApplications,
+  } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
 
   // ── Keyboard Shortcuts ──
   React.useEffect(() => {
@@ -125,32 +138,48 @@ const App: React.FC = () => {
   }, [setCurrentView, setShowNewModal, showToast, showNewModal, editingJob, selectedJob, setEditingJob, setSelectedJob]);
 
 
-  const handleDelete = (id: string) => {
-    deleteApplication(id);
-    if (selectedJob?.id === id) setSelectedJob(null);
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteApplication(id);
+      if (selectedJob?.id === id) setSelectedJob(null);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    } catch (error: any) {
+      showToast(`Failed to delete application: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
-  const handleStatusChange = (id: string, status: JobStatus) => {
-    updateStatus(id, status);
-    if (selectedJob?.id === id) setSelectedJob((prev) => prev ? { ...prev, status } : null);
+  const handleStatusChange = async (id: string, status: JobStatus) => {
+    try {
+      await updateStatus(id, status);
+      if (selectedJob?.id === id) setSelectedJob((prev) => prev ? { ...prev, status } : null);
+    } catch (error: any) {
+      showToast(`Failed to update status: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
-  const handleNewSave = (app: JobApplication) => {
-    addApplication(app);
-    setShowNewModal(false);
-    showToast(`Application to ${app.company} added!`, 'success');
+  const handleNewSave = async (app: JobApplication) => {
+    try {
+      await addApplication(app);
+      setShowNewModal(false);
+      showToast(`Application to ${app.company} added!`, 'success');
+    } catch (error: any) {
+      showToast(`Failed to add application: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
-  const handleEditSave = (app: JobApplication) => {
-    updateApplication(app);
-    setEditingJob(null);
-    if (selectedJob?.id === app.id) setSelectedJob(app); // update modal if open
-    showToast('Application updated.', 'info');
+  const handleEditSave = async (app: JobApplication) => {
+    try {
+      await updateApplication(app);
+      setEditingJob(null);
+      if (selectedJob?.id === app.id) setSelectedJob(app); // update modal if open
+      showToast('Application updated.', 'info');
+    } catch (error: any) {
+      showToast(`Failed to update application: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
   const searchedApplications = filterApplications(searchTerm);
@@ -189,21 +218,29 @@ const App: React.FC = () => {
 
   const getSelectedApps = () => applications.filter((app) => selectedIds.has(app.id));
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedIds.size === 0) return;
     const count = selectedIds.size;
     if (!window.confirm(`Delete ${selectedIds.size} selected applications?`)) return;
-    [...selectedIds].forEach((id) => deleteApplication(id));
-    setSelectedIds(new Set());
-    showToast(`Deleted ${count} applications.`, 'info');
+    try {
+      await Promise.all([...selectedIds].map((id) => deleteApplication(id)));
+      setSelectedIds(new Set());
+      showToast(`Deleted ${count} applications.`, 'info');
+    } catch (error: any) {
+      showToast(`Failed to delete applications: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
-  const handleBulkStatus = () => {
+  const handleBulkStatus = async () => {
     if (selectedIds.size === 0) return;
     const count = selectedIds.size;
-    [...selectedIds].forEach((id) => updateStatus(id, bulkStatus));
-    setSelectedIds(new Set());
-    showToast(`Updated ${count} applications to ${bulkStatus}.`, 'success');
+    try {
+      await Promise.all([...selectedIds].map((id) => updateStatus(id, bulkStatus)));
+      setSelectedIds(new Set());
+      showToast(`Updated ${count} applications to ${bulkStatus}.`, 'success');
+    } catch (error: any) {
+      showToast(`Failed to update status: ${error.message || 'Unknown error'}`, 'error');
+    }
   };
 
   const handleBulkOpenLinks = (kind: 'job' | 'website' | 'linkedin') => {
@@ -213,6 +250,20 @@ const App: React.FC = () => {
       if (url && url !== '#') window.open(url, '_blank', 'noopener,noreferrer');
     });
   };
+
+  const isInitialLoading = isAuthLoading || (isAuthenticated && isAppsLoading);
+
+  if (isInitialLoading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-app)' }}>
+        <div className="login-spinner" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
 
   const renderContent = () => {
     switch (currentView) {
