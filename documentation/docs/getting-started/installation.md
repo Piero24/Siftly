@@ -42,7 +42,8 @@ Edit `.env` with your configuration:
 ```bash
 # Supabase (optional — leave defaults for local-only mode)
 VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key-here
+VITE_SUPABASE_SECRET_KEY=your-secret-key-here
 
 # Enable debug mode for development
 VITE_DEBUG_MODE=true

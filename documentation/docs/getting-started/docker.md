@@ -43,12 +43,13 @@ Siftly includes CasaOS metadata in `docker-compose.yml`. To install on CasaOS:
 
 ## Environment Variables
 
-| Variable                 | Default   | Description                                       |
-| ------------------------ | --------- | ------------------------------------------------- |
-| `VITE_BASE_PATH`         | `/`       | Base URL path (for reverse proxy subpaths)        |
-| `VITE_SUPABASE_URL`      | _(empty)_ | Supabase project URL (leave empty for local-only) |
-| `VITE_SUPABASE_ANON_KEY` | _(empty)_ | Supabase anonymous key                            |
-| `VITE_ALLOW_LOCAL_ONLY`  | `true`    | Allow local-only mode (always true in Docker)     |
+| Variable                        | Default   | Description                                       |
+| ------------------------------- | --------- | ------------------------------------------------- |
+| `VITE_BASE_PATH`                | `/`       | Base URL path (for reverse proxy subpaths)        |
+| `VITE_SUPABASE_URL`             | _(empty)_ | Supabase project URL (leave empty for local-only) |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | _(empty)_ | Supabase publishable key                          |
+| `VITE_SUPABASE_SECRET_KEY`      | _(empty)_ | Supabase secret key                               |
+| `VITE_ALLOW_LOCAL_ONLY`         | `true`    | Allow local-only mode (always true in Docker)     |
 
 ## Authentication
 

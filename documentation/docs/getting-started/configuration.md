@@ -8,14 +8,15 @@ sidebar_position: 4
 
 Siftly is configured via Vite environment variables in the `.env` file.
 
-| Variable                 | Type               | Default     | Description                               |
-| ------------------------ | ------------------ | ----------- | ----------------------------------------- |
-| `VITE_SUPABASE_URL`      | `string`           | —           | Supabase project URL                      |
-| `VITE_SUPABASE_ANON_KEY` | `string`           | —           | Supabase anonymous key                    |
-| `VITE_ALLOW_LOCAL_ONLY`  | `boolean`          | `false`     | Allow skipping login                      |
-| `VITE_DEBUG_MODE`        | `boolean`          | `false`     | Enable debug toolbar and auth bypass      |
-| `VITE_BUILD_TARGET`      | `web \| extension` | `extension` | Build target (determines deployment mode) |
-| `VITE_BASE_PATH`         | `string`           | `/`         | Base URL path for web builds              |
+| Variable                        | Type               | Default     | Description                               |
+| ------------------------------- | ------------------ | ----------- | ----------------------------------------- |
+| `VITE_SUPABASE_URL`             | `string`           | —           | Supabase project URL                      |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | `string`           | —           | Supabase publishable key                  |
+| `VITE_SUPABASE_SECRET_KEY`      | `string`           | —           | Supabase secret key                       |
+| `VITE_ALLOW_LOCAL_ONLY`         | `boolean`          | `false`     | Allow skipping login                      |
+| `VITE_DEBUG_MODE`               | `boolean`          | `false`     | Enable debug toolbar and auth bypass      |
+| `VITE_BUILD_TARGET`             | `web \| extension` | `extension` | Build target (determines deployment mode) |
+| `VITE_BASE_PATH`                | `string`           | `/`         | Base URL path for web builds              |
 
 ## Deployment Modes
 
