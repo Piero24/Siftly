@@ -67,7 +67,7 @@
 
 /* Fixed column widths */
 .job-table col.col-select { width: 40px; }
-.job-table col.col-icon { width: 44px; }
+.job-table col.col-icon { width: 45px; }
 .job-table col.col-company { width: 128px; }
 .job-table col.col-sector { width: 88px; }
 .job-table col.col-position { width: 168px; }

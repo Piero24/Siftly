@@ -7,6 +7,7 @@ import { PhoneIcon, CodeIcon, SumIcon, UserIcon, MailIcon, VideoIcon, MapPinIcon
 import { SearchBar } from './SearchBar';
 import { useInterviewingFilters } from '../../hooks/useInterviewingFilters';
 import { INTERVIEWING_FILTER_FIELDS, INTERVIEWING_STATUS_OPTIONS } from '../../config/interviewingFilterConfig';
+import { useSettings } from '../../context/SettingsContext';
 
 interface InterviewingViewProps {
   applications: JobApplication[];
@@ -96,7 +97,8 @@ const InterviewRow: React.FC<{
   onToggleSelection: (id: string) => void;
   onStatusChange: (id: string, s: JobStatus) => void;
   onRowClick: (app: JobApplication) => void;
-}> = ({ app, selectorMode, isSelected, onToggleSelection, onStatusChange, onRowClick }) => {
+  useSoftIconBackground: boolean;
+}> = ({ app, selectorMode, isSelected, onToggleSelection, onStatusChange, onRowClick, useSoftIconBackground }) => {
   const phoneScreens = app.phoneScreens || 0;
   const interviews = app.interviews || 0;
   const totalRounds = phoneScreens + interviews;
@@ -122,7 +124,13 @@ const InterviewRow: React.FC<{
 
       <td className="table-cell col-icon">
         <div className="table-icon-cell">
-          <CompanyIcon name={app.company} logo={app.logo} website={app.links?.website} linkedin={app.links?.linkedin} />
+          <CompanyIcon
+            name={app.company}
+            logo={app.logo}
+            website={app.links?.website}
+            linkedin={app.links?.linkedin}
+            useAverageBg={useSoftIconBackground}
+          />
         </div>
       </td>
 
@@ -206,6 +214,7 @@ const InterviewRow: React.FC<{
 export const InterviewingView: React.FC<InterviewingViewProps> = ({
   applications, displayCurrency: _, cvProfiles: __, visibleColumns: ___, onStatusChange, onRowClick, onDelete
 }) => {
+  const { useSoftIconBackground } = useSettings();
   const {
     searchTerm,
     setSearchTerm,
@@ -370,6 +379,7 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
                 onToggleSelection={toggleRowSelection}
                 onStatusChange={onStatusChange}
                 onRowClick={onRowClick}
+                useSoftIconBackground={useSoftIconBackground}
               />
             ))}
           </tbody>

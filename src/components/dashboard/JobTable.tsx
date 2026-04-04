@@ -13,6 +13,7 @@ import { EmploymentTypeBadge } from './EmploymentTypeBadge';
 import { StatusDropdown } from './StatusDropdown';
 import { LinkIcon, LinkedinIcon, GlobeIcon } from '../common/Icons';
 import { useSalary }      from '../../hooks/useSalary';
+import { useSettings } from '../../context/SettingsContext';
 
 interface JobTableProps {
   applications:    JobApplication[];
@@ -39,7 +40,8 @@ const JobRow: React.FC<{
   onToggleRowSelection: (id: string) => void;
   onStatusChange:  (id: string, s: JobStatus) => void;
   onRowClick:      (app: JobApplication) => void;
-}> = ({ app, displayCurrency, cvProfiles, visibleColumns, selectorMode, isSelected, onToggleRowSelection, onStatusChange, onRowClick }) => {
+  useSoftIconBackground: boolean;
+}> = ({ app, displayCurrency, cvProfiles, visibleColumns, selectorMode, isSelected, onToggleRowSelection, onStatusChange, onRowClick, useSoftIconBackground }) => {
   const salary = useSalary(app.salary, displayCurrency, true);
   const cvProfile = cvProfiles.find((profile) => profile.id === app.cvProfileId);
 
@@ -68,7 +70,12 @@ const JobRow: React.FC<{
 
       <td className="table-cell col-icon">
         <div className="table-icon-cell">
-          <CompanyIcon name={app.company} website={app.links?.website} linkedin={app.links?.linkedin} />
+          <CompanyIcon
+            name={app.company}
+            website={app.links?.website}
+            linkedin={app.links?.linkedin}
+            useAverageBg={useSoftIconBackground}
+          />
         </div>
       </td>
 
@@ -161,6 +168,7 @@ const JobRow: React.FC<{
 export const JobTable: React.FC<JobTableProps> = ({
   applications, displayCurrency, cvProfiles, visibleColumns, selectorMode, selectedIds, onToggleRowSelection, onStatusChange, onDelete: _onDelete, onEdit: _onEdit, onRowClick,
 }) => {
+  const { useSoftIconBackground } = useSettings();
   const isVisible = (col: string) => visibleColumns.includes(col);
 
   return (
@@ -211,6 +219,7 @@ export const JobTable: React.FC<JobTableProps> = ({
               onToggleRowSelection={onToggleRowSelection}
               onStatusChange={onStatusChange}
               onRowClick={onRowClick}
+              useSoftIconBackground={useSoftIconBackground}
             />
           ))}
         </tbody>

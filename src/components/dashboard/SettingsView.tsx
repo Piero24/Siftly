@@ -50,6 +50,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ applications = [], o
     setPrivacy,
     tableDisplay,
     setTableDisplay,
+    useSoftIconBackground,
+    setUseSoftIconBackground,
   } = useSettings();
 
   const { showToast } = useToast();
@@ -149,6 +151,21 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ applications = [], o
                 <option value="1y">Last Year</option>
               </select>
             </div>
+
+            <div className="setting-item">
+              <label>Company Icon Style</label>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={useSoftIconBackground}
+                  onChange={(e) => setUseSoftIconBackground(e.target.checked)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+              When enabled, table and chart icons use a soft background with inset favicon. Disable to use full favicon mode.
+            </p>
           </SettingsCard>
         )}
 

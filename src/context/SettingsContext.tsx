@@ -29,6 +29,8 @@ interface SettingsContextValue {
   setPrivacy: React.Dispatch<React.SetStateAction<{ telemetry: boolean; dataRetention: number }>>;
   tableDisplay: { visibleColumns: string[]; defaultSort: string; rowsPerPage: number };
   setTableDisplay: React.Dispatch<React.SetStateAction<{ visibleColumns: string[]; defaultSort: string; rowsPerPage: number }>>;
+  useSoftIconBackground: boolean;
+  setUseSoftIconBackground: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const THEME_STORAGE_KEY = 'lumina-theme-mode';
@@ -36,6 +38,7 @@ const STORAGE_MODE_KEY = 'siftly-storage-mode';
 const NOTIFICATIONS_KEY = 'siftly-notifications';
 const PRIVACY_KEY = 'siftly-privacy';
 const TABLE_DISPLAY_KEY = 'siftly-table-display';
+const ICON_STYLE_KEY = 'siftly-use-soft-icon-background';
 
 const getSystemTheme = (): ResolvedTheme => {
   if (typeof window === 'undefined') return 'light';
@@ -107,6 +110,17 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch { return { visibleColumns: ['company', 'position', 'status', 'date'], defaultSort: 'date-desc', rowsPerPage: 20 }; }
   });
 
+  const [useSoftIconBackground, setUseSoftIconBackground] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      const stored = window.localStorage.getItem(ICON_STYLE_KEY);
+      if (stored == null) return true;
+      return stored === 'true';
+    } catch {
+      return true;
+    }
+  });
+
   const resolvedTheme: ResolvedTheme = theme === 'system' ? systemTheme : theme;
 
   useEffect(() => {
@@ -166,6 +180,12 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch { /* ignore */ }
   }, [tableDisplay]);
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ICON_STYLE_KEY, String(useSoftIconBackground));
+    } catch { /* ignore */ }
+  }, [useSoftIconBackground]);
+
   const value = useMemo<SettingsContextValue>(() => ({
     language,
     setLanguage,
@@ -190,6 +210,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setPrivacy,
     tableDisplay,
     setTableDisplay,
+    useSoftIconBackground,
+    setUseSoftIconBackground,
   }), [
     language,
     currency,
@@ -203,6 +225,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     notifications,
     privacy,
     tableDisplay,
+    useSoftIconBackground,
   ]);
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

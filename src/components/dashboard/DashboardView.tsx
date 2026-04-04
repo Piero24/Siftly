@@ -138,7 +138,7 @@ const TIME_RANGE_OPTIONS: Array<{ value: 'today' | 'total' | '7d' | '30d' | '1y'
 export const DashboardView: React.FC<DashboardViewProps> = ({
   applications,
 }) => {
-  const { cvProfiles, defaultTimeRange, resolvedTheme } = useSettings();
+  const { cvProfiles, defaultTimeRange, resolvedTheme, useSoftIconBackground } = useSettings();
   const [tooltipContent, setTooltipContent] = useState('');
   const [isMapInteractive, setIsMapInteractive] = useState(false);
   const [timeRange, setTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>(defaultTimeRange);
@@ -227,7 +227,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <foreignObject x={-90} y={-12} width={112} height={24}>
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '8px' }}>
             <div style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <CompanyIcon name={payload.value} logo={stat?.logo} website={stat?.website} linkedin={stat?.linkedin} size={20} />
+              <CompanyIcon
+                name={payload.value}
+                logo={stat?.logo}
+                website={stat?.website}
+                linkedin={stat?.linkedin}
+                size={20}
+                useAverageBg={useSoftIconBackground}
+              />
             </div>
             <span style={{ fontSize: '11px', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left', maxWidth: '84px' }}>
               {payload.value}
