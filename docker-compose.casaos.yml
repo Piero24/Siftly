@@ -1,0 +1,47 @@
+name: siftly-casaos
+
+services:
+  app:
+    image: ghcr.io/piero24/siftly:${SIFTLY_IMAGE_TAG:-latest}
+    pull_policy: always
+    container_name: siftly-casaos
+    restart: unless-stopped
+    ports:
+      - target: 8080
+        published: '8080'
+        protocol: tcp
+    x-casaos:
+      ports:
+        - container: '8080'
+          description:
+            en_us: Siftly Web UI
+      envs:
+        - container: SIFTLY_IMAGE_TAG
+          description:
+            en_us: GHCR image tag to deploy (e.g. latest, 1.3.0, 1.3).
+
+networks:
+  default:
+    name: siftly-casaos_default
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: Piero24
+  category: Productivity
+  developer: Piero24
+  icon: https://raw.githubusercontent.com/Piero24/Siftly/main/public/logo.png
+  index: /
+  is_uncontrolled: false
+  main: app
+  port_map: '8080'
+  scheme: http
+  store_app_id: siftly-casaos
+  tagline:
+    en_us: Job application tracker in web-only local mode (IndexedDB, no cloud required).
+  description:
+    en_us: Siftly web deployment for CasaOS using the GHCR image published by GitHub Actions. Runs in local-only mode with browser IndexedDB storage.
+  title:
+    custom: ''
+    en_us: Siftly

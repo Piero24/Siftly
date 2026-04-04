@@ -20,7 +20,9 @@ describe('iconColor', () => {
 
   it('normalizes favicon and direct urls to the same domain source', () => {
     const direct = normalizeIconSource('https://www.openai.com/careers');
-    const favicon = normalizeIconSource('https://www.google.com/s2/favicons?domain=openai.com&sz=128');
+    const favicon = normalizeIconSource(
+      'https://www.google.com/s2/favicons?domain=openai.com&sz=128'
+    );
 
     expect(direct).toBe('openai.com');
     expect(favicon).toBe('openai.com');
@@ -44,7 +46,9 @@ describe('iconColor', () => {
   });
 
   it('returns configured fallback when no image source exists', async () => {
-    await expect(getIconBackgroundColor('', { fallbackColor: 'var(--surface-muted)' })).resolves.toBe('var(--surface-muted)');
+    await expect(
+      getIconBackgroundColor('', { fallbackColor: 'var(--surface-muted)' })
+    ).resolves.toBe('var(--surface-muted)');
   });
 
   it('returns neutral fallback by default when image source is empty', async () => {
