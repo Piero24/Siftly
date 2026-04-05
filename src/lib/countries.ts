@@ -8,12 +8,25 @@ import enLocale from 'i18n-iso-countries/langs/en.json';
 // Register English locale once at module level
 countries.registerLocale(enLocale);
 
+const COUNTRY_CODE_ALIASES: Record<string, string> = {
+  UK: 'GB',
+};
+
+/**
+ * Normalizes common non-ISO aliases to ISO 3166-1 alpha-2 country codes.
+ */
+export function normalizeCountryCode(code: string): string {
+  const normalized = code.trim().toUpperCase();
+  return COUNTRY_CODE_ALIASES[normalized] ?? normalized;
+}
+
 /**
  * Returns the full English country name for an ISO alpha-2 code.
  * Falls back gracefully to the raw code string.
  */
 export function getCountryName(code: string): string {
-  return countries.getName(code.toUpperCase(), 'en') ?? code;
+  const normalizedCode = normalizeCountryCode(code);
+  return countries.getName(normalizedCode, 'en') ?? normalizedCode;
 }
 
 /**
@@ -21,7 +34,7 @@ export function getCountryName(code: string): string {
  * Uses lower-case country code.
  */
 export function getFlagClass(code: string): string {
-  return `fi fi-${code.toLowerCase()}`;
+  return `fi fi-${normalizeCountryCode(code).toLowerCase()}`;
 }
 
 /** All supported country codes (for select menus, etc.) */

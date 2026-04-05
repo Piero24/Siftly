@@ -1,7 +1,3 @@
-/**
- * Country & City utilities powered by country-state-city.
- * Replaces the hardcoded SUPPORTED_COUNTRIES list with the full world list.
- */
 import { Country, City } from 'country-state-city';
 import type { ICountry, ICity } from 'country-state-city';
 

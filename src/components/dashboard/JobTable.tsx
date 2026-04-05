@@ -5,6 +5,7 @@
 import React from 'react';
 import { CVProfile, JobApplication, JobStatus } from '../../types/job';
 import { logger } from '../../lib/logger';
+import { getFlagClass } from '../../lib/countries';
 
 const tableLogger = logger.for('JobTable');
 import { CompanyIcon }    from './CompanyIcon';
@@ -105,7 +106,7 @@ const JobRow: React.FC<{
       {isVisible('country') && (
         <td className="table-cell col-country" data-label="Country">
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-            <span className={`fi fi-${app.country.toLowerCase()}`} style={{ fontSize: '16px', borderRadius: '2px', border: '1px solid var(--border-subtle)' }} />
+            <span className={getFlagClass(app.country)} style={{ fontSize: '16px', borderRadius: '2px', border: '1px solid var(--border-subtle)' }} />
             <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{app.country}</span>
           </div>
         </td>
