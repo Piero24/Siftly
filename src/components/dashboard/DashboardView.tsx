@@ -153,10 +153,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   }, []);
 
   const isMobile = windowWidth < 768;
-  const isSmallMobile = windowWidth < 480;
   const chartHeight = Math.max(isMobile ? 220 : 280, 1);
   const timelineHeight = Math.max(isMobile ? 200 : 260, 1);
-  const mapHeight = Math.max(isMobile ? (isSmallMobile ? 300 : 380) : 470, 1);
+  const mapHeight = Math.max(windowWidth < 520 ? 240 : windowWidth < 680 ? 280 : windowWidth < 1100 ? 360 : 470, 1);
+  const mapScale = windowWidth < 400 ? 190 : windowWidth < 520 ? 178 : windowWidth < 680 ? 172 : windowWidth < 900 ? 178 : 186;
+  const mapZoom = windowWidth < 400 ? 1.24 : windowWidth < 520 ? 1.16 : windowWidth < 680 ? 1.08 : 1;
+  const mapCenter: [number, number] = windowWidth < 520 ? [-18, 37] : windowWidth < 680 ? [-8, 30] : [10, 24];
 
   const filteredApplications = useMemo(() => {
     if (timeRange === 'total') return applications;
@@ -277,14 +279,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {FEATURES.dashboard.kpiStrip && (
         <section className="db-section">
           <div className="db-chart-card db-overview-card glass-container" style={{ padding: '12px 20px' }}>
-            <div className="db-kpi-grid" style={{ padding: 0, justifyContent: 'center', gap: '12px', overflowX: 'auto', flexWrap: 'nowrap' }}>
+            <div className="db-kpi-grid">
               {STATUS_CONFIG.map(({ key, label, color, Icon }) => (
                 <div key={key} className="db-kpi-item">
                   <div className="db-kpi-item-content">
                     <Icon size={12} color={color} />
                     <span className="db-kpi-label">{label}</span>
                   </div>
-                  <span className="db-kpi-number" style={{ color, fontSize: '18px' }}>
+                  <span className="db-kpi-number" style={{ color }}>
                     {(activeStats as unknown as Record<string, number>)[key]}
                   </span>
                 </div>
@@ -312,10 +314,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="db-map-viewport" style={{ height: mapHeight, minHeight: mapHeight }}>
                       <ComposableMap
                         projection="geoMercator"
-                        projectionConfig={{ scale: isMobile ? 120 : 186, center: [10, 20] }}
+                        projectionConfig={{ scale: mapScale, center: mapCenter }}
                         style={{ width: '100%', height: '100%', pointerEvents: isMapInteractive ? 'auto' : 'none', outline: 'none' }}
                       >
-                        <ZoomableGroup zoom={1}>
+                        <ZoomableGroup zoom={mapZoom}>
                           <Geographies geography={GEO_URL}>
                             {(geoData: { geographies: Array<{ id: string; rsmKey: string; properties: { name: string } }> }) =>
                               geoData.geographies.map((geo) => {
@@ -417,7 +419,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       <span className="db-empty-chart-text">No applications added yet</span>
                     </div>
                   ) : (
-                    <div className="db-continent-row db-pill-row-spaced">
+                    <div className="db-continent-row db-pill-row-spaced db-employment-row">
                       {employmentTypes.map((stat) => (
                         <div key={stat.name} className="db-continent-pill" style={{ color: EMPLOYMENT_COLOR[stat.name] }}>
                           <div className="db-continent-dot" style={{ backgroundColor: EMPLOYMENT_COLOR[stat.name] }} />

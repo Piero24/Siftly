@@ -6,7 +6,7 @@
 .db-root {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: clamp(16px, 2.2vw, 24px);
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -26,7 +26,7 @@
 }
 
 .db-section-title {
-  font-size: 20px;
+  font-size: clamp(18px, 3vw, 20px);
   font-weight: 700;
   margin: 0;
   color: var(--text-primary);
@@ -50,11 +50,9 @@
 }
 
 .db-kpi-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-y: contain;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .db-kpi-item {
@@ -63,8 +61,11 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  flex: 1;
-  min-width: 70px;
+  min-width: 0;
+  padding: 4px 2px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
 }
 
 .db-kpi-item-content {
@@ -84,20 +85,29 @@
 }
 
 .db-kpi-number {
+  font-size: 18px;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.5px;
 }
 
-@media (max-width: 600px) {
-  .db-kpi-item {
-    min-width: 60px;
+@media (max-width: 1200px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+@media (max-width: 680px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .db-kpi-number {
-    font-size: 15px !important;
+    font-size: 16px;
   }
+
   .db-kpi-label {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
@@ -123,6 +133,7 @@
 }
 
 .db-time-btn {
+  min-height: 34px;
   padding: 6px 10px;
   border-radius: 8px;
   border: none;
@@ -183,20 +194,42 @@
 }
 
 .db-worktype-row {
-  flex-wrap: nowrap;
-  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  gap: 14px;
 }
 
 .db-pill-row-spaced {
   width: 100%;
-  flex-wrap: nowrap;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  column-gap: 14px;
+  row-gap: 12px;
+}
+
+.db-employment-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.db-worktype-row .db-continent-pill,
+.db-employment-row .db-continent-pill {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 38px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .db-worktype-row .db-continent-pill {
-  padding: 4px 8px;
+  padding: 6px 10px;
   font-size: 11px;
-  gap: 4px;
+  gap: 8px;
 }
 
 .db-worktype-row .badge {
@@ -255,6 +288,8 @@
 
 .db-map-interactive-area {
   position: relative;
+  overflow: hidden;
+  border-radius: 12px;
   height: 470px;
   min-height: 470px;
   flex: 0 0 470px;
@@ -282,14 +317,26 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-top: 8px;
-  margin-top: auto;
+  padding-top: 12px;
+  margin-top: 0;
   border-top: 1px solid var(--border-subtle);
 }
 
 .db-continent-row-spaced {
-  justify-content: space-between;
-  row-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: stretch;
+  column-gap: 12px;
+  row-gap: 12px;
+}
+
+.db-continent-row-spaced .db-continent-pill {
+  flex: 1 1 140px;
+  min-width: 140px;
+  min-height: 38px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .db-map-continent-section .db-empty-chart {
@@ -378,13 +425,13 @@
   }
 
   .db-map-interactive-area {
-    height: 450px;
-    min-height: 450px;
-    flex: 0 0 450px;
+    height: 360px;
+    min-height: 360px;
+    flex: 0 0 360px;
   }
 
   .db-map-viewport {
-    min-height: 450px;
+    min-height: 360px;
   }
 
   .db-time-filter-shell {
@@ -412,13 +459,83 @@
   }
 
   .db-map-interactive-area {
-    height: 300px !important;
-    min-height: 300px !important;
-    flex: 0 0 300px !important;
+    height: 280px !important;
+    min-height: 280px !important;
+    flex: 0 0 280px !important;
   }
 
   .db-map-viewport {
-    min-height: 300px !important;
+    min-height: 280px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .db-worktype-row,
+  .db-employment-row {
+    gap: 10px;
+  }
+
+  .db-continent-row-spaced {
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+
+  .db-continent-row-spaced .db-continent-pill {
+    flex-basis: 120px;
+    min-width: 120px;
+  }
+
+  .db-pill-row-spaced {
+    column-gap: 12px;
+    row-gap: 10px;
+  }
+
+  .db-empty-chart {
+    height: 240px;
+  }
+}
+
+@media (max-width: 520px) {
+  .db-worktype-row,
+  .db-employment-row {
+    gap: 8px;
+  }
+
+  .db-continent-row-spaced {
+    column-gap: 8px;
+    row-gap: 8px;
+  }
+
+  .db-continent-row-spaced .db-continent-pill {
+    flex-basis: 108px;
+    min-width: 108px;
+  }
+
+  .db-pill-row-spaced {
+    row-gap: 8px;
+  }
+
+  .db-map-interactive-area {
+    height: 240px !important;
+    min-height: 240px !important;
+    flex: 0 0 240px !important;
+  }
+
+  .db-map-viewport {
+    min-height: 240px !important;
+  }
+
+  .db-chart-card {
+    padding: 12px 14px 14px;
+  }
+
+  .db-empty-chart {
+    height: 210px;
+  }
+
+  .db-continent-pill {
+    padding: 5px 10px;
+    font-size: 11px;
   }
 }
 

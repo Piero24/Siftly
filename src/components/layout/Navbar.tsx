@@ -16,6 +16,12 @@ interface NavbarProps {
   onViewChange: (view: ViewType) => void;
 }
 
+const PRIMARY_VIEWS: Array<{ view: ViewType; label: string }> = [
+  { view: 'dashboard', label: 'Dashboard' },
+  { view: 'table', label: 'Applications' },
+  { view: 'interviewing', label: 'Interviewing' },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
   const { user, isLocalOnly, signOut } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
@@ -37,9 +43,51 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showProfile, handleClickOutside]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false);
+        setShowProfile(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-mobile-menu-open', mobileMenuOpen);
+    return () => document.body.classList.remove('nav-mobile-menu-open');
+  }, [mobileMenuOpen]);
+
   const handleNavClick = (view: ViewType) => {
     onViewChange(view);
+    setShowProfile(false);
     setMobileMenuOpen(false);
+  };
+
+  const handleMobileToggle = () => {
+    setShowProfile(false);
+    setMobileMenuOpen((prev) => !prev);
+  };
+
+  const handleSignOut = () => {
+    setMobileMenuOpen(false);
+    setShowProfile(false);
+    signOut();
   };
 
   return (
@@ -52,21 +100,23 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
       {/* Hamburger button — visible on mobile only */}
       <button
         className={`nav-hamburger ${mobileMenuOpen ? 'open' : ''}`}
-        onClick={() => setMobileMenuOpen((prev) => !prev)}
+        onClick={handleMobileToggle}
         aria-label="Toggle navigation menu"
+        aria-expanded={mobileMenuOpen}
+        aria-controls="mobile-nav-drawer"
       >
         <span /><span /><span />
       </button>
 
-      <nav className={`nav-center ${mobileMenuOpen ? 'nav-center--open' : ''}`}>
+      <nav className="nav-center">
         <div className="nav-menu-pill">
-          {(['dashboard', 'table', 'interviewing'] as ViewType[]).map((view) => (
+          {PRIMARY_VIEWS.map(({ view, label }) => (
             <button
               key={view}
               className={`nav-link-btn ${currentView === view ? 'active' : ''}`}
               onClick={() => handleNavClick(view)}
             >
-              {view === 'table' ? 'Applications' : view === 'interviewing' ? 'Interviewing' : 'Dashboard'}
+              {label}
             </button>
           ))}
         </div>
@@ -124,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
               </button>
               <button
                 className="profile-dropdown-item profile-dropdown-item--danger"
-                onClick={() => { signOut(); setShowProfile(false); }}
+                onClick={handleSignOut}
               >
                 Sign Out
               </button>
@@ -132,6 +182,73 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
           )}
         </div>
       </div>
+
+      <button
+        type="button"
+        className={`nav-mobile-backdrop ${mobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+        aria-label="Close navigation menu"
+      />
+
+      <aside
+        id="mobile-nav-drawer"
+        className={`nav-mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}
+        aria-hidden={!mobileMenuOpen}
+      >
+        <div className="nav-mobile-drawer-header">
+          <div className="nav-mobile-profile-meta">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Avatar" className="profile-dropdown-avatar" />
+            ) : (
+              <div className="profile-dropdown-avatar profile-dropdown-avatar--placeholder">
+                {displayName.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <div>
+              <div className="profile-dropdown-name">{displayName}</div>
+              {user?.email && <div className="profile-dropdown-email">{user.email}</div>}
+              {isLocalOnly && <div className="profile-dropdown-email">Local mode</div>}
+            </div>
+          </div>
+          <button type="button" className="nav-mobile-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
+            ×
+          </button>
+        </div>
+
+        <div className="nav-mobile-section">
+          {PRIMARY_VIEWS.map(({ view, label }) => (
+            <button
+              key={view}
+              type="button"
+              className={`nav-mobile-link ${currentView === view ? 'active' : ''}`}
+              onClick={() => handleNavClick(view)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="nav-mobile-section">
+          <button
+            type="button"
+            className={`nav-mobile-link ${currentView === 'settings' ? 'active' : ''}`}
+            onClick={() => handleNavClick('settings')}
+          >
+            Settings
+          </button>
+          <button
+            type="button"
+            className={`nav-mobile-link ${currentView === 'account' ? 'active' : ''}`}
+            onClick={() => handleNavClick('account')}
+          >
+            Account
+          </button>
+        </div>
+
+        <button type="button" className="nav-mobile-link nav-mobile-link--danger" onClick={handleSignOut}>
+          Sign Out
+        </button>
+      </aside>
     </header>
   );
 };
