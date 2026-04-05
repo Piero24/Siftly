@@ -43,6 +43,7 @@ const STATUSES: { value: JobStatus; label: string }[] = [
   { value: 'applied', label: 'Applied' },
   { value: 'interviewing', label: 'Interviewing' },
   { value: 'offer', label: 'Offer' },
+  { value: 'declined', label: 'Declined' },
   { value: 'accepted', label: 'Accepted' },
   { value: 'rejected', label: 'Rejected' },
   { value: 'no-response', label: 'No Response' },

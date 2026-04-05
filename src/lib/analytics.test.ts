@@ -36,15 +36,17 @@ describe('analytics', () => {
     const apps: JobApplication[] = [
       makeApp({ status: 'applied' }),
       makeApp({ status: 'offer' }),
+      makeApp({ status: 'declined' }),
       makeApp({ status: 'rejected' }),
       makeApp({ status: 'rejected' }),
     ];
 
     const counts = getStatusCounts(apps);
 
-    expect(counts.total).toBe(4);
+    expect(counts.total).toBe(5);
     expect(counts.applied).toBe(1);
     expect(counts.offer).toBe(1);
+    expect(counts.declined).toBe(1);
     expect(counts.rejected).toBe(2);
   });
 
@@ -82,12 +84,13 @@ describe('analytics', () => {
     const apps: JobApplication[] = [
       makeApp({ status: 'rejected' }), // responded
       makeApp({ status: 'offer' }), // responded
+      makeApp({ status: 'declined' }), // responded
       makeApp({ status: 'no-response' }), // no-response
       makeApp({ status: 'applied' }), // pending
     ];
 
     const stats = getResponseRate(apps);
-    expect(stats.responded).toBe(2);
+    expect(stats.responded).toBe(3);
     expect(stats.noResponse).toBe(1);
     expect(stats.pending).toBe(1);
   });

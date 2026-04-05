@@ -13,6 +13,7 @@ export interface StatusCounts {
   applied:      number;
   interviewing: number;
   offer:        number;
+  declined:     number;
   accepted:     number;
   rejected:     number;
   'no-response': number;
@@ -21,7 +22,7 @@ export interface StatusCounts {
 export function getStatusCounts(apps: JobApplication[]): StatusCounts {
   const zero: StatusCounts = {
     total: apps.length, pending: 0, applied: 0,
-    interviewing: 0, offer: 0, accepted: 0, rejected: 0, 'no-response': 0,
+    interviewing: 0, offer: 0, declined: 0, accepted: 0, rejected: 0, 'no-response': 0,
   };
   return apps.reduce((acc, app) => {
     const s = app.status as JobStatus;
@@ -288,7 +289,7 @@ export function getResponseRate(apps: JobApplication[]): ResponseRate {
   let pending = 0;
 
   for (const app of apps) {
-    if (['interviewing', 'offer', 'accepted', 'rejected'].includes(app.status)) {
+    if (['interviewing', 'offer', 'declined', 'accepted', 'rejected'].includes(app.status)) {
       responded++;
     } else if (app.status === 'no-response') {
       noResponse++;

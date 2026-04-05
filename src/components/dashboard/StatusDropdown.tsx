@@ -22,6 +22,7 @@ const STATUS_CONFIG: Record<JobStatus, StatusConfig> = {
   applied:      { label: 'Applied',      className: 'badge badge-applied',      Icon: SendIcon          },
   interviewing: { label: 'Interviewing', className: 'badge badge-interviewing', Icon: UsersIcon         },
   offer:        { label: 'Offer',        className: 'badge badge-offer',        Icon: GiftIcon          },
+  declined:     { label: 'Declined',     className: 'badge badge-declined',     Icon: XCircleIcon       },
   accepted:     { label: 'Accepted',     className: 'badge badge-accepted',     Icon: CheckCircleIcon   },
   rejected:     { label: 'Rejected',     className: 'badge badge-rejected',     Icon: XCircleIcon       },
   'no-response':{ label: 'No Response',  className: 'badge badge-no-response',  Icon: ClockIcon         },

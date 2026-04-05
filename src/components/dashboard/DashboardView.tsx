@@ -79,6 +79,7 @@ const STATUS_CONFIG = [
   { key: 'applied', label: 'Applied', color: '#007AFF', bg: 'rgba(0,122,255,0.06)', Icon: SendIcon },
   { key: 'interviewing', label: 'Interviewing', color: '#34C759', bg: 'rgba(52,199,89,0.07)', Icon: UsersIcon },
   { key: 'offer', label: 'Offers', color: '#AF52DE', bg: 'rgba(175,82,222,0.07)', Icon: GiftIcon },
+  { key: 'declined', label: 'Declined', color: '#FF9500', bg: 'rgba(255,149,0,0.10)', Icon: XCircleIcon },
   { key: 'accepted', label: 'Accepted', color: '#30D158', bg: 'rgba(48,209,88,0.07)', Icon: CheckCircleIcon },
   { key: 'rejected', label: 'Rejected', color: '#FF3B30', bg: 'rgba(255,59,48,0.07)', Icon: XCircleIcon },
   { key: 'pending', label: 'Pending', color: '#8E8E93', bg: 'rgba(142,142,147,0.07)', Icon: CircleIcon },
