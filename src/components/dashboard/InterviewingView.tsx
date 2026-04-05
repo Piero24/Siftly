@@ -147,7 +147,7 @@ const InterviewRow: React.FC<{
         </div>
       </td>
 
-      <td className="table-cell" style={{ fontSize: '13px', textAlign: 'center' }}>
+      <td className="table-cell col-recruiter" data-label="Recruiter" style={{ fontSize: '13px', textAlign: 'center' }}>
         {app.recruiter ? (
           <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', textAlign: 'left' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
@@ -172,21 +172,21 @@ const InterviewRow: React.FC<{
         )}
       </td>
 
-      <td className="table-cell" style={{ textAlign: 'center' }}>
+      <td className="table-cell col-phonescreens" data-label="Phone" style={{ textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
           <PhoneIcon size={14} style={{ color: 'var(--text-secondary)' }} />
           <span style={{ fontWeight: 500 }}>{phoneScreens}</span>
         </div>
       </td>
 
-      <td className="table-cell" style={{ textAlign: 'center' }}>
+      <td className="table-cell col-interviews" data-label="Technical" style={{ textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
           <CodeIcon size={14} style={{ color: 'var(--text-secondary)' }} />
           <span style={{ fontWeight: 500 }}>{interviews}</span>
         </div>
       </td>
 
-      <td className="table-cell" style={{ textAlign: 'center' }}>
+      <td className="table-cell col-totalrounds" data-label="Total" style={{ textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', background: 'var(--surface-muted)', borderRadius: '12px', padding: '2px 8px', fontSize: '12px', fontWeight: 600, gap: '4px' }}>
           <SumIcon size={12} style={{ opacity: 0.6 }} />
           {totalRounds}
@@ -273,12 +273,14 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
     <div className="glass-container applications-card" style={{ maxWidth: '1400px', width: '100%', margin: '0 auto' }}>
       <div className="applications-toolbar">
         <div className="applications-toolbar-left">
-          <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>Interviewing Pipeline</h2>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>Interviewing</h2>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
         <div className="applications-toolbar-right">
-          <button className={`btn-apple selection-toggle-btn ${showFilterRow ? 'is-active' : ''}`} onClick={toggleFilterRow}><FilterIcon size={14} />Filters</button>
-          <button className={`btn-apple selection-toggle-btn ${selectorMode ? 'is-active' : ''}`} onClick={toggleSelectorMode}><UsersIcon size={14} />{selectorMode ? 'Exit Selection' : 'Select Rows'}</button>
+          <div className="applications-toolbar-actions">
+            <button className={`btn-apple selection-toggle-btn ${showFilterRow ? 'is-active' : ''}`} onClick={toggleFilterRow}><FilterIcon size={14} />Filters</button>
+            <button className={`btn-apple selection-toggle-btn ${selectorMode ? 'is-active' : ''}`} onClick={toggleSelectorMode}><UsersIcon size={14} />{selectorMode ? 'Exit Selection' : 'Select Rows'}</button>
+          </div>
         </div>
       </div>
 
@@ -344,7 +346,7 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
       )}
 
       <div className="table-responsive">
-        <table className="job-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+        <table className="job-table interview-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
           <colgroup>
             <col className="col-select" />
             <col className="col-icon" />

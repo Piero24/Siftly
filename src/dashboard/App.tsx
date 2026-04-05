@@ -308,22 +308,24 @@ const App: React.FC = () => {
                 <SearchBar value={searchTerm} onChange={setSearchTerm} />
               </div>
               <div className="applications-toolbar-right">
+                <div className="applications-toolbar-actions">
+                  <button
+                    className={`btn-apple selection-toggle-btn ${showFilterRow ? 'is-active' : ''}`}
+                    onClick={toggleFilterRow}
+                  >
+                    <FilterIcon size={14} />
+                    Filters
+                  </button>
+                  <button
+                    className={`btn-apple selection-toggle-btn ${selectorMode ? 'is-active' : ''}`}
+                    onClick={toggleSelectorMode}
+                  >
+                    <UsersIcon size={14} />
+                    {selectorMode ? 'Exit Selection' : 'Select Rows'}
+                  </button>
+                </div>
                 <button
-                  className={`btn-apple selection-toggle-btn ${showFilterRow ? 'is-active' : ''}`}
-                  onClick={toggleFilterRow}
-                >
-                  <FilterIcon size={14} />
-                  Filters
-                </button>
-                <button
-                  className={`btn-apple selection-toggle-btn ${selectorMode ? 'is-active' : ''}`}
-                  onClick={toggleSelectorMode}
-                >
-                  <UsersIcon size={14} />
-                  {selectorMode ? 'Exit Selection' : 'Select Rows'}
-                </button>
-                <button
-                  className="btn-apple btn-primary"
+                  className="btn-apple btn-primary btn-new-app"
                   style={{ padding: '8px 16px', whiteSpace: 'nowrap' }}
                   onClick={() => setShowNewModal(true)}
                 >

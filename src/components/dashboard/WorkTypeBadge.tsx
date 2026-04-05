@@ -31,7 +31,7 @@ export const WorkTypeBadge: React.FC<WorkTypeBadgeProps> = ({ type }) => {
   return (
     <span className={className}>
       <Icon size={12} />
-      {label}
+      <span className="work-type-label">{label}</span>
     </span>
   );
 };

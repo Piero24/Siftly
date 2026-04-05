@@ -179,11 +179,7 @@
   }
 
   .job-table, 
-  .job-table thead, 
-  .job-table tbody, 
-  .job-table th, 
-  .job-table td, 
-  .job-table tr {
+  .job-table tbody {
     display: block;
     width: 100% !important;
   }
@@ -195,14 +191,21 @@
 
   .job-row {
     margin-bottom: 20px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    background: var(--surface-subtle, var(--background)); /* Increased contrast from container */
+    border: 1px solid var(--border-strong); /* Stronger border contrast */
     border-radius: 16px;
     padding: 16px;
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--shadow-medium); /* Increased shadow depth */
     position: relative;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden; /* Enforces corner clipping for CV ribbon */
+    
+    /* Flex container for mobile card elements */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
   }
 
   .job-row:hover {
@@ -210,23 +213,7 @@
     box-shadow: var(--shadow-medium);
   }
 
-  /* Special handling for selector/icon columns on mobile */
-  .table-cell.col-select {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 0;
-    width: auto !important;
-    z-index: 5;
-  }
-
-  .table-cell.col-icon {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 12px;
-    padding: 0;
-  }
-
+  /* Default cell behavior */
   .table-cell {
     border: none;
     padding: 8px 0;
@@ -237,15 +224,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--divider-subtle);
+    border-bottom: 1px dashed var(--divider-subtle);
+    width: 100%;
+    order: 10;
+    box-sizing: border-box;
   }
-
   .table-cell:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
-
-  /* Use data-label for mobile headers */
+  
   .table-cell[data-label]::before {
     content: attr(data-label);
     font-weight: 600;
@@ -260,16 +248,263 @@
     text-align: right;
   }
 
+  /* CHECKBOX */
+  .table-cell.col-select {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: auto !important;
+    border: none !important;
+    padding: 0;
+    z-index: 10;
+    order: 0;
+  }
+
+  /* LOGO */
+  .table-cell.col-icon {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 48px !important;
+    height: 48px;
+    border: none !important;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 1;
+  }
+  .table-cell.col-icon .table-icon-cell {
+    transform: scale(1.1);
+    transform-origin: center;
+  }
+
+  /* COMPANY */
+  .table-cell.col-company {
+    width: 100% !important;
+    padding: 0 150px 2px 64px !important; /* 150px right padding clears absolute status badge */
+    border: none !important;
+    order: 1;
+    align-items: flex-start;
+  }
+  .table-cell.col-company::before { content: none !important; }
+  .table-cell.col-company .table-ellipsis { 
+    font-size: 16px; 
+    font-weight: 600; 
+    text-align: left; 
+    white-space: normal;
+    color: var(--text-primary);
+  }
+
+  /* POSITION */
+  .table-cell.col-position {
+    width: 100% !important;
+    padding: 0 150px 8px 64px !important;
+    border: none !important;
+    order: 2;
+    align-items: flex-start;
+  }
+  .table-cell.col-position::before { content: none !important; }
+  .table-cell.col-position .table-ellipsis { 
+    font-size: 13px; 
+    font-weight: 500; 
+    text-align: left; 
+    white-space: normal;
+    color: var(--text-secondary);
+  }
+
+  /* CV CORNER RIBBON */
+  .table-cell.col-cv {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 26px !important; /* Smaller corner size */
+    height: 26px;
+    border: none !important;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+  }
+  .table-cell.col-cv::before { content: none !important; }
+  .table-cell.col-cv span:not(.cv-dot-indicator) { display: none; }
+  .table-cell.col-cv .cv-dot-indicator {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+
+  /* INLINE TAGS (Country, City, Work, Sector) */
+  .table-cell.col-country,
+  .table-cell.col-city,
+  .table-cell.col-work,
+  .table-cell.col-sector {
+    width: auto !important;
+    padding: 0 8px 6px 0;
+    border: none !important;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    order: 3;
+    margin-top: 4px;
+  }
+  .table-cell.col-country::before,
+  .table-cell.col-city::before,
+  .table-cell.col-work::before,
+  .table-cell.col-sector::before { content: none !important; }
+
+  .table-cell.col-country > div {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  .table-cell.col-country > div > span:last-child {
+    display: none;
+  }
+
+  .table-cell.col-city {
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  /* WORK TYPE (Icon Only) */
+  .table-cell.col-work .work-type-label {
+    display: none;
+  }
+  .table-cell.col-work .badge {
+    padding: 4px; /* Icon-only compact padding */
+    border-radius: 6px;
+  }
+
+  /* POST-HEADER DIVIDER */
+  .table-cell.col-salary,
+  .table-cell.col-recruiter {
+    border-top: 1px dotted var(--divider);
+    padding-top: 12px;
+    margin-top: 4px;
+    order: 10;
+  }
+
+  /* PIPELINE COUNTS */
+  .table-cell.col-phonescreens,
+  .table-cell.col-interviews,
+  .table-cell.col-totalrounds {
+    width: 33.33% !important;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    border: none;
+    padding: 12px 0 4px 0;
+  }
+  .table-cell.col-phonescreens[data-label]::before,
+  .table-cell.col-interviews[data-label]::before,
+  .table-cell.col-totalrounds[data-label]::before {
+    content: attr(data-label) !important;
+    display: block;
+    font-size: 10px;
+    margin-bottom: 8px;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  /* STATUS (Absolute Top Right) */
   .table-cell.col-status {
-    justify-content: space-between;
+    position: absolute;
+    top: 16px;
+    right: 8px;
+    height: 48px;
+    width: 130px !important;
+    border: none !important;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
   }
+  .table-cell.col-status::before { content: none !important; }
 
+  /* LINKS (Absolute under Status) */
+  .table-cell.col-links {
+    position: absolute;
+    top: 68px;
+    right: 8px;
+    width: 130px !important;
+    border: none !important;
+    padding: 0;
+    justify-content: center;
+    z-index: 10;
+  }
+  .table-cell.col-links::before { content: none !important; }
+  
   .table-links-cell {
-    justify-content: flex-end;
+    gap: 20px !important; /* Extra space between links to click easier */
+    justify-content: center !important;
+    width: 100%;
   }
 
-  .table-icon-cell {
-    transform: scale(1.2);
+  /* ── INTERVIEWING SPECIFIC MOBILE CARD ── */
+  
+  /* Row 1: Pipeline Stats (Left) + Date (Right) */
+  .interview-table .col-phonescreens,
+  .interview-table .col-interviews,
+  .interview-table .col-totalrounds {
+    width: auto !important;
+    flex: 0 1 auto !important;
+    border-bottom: none !important;
+    padding: 12px 10px 8px 0 !important;
+    margin: 0 !important;
+    order: 20;
+    justify-content: flex-start;
+  }
+
+  .interview-table .col-phonescreens { padding-left: 16px !important; }
+
+  .interview-table .col-phonescreens::before,
+  .interview-table .col-interviews::before,
+  .interview-table .col-totalrounds::before {
+    content: none !important;
+  }
+
+  .interview-table .col-date {
+    width: auto !important;
+    flex: 1;
+    justify-content: flex-end;
+    padding: 12px 16px 8px 0 !important;
+    border-bottom: none !important;
+    order: 21;
+    text-align: right;
+  }
+  .interview-table .col-date::before { 
+    content: none !important;
+  }
+
+  /* Row 2: Recruiter (Left) + Next Round (Right) */
+  .interview-table .col-recruiter {
+    width: 50% !important;
+    order: 30;
+    padding: 12px 0 12px 16px !important;
+    align-items: flex-start;
+    border-top: 1px solid var(--divider-subtle);
+    border-bottom: none !important;
+  }
+  .interview-table .col-recruiter::before { 
+    content: none !important;
+  }
+
+  .interview-table .col-nextround {
+    width: 50% !important;
+    order: 31;
+    padding: 12px 16px 12px 0 !important;
+    align-items: flex-end;
+    justify-content: flex-end;
+    border-top: 1px solid var(--divider-subtle);
+    border-bottom: none !important;
+  }
+  .interview-table .col-nextround::before {
+    content: none !important;
+  }
+  .interview-table .col-nextround > div {
+    align-items: flex-end !important;
   }
 }
 
