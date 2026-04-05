@@ -20,47 +20,68 @@
   animation: fadeIn 0.2s ease-out;
 }
 
+@media (max-width: 768px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+}
+
 /* ── Sheet ── */
 .modal-content {
-  width: 90%; max-width: 800px; max-height: calc(100vh - 120px);
+  width: 92%; max-width: 850px; max-height: calc(100vh - 80px);
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--surface-solid);
   box-shadow: var(--shadow-medium);
-  padding: 40px;
+  padding: 40px; /* Base padding for desktop */
   position: relative;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  display: flex; flex-direction: column; gap: 32px;
+  display: flex; flex-direction: column; 
+  gap: 0; /* Removing fixed gap to use targeted margins */
+  border-radius: 24px;
 }
 
-.modal-content::-webkit-scrollbar       { width: 8px; }
-.modal-content::-webkit-scrollbar-track { background: transparent; }
-.modal-content::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 10px; }
+@media (max-width: 768px) {
+  .modal-content {
+    width: 94%;
+    max-width: 440px !important;
+    height: auto;
+    max-height: 90vh;
+    border-radius: 28px;
+    padding: 0 !important;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+}
 
 /* ── Close button ── */
 .modal-close-btn {
   position: absolute;
   top: 24px; right: 24px;
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   display: flex; align-items: center; justify-content: center;
   background: var(--surface-subtle);
-  border: none; border-radius: 50%;
+  border: 1px solid var(--border-subtle); border-radius: 50%;
   color: var(--text-secondary);
-  cursor: pointer; transition: all 0.2s; z-index: 10;
+  cursor: pointer; transition: all 0.2s; z-index: 100;
 }
-.modal-close-btn:hover {
-  background: var(--input-bg-hover);
-  color: var(--text-primary);
-  transform: rotate(90deg);
+.modal-close-btn:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+@media (max-width: 768px) {
+  .modal-close-btn { top: 12px; right: 12px; width: 32px; height: 32px; }
 }
-.modal-close-btn svg { width: 14px; height: 14px; }
 
 /* ── Header (company + rating) ── */
-.modal-header { display: flex; justify-content: space-between; align-items: center; }
+.modal-header { 
+  display: flex; justify-content: space-between; align-items: center; 
+  margin-bottom: 8px; /* Desktop margin */
+}
 .modal-header-left { display: flex; align-items: center; gap: 16px; }
 .modal-company-info { display: flex; align-items: center; gap: 12px; }
 .modal-company-name {
-  font-size: 22px; font-weight: 600;
+  font-size: 20px; font-weight: 600;
   text-transform: capitalize; letter-spacing: -0.5px;
 }
 
@@ -68,16 +89,17 @@
 .modal-hero {
   display: flex; justify-content: space-between;
   align-items: flex-start; gap: 24px;
+  margin-bottom: 24px; /* Space before salary row - Desktop */
 }
-.modal-hero-left  { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
 .modal-job-title  {
-  font-size: 38px; font-weight: 800;
-  margin: 0; letter-spacing: -1px; line-height: 1.1;
+  font-size: 32px; font-weight: 800; /* Scaled down slightly for desktop */
+  margin: 0 0 8px 0; letter-spacing: -0.8px; line-height: 1.1;
   color: var(--text-primary);
 }
-.modal-status-box { margin-top: 6px; }
 
-.modal-meta-row { display: flex; align-items: center; gap: 12px; }
+.modal-status-box { margin-top: 4px; }
+.modal-meta-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .modal-separator { color: var(--text-secondary); opacity: 0.3; }
 .modal-city-pill { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
 .modal-sector-tag {
@@ -113,6 +135,7 @@
 @media (max-width: 768px) {
   .modal-body-layout {
     flex-direction: column;
+    gap: 24px;
   }
 }
 
@@ -125,6 +148,16 @@
   background: var(--surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
+  margin-bottom: 40px; /* Space between metrics and description - Desktop */
+}
+
+@media (max-width: 768px) {
+  .modal-highlight-row {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 16px;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
 }
 
 .detail-item {
@@ -148,23 +181,29 @@
 .employment-type-value { text-transform: capitalize; }
 
 /* ── Sections ── */
-.modal-section { display: flex; flex-direction: column; gap: 12px; }
+.modal-section { 
+  display: flex; flex-direction: column; gap: 14px; 
+  margin-bottom: 12px;
+}
 .section-title {
-  font-size: 14px; font-weight: 700;
+  font-size: 12px; font-weight: 700; /* Scaled down for desktop */
   color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 4px;
 }
 
-.modal-description-box,
-.modal-notes-box {
+.modal-description-box {
   font-size: 15px; line-height: 1.6; color: var(--text-primary);
   background: var(--surface-subtle);
   padding: 20px; border-radius: 14px;
-  max-height: 300px; overflow-y: auto;
+  max-height: 350px; overflow-y: auto;
 }
+
 .modal-notes-box {
+  font-size: 15px; line-height: 1.6; color: var(--text-primary);
   background: rgba(0, 122, 255, 0.03);
+  padding: 20px; border-radius: 14px;
   border-left: 4px solid var(--apple-blue);
-  color: var(--text-primary);
+  max-height: 350px; overflow-y: auto;
 }
 
 /* ── Sidebar Cards ── */
@@ -259,8 +298,9 @@
 /* ── Footer ── */
 .modal-footer {
   display: flex; justify-content: flex-end; gap: 12px;
-  padding-top: 24px;
-  border-top: 1px solid var(--divider);
+  padding: 24px 0; /* Vertical padding for breathing room */
+  margin-top: 24px; /* Space from sections - Desktop */
+  border-top: 1px solid var(--border-subtle);
 }
 
 /* ── Keyframes ── */
@@ -533,29 +573,136 @@
 
 /* ── Mobile responsive ── */
 @media (max-width: 768px) {
-  .modal-content {
-    max-width: 100% !important;
-    width: 100%;
-    max-height: 90vh;
-    border-radius: 16px 16px 0 0;
-    margin: auto 0 0 0;
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
   }
 
-  .modal-overlay {
-    align-items: flex-end;
+  .modal-content {
+    width: 92%;
+    max-width: 440px !important;
+    height: auto;
+    max-height: 90vh;
+    border-radius: 24px;
+    padding: 0 !important;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .modal-body-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 20px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .modal-header {
-    padding: 16px 16px 0;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .modal-header-left {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .modal-company-info {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .modal-header-left .company-icon {
+    width: 64px !important; /* Slightly larger logo for center piece */
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+    border-radius: 16px;
+    background: var(--surface-subtle) !important;
+    border: 1.5px solid var(--border-subtle);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .modal-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+
+  .modal-hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .modal-job-title {
+    font-size: 26px;
+    line-height: 1.2;
+    max-width: 100%;
+  }
+
+  .modal-meta-row {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .modal-status-box {
+    margin-top: 8px;
+    width: 100%;
+    max-width: 280px; /* Keep it centered but not too wide */
+  }
+
+  .modal-main-column {
+    order: 1;
+    width: 100%;
+  }
+
+  .modal-side-column {
+    order: 2;
+    width: 100%;
+  }
+
+  .modal-status-box .apple-select {
+    width: 100%;
+    text-align: center;
   }
 
   .modal-footer {
-    padding: 0 16px 16px;
+    position: relative; /* Not sticky/fixed anymore */
+    background: var(--surface-muted);
+    padding: 20px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .modal-footer .btn-apple {
+    width: 100%;
+    justify-content: center;
+    padding: 12px !important;
+    font-size: 14px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-content {
-    padding: 16px !important;
+  .modal-body-scrollable {
+    padding: 20px 16px;
   }
 }
