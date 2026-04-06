@@ -473,7 +473,7 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
       <div
         className="glass-container applications-card"
         style={{
-          maxWidth: '1400px',
+          maxWidth: '1600px',
           width: '100%',
           margin: '0 auto',
           padding: '40px',
@@ -493,7 +493,7 @@ export const InterviewingView: React.FC<InterviewingViewProps> = ({
   return (
     <div
       className="glass-container applications-card"
-      style={{ maxWidth: '1400px', width: '100%', margin: '0 auto' }}
+      style={{ maxWidth: '1600px', width: '100%', margin: '0 auto' }}
     >
       <div className="applications-toolbar">
         <div className="applications-toolbar-left">

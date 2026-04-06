@@ -10,7 +10,7 @@
 }
 
 .applications-card {
-  width: min(100%, 1400px);
+  width: min(100%, 1600px);
   margin-inline: auto;
   box-sizing: border-box;
   background: var(--surface-solid);

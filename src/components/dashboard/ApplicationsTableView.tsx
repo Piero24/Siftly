@@ -50,14 +50,24 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
 }) => {
   const { setShowNewModal } = useUI();
   const {
-    selectorMode, setSelectorMode, selectedIds, setSelectedIds,
-    bulkStatus, setBulkStatus, bulkLinkKind, setBulkLinkKind,
+    selectorMode,
+    setSelectorMode,
+    selectedIds,
+    setSelectedIds,
+    bulkStatus,
+    setBulkStatus,
+    bulkLinkKind,
+    setBulkLinkKind,
   } = useSelection();
   const {
-    searchTerm, setSearchTerm,
-    showFilterRow, setShowFilterRow,
-    filterField, setFilterField,
-    filterValue, setFilterValue,
+    searchTerm,
+    setSearchTerm,
+    showFilterRow,
+    setShowFilterRow,
+    filterField,
+    setFilterField,
+    filterValue,
+    setFilterValue,
   } = useTableFilters();
 
   const searchedApplications = filterApplications(searchTerm);
@@ -95,7 +105,10 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
   };
 
   return (
-    <div className="glass-container applications-card" style={{ maxWidth: '1400px', width: '100%', margin: '0 auto' }}>
+    <div
+      className="glass-container applications-card"
+      style={{ maxWidth: '1600px', width: '100%', margin: '0 auto' }}
+    >
       <TableToolbar
         title="Applications"
         searchTerm={searchTerm}
@@ -126,7 +139,10 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
           onFilterValueChange={setFilterValue}
           fieldOptions={FILTER_FIELDS}
           valueOptions={filterValueOptions}
-          onClear={() => { setFilterField(''); setFilterValue(''); }}
+          onClear={() => {
+            setFilterField('');
+            setFilterValue('');
+          }}
         />
       )}
 
