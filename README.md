@@ -14,16 +14,23 @@
 ---
 
 ###  The Vision
+
 Siftly is a high-fidelity job application tracker designed to turn the chaotic search for your next role into a streamlined, data-driven experience. Built with a focus on **clean aesthetics** and **logical density**, it provides a command center for every interview, salary detail, and recruiter contact in your pipeline.
 
 ### ✨ Key Features
-*   **KPI Dashboard**: Instant insights into your application volume and interview conversion rates.
--   **Interactive Timeline**: Manage your journey from *Initial Apply* to *Signed Offer* with a sleek, responsive interface.
-*   **Insight Cards**: Deep-dive modals for job details, interview rounds, and meeting links — optimized for both desktop and mobile.
--   **Multi-Currency Support**: Real-time salary tracking with automatic conversion based on your local settings.
-*   **Privacy-Centric**: Secure data management powered by Supabase, ensuring your career data stays yours.
+
+- **KPI Dashboard**: Instant insights into your application volume and interview conversion rates.
+
+* **Interactive Timeline**: Manage your journey from _Initial Apply_ to _Signed Offer_ with a sleek, responsive interface.
+
+- **Insight Cards**: Deep-dive modals for job details, interview rounds, and meeting links — optimized for both desktop and mobile.
+
+* **Multi-Currency Support**: Real-time salary tracking with automatic conversion based on your local settings.
+
+- **Privacy-Centric**: Secure data management powered by Supabase, ensuring your career data stays yours.
 
 ### 🛠 Tech Stack
+
 - **Frontend**: [React 19](https://react.dev/), [Vite](https://vitejs.dev/), [Lucide Icons](https://lucide.dev/)
 - **Styling**: Vanilla CSS with a custom Apple-inspired design system.
 - **Backend**: [Supabase](https://supabase.com/) (Auth & Postgres)
@@ -32,6 +39,7 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
 ### 🚀 Getting Started
 
 1. **Clone & Install**
+
    ```bash
    git clone https://github.com/Piero24/Siftly.git
    cd Siftly
@@ -40,6 +48,7 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
 
 2. **Environment Setup**
    Create a `.env` file with your Supabase credentials:
+
    ```env
    VITE_SUPABASE_URL=your_url
    VITE_SUPABASE_ANON_KEY=your_key
@@ -51,7 +60,9 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
    ```
 
 ### 📦 Extension Build
+
 Siftly is designed to work where you do. Build the Chrome extension with:
+
 ```bash
 npm run build:extension
 ```

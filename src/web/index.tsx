@@ -49,15 +49,13 @@ const AuthGate: React.FC = () => {
           DEV MODE ({DEPLOYMENT_MODE})
         </div>
       )}
-      <SettingsProvider>
-        <UIProvider routingMode="path">
-          <SelectionProvider>
-            <TableFilterProvider>
-              <App />
-            </TableFilterProvider>
-          </SelectionProvider>
-        </UIProvider>
-      </SettingsProvider>
+      <UIProvider routingMode="path">
+        <SelectionProvider>
+          <TableFilterProvider>
+            <App />
+          </TableFilterProvider>
+        </SelectionProvider>
+      </UIProvider>
     </>
   );
 };
@@ -65,9 +63,11 @@ const AuthGate: React.FC = () => {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ToastProvider>
-      <AuthProvider>
-        <AuthGate />
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <AuthGate />
+        </AuthProvider>
+      </SettingsProvider>
     </ToastProvider>
   </React.StrictMode>
 );

@@ -6,6 +6,7 @@ import React from 'react';
 import { CVProfile, JobApplication, JobStatus } from '../../types/job';
 import { logger } from '../../lib/logger';
 import { getFlagClass } from '../../lib/countries';
+import { capitalizeCompanyName } from '../../lib/format';
 
 const tableLogger = logger.for('JobTable');
 import { CompanyIcon }    from './CompanyIcon';
@@ -83,7 +84,7 @@ const JobRow: React.FC<{
       {isVisible('company') && (
         <td className="table-cell col-company" data-label="Company">
           <span className="table-ellipsis" title={app.company}>
-            {app.company.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
+            {capitalizeCompanyName(app.company)}
           </span>
         </td>
       )}

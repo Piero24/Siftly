@@ -46,14 +46,13 @@
 
 /* ── 1. KPI Overview Card ── */
 .db-overview-card {
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
 }
 
 .db-kpi-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
 }
 
 .db-kpi-item {
@@ -63,12 +62,18 @@
   justify-content: center;
   gap: 4px;
   min-width: 0;
-  padding: 4px 2px;
-  border-radius: 0;
-  border: none;
-  background: transparent;
-  flex: 1 0 0;
-  min-width: 110px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.db-kpi-item:hover {
+  background: var(--surface-muted);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
 }
 
 .db-kpi-item-content {
@@ -94,13 +99,48 @@
   letter-spacing: -0.5px;
 }
 
+@media (max-width: 900px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 680px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .db-kpi-item {
+    padding: 6px 2px;
+  }
+
   .db-kpi-number {
     font-size: 16px;
   }
 
   .db-kpi-label {
     font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .db-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .db-kpi-item {
+    padding: 4px 1px;
+  }
+
+  .db-kpi-label {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+
+  .db-kpi-number {
+    font-size: 14px;
   }
 }
 

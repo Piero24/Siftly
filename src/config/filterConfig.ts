@@ -1,4 +1,11 @@
-import { FilterField, SelectOption } from '../types/ui';
+/**
+ * filterConfig.ts — Filter field and option definitions for the Applications table.
+ *
+ * Status, work-type, and employment options are imported from the shared
+ * constants module (src/constants/status.ts) to maintain a single source of truth.
+ */
+import { FilterField } from '../types/ui';
+import { STATUS_SELECT_OPTIONS, WORK_TYPE_SELECT_OPTIONS, EMPLOYMENT_SELECT_OPTIONS } from '../constants/status';
 
 export const FILTER_FIELDS: Array<{ value: FilterField; label: string }> = [
   { value: 'company', label: 'Company' },
@@ -14,26 +21,4 @@ export const FILTER_FIELDS: Array<{ value: FilterField; label: string }> = [
   { value: 'referrerLink', label: 'Referrer Link' },
 ];
 
-export const STATUS_OPTIONS: SelectOption[] = [
-  { value: 'pending', label: 'Pending' },
-  { value: 'applied', label: 'Applied' },
-  { value: 'interviewing', label: 'Interviewing' },
-  { value: 'offer', label: 'Offer' },
-  { value: 'declined', label: 'Declined' },
-  { value: 'accepted', label: 'Accepted' },
-  { value: 'rejected', label: 'Rejected' },
-  { value: 'no-response', label: 'No Response' },
-];
-
-export const WORK_TYPE_OPTIONS: SelectOption[] = [
-  { value: 'onsite', label: 'Onsite' },
-  { value: 'hybrid', label: 'Hybrid' },
-  { value: 'remote', label: 'Remote' },
-];
-
-export const EMPLOYMENT_OPTIONS: SelectOption[] = [
-  { value: 'permanent', label: 'Permanent' },
-  { value: 'intern', label: 'Intern' },
-  { value: 'fixed-term', label: 'Fixed-term' },
-  { value: '__none__', label: 'Not specified' },
-];
+export { STATUS_SELECT_OPTIONS as STATUS_OPTIONS, WORK_TYPE_SELECT_OPTIONS as WORK_TYPE_OPTIONS, EMPLOYMENT_SELECT_OPTIONS as EMPLOYMENT_OPTIONS };

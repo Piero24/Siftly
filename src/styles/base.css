@@ -67,3 +67,21 @@ body {
   gap: 16px;
   color: var(--text-secondary);
 }
+
+.app-main-shell {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 28px 40px 40px;
+}
+
+@media (max-width: 768px) {
+  .app-main-shell {
+    padding: 16px 12px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main-shell {
+    padding: 12px 10px 20px;
+  }
+}
