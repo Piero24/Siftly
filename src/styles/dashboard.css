@@ -152,23 +152,47 @@
   display: flex;
   align-items: center;
   width: 100%;
+  gap: 12px;
+}
+
+.db-scope-nav {
+  display: flex;
+  align-items: center;
+  padding: 1px 2px;
+  border-radius: 7px;
+  gap: 3px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-subtle);
+  flex: 0 0 auto;
+  min-width: 220px;
+  width: 220px;
+}
+
+.db-time-spacer {
+  flex: 1 1 auto;
+  min-width: 20px;
 }
 
 .db-time-nav {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 4px;
-  border-radius: 10px;
-  gap: 4px;
+  width: auto;
+  padding: 1px 2px;
+  border-radius: 7px;
+  gap: 3px;
   background: var(--surface-muted);
   border: 1px solid var(--border-subtle);
+  flex: 0 0 auto;
+  margin-left: auto;
+  min-width: 560px;
+  max-width: 100%;
 }
 
+.db-time-scope-btn,
 .db-time-btn {
-  min-height: 34px;
-  padding: 6px 10px;
-  border-radius: 8px;
+  min-height: 28px;
+  padding: 3px 14px;
+  border-radius: 7px;
   border: none;
   font-size: 11px;
   font-weight: 600;
@@ -180,6 +204,7 @@
   white-space: nowrap;
 }
 
+.db-time-scope-btn.active,
 .db-time-btn.active {
   background: var(--surface-solid);
   box-shadow: var(--shadow-soft);
@@ -188,10 +213,21 @@
 
 .db-time-btn {
   flex: 1;
+  min-width: 96px;
+  text-align: center;
+}
+
+.db-time-scope-btn {
+  flex: 1 1 0;
+  min-width: 0;
   text-align: center;
 }
 
 .db-time-btn:hover:not(.active) {
+  background: var(--surface-subtle) !important;
+}
+
+.db-time-scope-btn:hover:not(.active) {
   background: var(--surface-subtle) !important;
 }
 
@@ -469,9 +505,21 @@
 
   .db-time-filter-shell {
     flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .db-time-spacer {
+    display: none;
+  }
+
+  .db-scope-nav {
+    flex: 0 0 auto;
   }
 
   .db-time-nav {
+    width: 100%;
+    margin-left: 0;
+    flex: 1 1 100%;
     flex-wrap: wrap;
   }
 
@@ -481,6 +529,14 @@
 }
 
 @media (max-width: 680px) {
+  .db-scope-nav {
+    width: 100%;
+  }
+
+  .db-time-scope-btn {
+    flex: 1 1 calc(50% - 4px);
+  }
+
   .db-time-nav {
     width: 100%;
     flex-wrap: wrap;
@@ -488,7 +544,7 @@
 
   .db-time-btn {
     flex: 1 1 calc(50% - 4px);
-    min-height: 34px;
+    min-height: 28px;
   }
 
   .db-map-interactive-area {

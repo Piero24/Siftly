@@ -4,6 +4,7 @@ import { CVProfile } from '../types/job';
 import { ResolvedTheme, ThemeMode } from '../types/ui';
 import { StorageMode } from '../lib/storage';
 import { DEPLOYMENT } from '../config/deploymentMode';
+import { OverviewScope } from '../constants/dashboard';
 
 interface SettingsContextValue {
   language: string;
@@ -19,6 +20,8 @@ interface SettingsContextValue {
   setAutoNoResponseDays: React.Dispatch<React.SetStateAction<number>>;
   defaultTimeRange: 'today' | 'total' | '7d' | '30d' | '1y';
   setDefaultTimeRange: React.Dispatch<React.SetStateAction<'today' | 'total' | '7d' | '30d' | '1y'>>;
+  defaultOverviewScope: OverviewScope;
+  setDefaultOverviewScope: React.Dispatch<React.SetStateAction<OverviewScope>>;
   cvProfiles: CVProfile[];
   setCvProfiles: React.Dispatch<React.SetStateAction<CVProfile[]>>;
   storageMode: StorageMode;
@@ -39,6 +42,8 @@ const NOTIFICATIONS_KEY = 'siftly-notifications';
 const PRIVACY_KEY = 'siftly-privacy';
 const TABLE_DISPLAY_KEY = 'siftly-table-display';
 const ICON_STYLE_KEY = 'siftly-use-soft-icon-background';
+const DEFAULT_TIME_RANGE_KEY = 'siftly-default-time-range';
+const DEFAULT_OVERVIEW_SCOPE_KEY = 'siftly-default-overview-scope';
 
 const getSystemTheme = (): ResolvedTheme => {
   if (typeof window === 'undefined') return 'light';
@@ -65,7 +70,27 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(getSystemTheme);
   const [autoNoResponse, setAutoNoResponse] = useState(false);
   const [autoNoResponseDays, setAutoNoResponseDays] = useState(60);
-  const [defaultTimeRange, setDefaultTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>('total');
+  const [defaultTimeRange, setDefaultTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>(() => {
+    if (typeof window === 'undefined') return 'total';
+    try {
+      const stored = window.localStorage.getItem(DEFAULT_TIME_RANGE_KEY);
+      if (stored === 'today' || stored === '7d' || stored === '30d' || stored === '1y' || stored === 'total') {
+        return stored;
+      }
+      return 'total';
+    } catch {
+      return 'total';
+    }
+  });
+  const [defaultOverviewScope, setDefaultOverviewScope] = useState<OverviewScope>(() => {
+    if (typeof window === 'undefined') return 'total';
+    try {
+      const stored = window.localStorage.getItem(DEFAULT_OVERVIEW_SCOPE_KEY);
+      return stored === 'current' ? 'current' : 'total';
+    } catch {
+      return 'total';
+    }
+  });
   const [cvProfiles, setCvProfiles] = useState<CVProfile[]>([
     { id: 'cv-default', name: 'Default CV', color: '#007AFF' },
   ]);
@@ -186,6 +211,18 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch { /* ignore */ }
   }, [useSoftIconBackground]);
 
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(DEFAULT_TIME_RANGE_KEY, defaultTimeRange);
+    } catch { /* ignore */ }
+  }, [defaultTimeRange]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(DEFAULT_OVERVIEW_SCOPE_KEY, defaultOverviewScope);
+    } catch { /* ignore */ }
+  }, [defaultOverviewScope]);
+
   const value = useMemo<SettingsContextValue>(() => ({
     language,
     setLanguage,
@@ -200,6 +237,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setAutoNoResponseDays,
     defaultTimeRange,
     setDefaultTimeRange,
+    defaultOverviewScope,
+    setDefaultOverviewScope,
     cvProfiles,
     setCvProfiles,
     storageMode,
@@ -220,6 +259,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     autoNoResponse,
     autoNoResponseDays,
     defaultTimeRange,
+    defaultOverviewScope,
     cvProfiles,
     storageMode,
     notifications,

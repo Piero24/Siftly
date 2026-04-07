@@ -9,15 +9,16 @@
  *   5. TimelineChart
  *   6. InsightsRow (funnel, response rate, salary distribution)
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import 'flag-icons/css/flag-icons.min.css';
 
 import { JobApplication } from '../../types/job';
 import { useSettings } from '../../context/SettingsContext';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { FEATURES } from '../../config/features';
+import { OverviewScope } from '../../constants/dashboard';
 import {
-  getStatusCounts,
+  getOverviewStatusCounts,
   getContinentStats,
   getCountryStats,
   getTopCompaniesByApplications,
@@ -44,10 +45,28 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ applications }) => {
-  const { cvProfiles, defaultTimeRange, resolvedTheme, useSoftIconBackground } = useSettings();
+  const {
+    cvProfiles,
+    defaultTimeRange,
+    defaultOverviewScope,
+    resolvedTheme,
+    useSoftIconBackground,
+  } = useSettings();
   const { width: windowWidth, isMobile } = useWindowSize();
-  const [timeRange, setTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>(defaultTimeRange);
+  const [timeRange, setTimeRange] = useState<'today' | 'total' | '7d' | '30d' | '1y'>(
+    defaultTimeRange
+  );
+  const [overviewScope, setOverviewScope] = useState<OverviewScope>(defaultOverviewScope);
   const isDark = resolvedTheme === 'dark';
+
+  // Keep dashboard selectors connected to user-configured defaults from Settings.
+  useEffect(() => {
+    setTimeRange(defaultTimeRange);
+  }, [defaultTimeRange]);
+
+  useEffect(() => {
+    setOverviewScope(defaultOverviewScope);
+  }, [defaultOverviewScope]);
 
   // ── Time-filtered applications ──
   const filteredApplications = useMemo(() => {
@@ -56,7 +75,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications }) =>
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    return applications.filter(app => {
+    return applications.filter((app) => {
       if (!app.date) return false;
       const appDate = new Date(app.date);
 
@@ -76,32 +95,68 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications }) =>
   }, [applications, timeRange]);
 
   // ── Analytics data ──
-  const stats = useMemo(() => getStatusCounts(filteredApplications), [filteredApplications]);
+  const stats = useMemo(
+    () => getOverviewStatusCounts(filteredApplications, overviewScope),
+    [filteredApplications, overviewScope]
+  );
   const continents = useMemo(() => getContinentStats(filteredApplications), [filteredApplications]);
   const workTypes = useMemo(() => getWorkTypeStats(filteredApplications), [filteredApplications]);
-  const cvStats = useMemo(() => getCvStats(filteredApplications, cvProfiles), [filteredApplications, cvProfiles]);
-  const employmentTypes = useMemo(() => getEmploymentTypeStats(filteredApplications), [filteredApplications]);
+  const cvStats = useMemo(
+    () => getCvStats(filteredApplications, cvProfiles),
+    [filteredApplications, cvProfiles]
+  );
+  const employmentTypes = useMemo(
+    () => getEmploymentTypeStats(filteredApplications),
+    [filteredApplications]
+  );
   const countryMap = useMemo(() => {
     const m = new Map<string, number>();
-    getCountryStats(filteredApplications).forEach(({ code, count }) => m.set(code.toUpperCase(), count));
+    getCountryStats(filteredApplications).forEach(({ code, count }) =>
+      m.set(code.toUpperCase(), count)
+    );
     return m;
   }, [filteredApplications]);
-  const topApps = useMemo(() => getTopCompaniesByApplications(filteredApplications, 8), [filteredApplications]);
-  const topRej = useMemo(() => getTopCompaniesByRejections(filteredApplications, 8), [filteredApplications]);
-  const topCities = useMemo(() => getTopCitiesByApplications(filteredApplications, 8), [filteredApplications]);
-  const timeline = useMemo(() => getApplicationTimeline(filteredApplications, 12), [filteredApplications]);
+  const topApps = useMemo(
+    () => getTopCompaniesByApplications(filteredApplications, 8),
+    [filteredApplications]
+  );
+  const topRej = useMemo(
+    () => getTopCompaniesByRejections(filteredApplications, 8),
+    [filteredApplications]
+  );
+  const topCities = useMemo(
+    () => getTopCitiesByApplications(filteredApplications, 8),
+    [filteredApplications]
+  );
+  const timeline = useMemo(
+    () => getApplicationTimeline(filteredApplications, 12),
+    [filteredApplications]
+  );
   const funnel = useMemo(() => getStatusFunnel(filteredApplications), [filteredApplications]);
   const responseRate = useMemo(() => getResponseRate(filteredApplications), [filteredApplications]);
-  const salaryDist = useMemo(() => getSalaryDistribution(filteredApplications), [filteredApplications]);
+  const salaryDist = useMemo(
+    () => getSalaryDistribution(filteredApplications),
+    [filteredApplications]
+  );
 
-  const showMiddleRow = FEATURES.dashboard.worldMap || FEATURES.dashboard.workTypes || FEATURES.dashboard.cvProfiles || FEATURES.dashboard.employmentTypes;
-  const showInsights = FEATURES.dashboard.funnel || FEATURES.dashboard.responseRate || FEATURES.dashboard.salaryDist;
+  const showMiddleRow =
+    FEATURES.dashboard.worldMap ||
+    FEATURES.dashboard.workTypes ||
+    FEATURES.dashboard.cvProfiles ||
+    FEATURES.dashboard.employmentTypes;
+  const showInsights =
+    FEATURES.dashboard.funnel || FEATURES.dashboard.responseRate || FEATURES.dashboard.salaryDist;
 
   return (
     <div className="db-root">
-      <TimeRangeFilter value={timeRange} onChange={setTimeRange} />
+      <TimeRangeFilter
+        value={timeRange}
+        onChange={setTimeRange}
+        overviewScope={overviewScope}
+        onOverviewScopeChange={setOverviewScope}
+      />
 
-      {FEATURES.dashboard.kpiStrip && <KpiStrip stats={stats} />}
+      {FEATURES.dashboard.kpiStrip && <KpiStrip stats={stats} overviewScope={overviewScope} />}
 
       {showMiddleRow && (
         <WorldMapSection

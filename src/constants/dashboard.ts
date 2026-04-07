@@ -48,12 +48,19 @@ export const EMPLOYMENT_COLOR: Record<'permanent' | 'intern' | 'fixed-term', str
   'fixed-term': '#5AC8FA',
 };
 
+export type OverviewScope = 'total' | 'current';
+
+export const OVERVIEW_SCOPE_OPTIONS: Array<{ value: OverviewScope; label: string }> = [
+  { value: 'total', label: 'Total' },
+  { value: 'current', label: 'Current' },
+];
+
 export const TIME_RANGE_OPTIONS: Array<{ value: 'today' | 'total' | '7d' | '30d' | '1y'; label: string }> = [
   { value: 'today', label: 'Today' },
-  { value: 'total', label: 'Total' },
   { value: '7d', label: 'Last Week' },
   { value: '30d', label: 'Last Month' },
   { value: '1y', label: 'Last Year' },
+  { value: 'total', label: 'All Time' },
 ];
 
 /**

@@ -20,12 +20,18 @@ The sidebar provides access to all sections:
 
 ## KPI Strip
 
-At the top of the Overview, a strip of key performance indicators shows:
+At the top of the Overview, a strip of key performance indicators supports two modes:
 
-- **Total Applications** — all-time count
-- **Interviewing** — currently active interviews
-- **Offers** — received offers
-- **Response Rate** — percentage of applications that received a response
+- **Current mode**
+  - Shows **Total** plus direct status counts (Applied, Interviewing, Offers, Declined, Accepted, Rejected, Pending, No Response).
+  - Each counter reflects only the applications currently in that exact status.
+- **Total mode**
+  - Hides the **Total** card.
+  - Uses cumulative pipeline counters:
+    - **Applied** = all applications in timeframe (including pending)
+    - **Interviewing** = interviewing + offers + declined + accepted + rejected
+    - **Offers** = offers + declined + accepted
+    - **Declined**, **Accepted**, **Rejected**, **Pending**, **No Response** remain direct counts
 
 ## Charts & Analytics
 
@@ -40,12 +46,15 @@ The dashboard includes interactive charts:
 
 ## Time Range Filter
 
-All analytics support time range filtering:
+The time range selector applies to both KPI modes and all analytics:
 
 - Today
 - Last 7 days
 - Last 30 days
 - Last year
-- All time (Total)
+- All time
 
-The default time range can be configured in Settings → Appearance.
+Both defaults can be configured in Settings → Appearance:
+
+- Default KPI mode: **Total** or **Current**
+- Default Time Range: **Today**, **Last Week**, **Last Month**, **Last Year**, **All Time**

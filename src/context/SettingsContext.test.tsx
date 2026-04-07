@@ -37,4 +37,26 @@ describe('SettingsContext', () => {
     expect(window.localStorage.getItem('lumina-theme-mode')).toBe('light');
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
   });
+
+  it('loads dashboard defaults from storage', () => {
+    window.localStorage.setItem('siftly-default-time-range', '1y');
+    window.localStorage.setItem('siftly-default-overview-scope', 'current');
+
+    const { result } = renderHook(() => useSettings(), { wrapper });
+
+    expect(result.current.defaultTimeRange).toBe('1y');
+    expect(result.current.defaultOverviewScope).toBe('current');
+  });
+
+  it('persists dashboard default selector changes', () => {
+    const { result } = renderHook(() => useSettings(), { wrapper });
+
+    act(() => {
+      result.current.setDefaultTimeRange('30d');
+      result.current.setDefaultOverviewScope('current');
+    });
+
+    expect(window.localStorage.getItem('siftly-default-time-range')).toBe('30d');
+    expect(window.localStorage.getItem('siftly-default-overview-scope')).toBe('current');
+  });
 });

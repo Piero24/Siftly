@@ -9,7 +9,12 @@ Access settings from the sidebar → **Settings**.
 ## Appearance & Dashboard
 
 - **Visual Theme** — Light, Dark, or System (follows your OS preference)
-- **Default Time Range** — Which time filter is selected by default on the dashboard
+- **Default Overview Counter** — Choose dashboard KPI mode default:
+  - **Current**: direct per-status counters, with **Total** visible
+  - **Total**: cumulative pipeline counters, with **Total** hidden
+- **Default Time Range** — Which timeframe is selected by default on the dashboard
+
+The selected time range is shared by both KPI modes.
 
 ## Automation
 

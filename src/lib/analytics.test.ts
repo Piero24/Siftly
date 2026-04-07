@@ -2,6 +2,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  getOverviewStatusCounts,
   getStatusCounts,
   getTopCompaniesByRejections,
   getWorkTypeStats,
@@ -48,6 +49,56 @@ describe('analytics', () => {
     expect(counts.offer).toBe(1);
     expect(counts.declined).toBe(1);
     expect(counts.rejected).toBe(2);
+  });
+
+  it('computes total-mode overview counts with cumulative formulas', () => {
+    const apps: JobApplication[] = [
+      makeApp({ status: 'pending' }),
+      makeApp({ status: 'applied' }),
+      makeApp({ status: 'interviewing' }),
+      makeApp({ status: 'offer' }),
+      makeApp({ status: 'declined' }),
+      makeApp({ status: 'accepted' }),
+      makeApp({ status: 'rejected' }),
+      makeApp({ status: 'no-response' }),
+    ];
+
+    const counts = getOverviewStatusCounts(apps, 'total');
+
+    expect(counts.total).toBe(8);
+    expect(counts.applied).toBe(8);
+    expect(counts.interviewing).toBe(5); // interviewing + offer + declined + accepted + rejected
+    expect(counts.offer).toBe(3); // offer + declined + accepted
+    expect(counts.declined).toBe(1);
+    expect(counts.accepted).toBe(1);
+    expect(counts.rejected).toBe(1);
+    expect(counts.pending).toBe(1);
+    expect(counts['no-response']).toBe(1);
+  });
+
+  it('computes current-mode overview counts as direct status counts', () => {
+    const apps: JobApplication[] = [
+      makeApp({ status: 'pending' }),
+      makeApp({ status: 'applied' }),
+      makeApp({ status: 'interviewing' }),
+      makeApp({ status: 'offer' }),
+      makeApp({ status: 'declined' }),
+      makeApp({ status: 'accepted' }),
+      makeApp({ status: 'rejected' }),
+      makeApp({ status: 'no-response' }),
+    ];
+
+    const counts = getOverviewStatusCounts(apps, 'current');
+
+    expect(counts.total).toBe(8);
+    expect(counts.applied).toBe(1);
+    expect(counts.interviewing).toBe(1);
+    expect(counts.offer).toBe(1);
+    expect(counts.declined).toBe(1);
+    expect(counts.accepted).toBe(1);
+    expect(counts.rejected).toBe(1);
+    expect(counts.pending).toBe(1);
+    expect(counts['no-response']).toBe(1);
   });
 
   it('returns work type stats ordered by count', () => {
