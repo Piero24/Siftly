@@ -13,6 +13,7 @@ import { LINKS } from '../../../config/links';
 import { CONTINENT_COLOR, CONTINENT_ORDER, EMPLOYMENT_COLOR, EMPLOYMENT_LABEL, A3_TO_A2 } from '../../../constants/dashboard';
 import { WorkTypeBadge } from '../WorkTypeBadge';
 import { FEATURES } from '../../../config/features';
+import { getContinent } from '../../../lib/continents';
 
 const GEO_URL = LINKS.geoData;
 
@@ -20,6 +21,7 @@ interface ContinentStat { name: string; count: number }
 interface WorkTypeStat { name: string; count: number }
 interface CvStat { id: string; name: string; count: number; color: string }
 interface EmploymentTypeStat { name: string; count: number }
+interface ReferralStat { name: 'with-referral' | 'without-referral'; count: number }
 
 interface WorldMapSectionProps {
   countryMap: Map<string, number>;
@@ -27,12 +29,13 @@ interface WorldMapSectionProps {
   workTypes: WorkTypeStat[];
   cvStats: CvStat[];
   employmentTypes: EmploymentTypeStat[];
+  referralStats: ReferralStat[];
   isDark: boolean;
   windowWidth: number;
 }
 
 export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
-  countryMap, continentStats, workTypes, cvStats, employmentTypes, isDark, windowWidth,
+  countryMap, continentStats, workTypes, cvStats, employmentTypes, referralStats, isDark, windowWidth,
 }) => {
   const [tooltipContent, setTooltipContent] = useState('');
   const [isMapInteractive, setIsMapInteractive] = useState(false);
@@ -51,6 +54,17 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
   const heatOpacity = (code: string) => {
     const n = countryMap.get(code) ?? 0;
     return n === 0 ? 0 : 0.15 + (n / maxCount) * 0.75;
+  };
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    const safeHex = hex.replace('#', '');
+    const bigint = parseInt(safeHex.length === 3
+      ? safeHex.split('').map((c) => c + c).join('')
+      : safeHex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
   return (
@@ -79,10 +93,13 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
                             const a2 = A3_TO_A2[geo.id] || '';
                             const count = countryMap.get(a2) || 0;
                             const opacity = heatOpacity(a2);
+                            const continent = a2 ? getContinent(a2) : null;
+                            const continentColor = continent ? CONTINENT_COLOR[continent] : null;
                             const neutralFill = isDark ? '#2a2d35' : '#EAEAEC';
-                            const accentFill = isDark ? `rgba(90,200,250,${opacity})` : `rgba(0,122,255,${opacity})`;
-                            const hoverFill = isDark ? '#5AC8FA' : '#007AFF';
-                            const pressFill = isDark ? '#2f8fbf' : '#005bb5';
+                            const accentBase = continentColor ?? (isDark ? '#5AC8FA' : '#007AFF');
+                            const accentFill = hexToRgba(accentBase, opacity);
+                            const hoverFill = accentBase;
+                            const pressFill = hexToRgba(accentBase, 0.8);
                             return (
                               <Geography
                                 key={geo.rsmKey}
@@ -179,6 +196,32 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
                       <span className="db-continent-count">{stat.count}</span>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {FEATURES.dashboard.employmentTypes && (
+            <div className="db-chart-card glass-container">
+              {referralStats.every((stat) => stat.count === 0) ? (
+                <div className="db-empty-chart">
+                  <span className="db-empty-chart-text">No applications added yet</span>
+                </div>
+              ) : (
+                <div className="db-continent-row db-pill-row-spaced db-employment-row">
+                  {referralStats.map((stat) => {
+                    const isWithReferral = stat.name === 'with-referral';
+                    const color = isWithReferral ? '#34C759' : '#8E8E93';
+                    const label = isWithReferral ? 'With Referral' : 'Without Referral';
+
+                    return (
+                      <div key={stat.name} className="db-continent-pill" style={{ color }}>
+                        <div className="db-continent-dot" style={{ backgroundColor: color }} />
+                        <span className="db-continent-name">{label}</span>
+                        <span className="db-continent-count">{stat.count}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

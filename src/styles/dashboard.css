@@ -448,6 +448,38 @@
   flex-direction: column;
 }
 
+.db-chart-card-response,
+.db-chart-card-salary {
+  height: 100%;
+  min-height: 0;
+}
+
+.db-donut-block {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.db-donut-chart-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 180px;
+}
+
+.db-donut-chart-shell {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.db-salary-chart-area {
+  flex: 1;
+  min-height: 220px;
+}
 .db-chart-title {
   font-size: 14px;
   font-weight: 700;
@@ -708,7 +740,9 @@
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-top: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  flex-wrap: wrap;
 }
 
 .db-donut-legend-item {

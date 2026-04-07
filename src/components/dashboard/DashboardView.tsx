@@ -27,6 +27,7 @@ import {
   getWorkTypeStats,
   getCvStats,
   getEmploymentTypeStats,
+  getReferralStats,
   getApplicationTimeline,
   getStatusFunnel,
   getResponseRate,
@@ -109,6 +110,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications }) =>
     () => getEmploymentTypeStats(filteredApplications),
     [filteredApplications]
   );
+  const referralStats = useMemo(
+    () => getReferralStats(filteredApplications),
+    [filteredApplications]
+  );
   const countryMap = useMemo(() => {
     const m = new Map<string, number>();
     getCountryStats(filteredApplications).forEach(({ code, count }) =>
@@ -165,6 +170,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ applications }) =>
           workTypes={workTypes}
           cvStats={cvStats}
           employmentTypes={employmentTypes}
+          referralStats={referralStats}
           isDark={isDark}
           windowWidth={windowWidth}
         />

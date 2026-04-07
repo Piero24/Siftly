@@ -37,7 +37,8 @@ interface InsightsRowProps {
 export const InsightsRow: React.FC<InsightsRowProps> = ({
   funnel, responseRate, salaryDist, isDark, isMobile,
 }) => {
-  const chartHeight = Math.max(isMobile ? 220 : 280, 1);
+  const donutHeight = isMobile ? 180 : 200;
+  const minSalaryChartHeight = Math.max(isMobile ? 220 : 280, 1);
 
   const totalResponses = responseRate.responded + responseRate.noResponse + responseRate.pending;
   const totalForRate = totalResponses || 1;
@@ -83,41 +84,43 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
 
         {/* Response Rate Donut */}
         {FEATURES.dashboard.responseRate && (
-          <div className="db-chart-card glass-container">
+          <div className="db-chart-card db-chart-card-response glass-container">
             <h3 className="db-chart-title">Response Rate</h3>
             {totalResponses === 0 ? (
               <div className="db-empty-chart">
                 <span className="db-empty-chart-text">No response data</span>
               </div>
             ) : (
-              <>
-                <div style={{ position: 'relative', height: isMobile ? 180 : 200 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={responseData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={isMobile ? 50 : 60}
-                        outerRadius={isMobile ? 80 : 90}
-                        paddingAngle={3}
-                        dataKey="value"
-                        strokeWidth={0}
-                      >
-                        {responseData.map((entry, i) => (
-                          <Cell key={i} fill={entry.color} />
-                        ))}
-                      </Pie>
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="db-donut-center" style={{ height: isMobile ? 180 : 200 }}>
-                    <span className="db-donut-value" style={{ fontSize: isMobile ? '22px' : '28px' }}>
-                      {Math.round((responseRate.responded / totalForRate) * 100)}%
-                    </span>
-                    <span className="db-donut-label">Responded</span>
+              <div className="db-donut-block">
+                <div className="db-donut-chart-area" style={{ minHeight: donutHeight }}>
+                  <div className="db-donut-chart-shell" style={{ height: donutHeight }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={responseData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={isMobile ? 50 : 60}
+                          outerRadius={isMobile ? 80 : 90}
+                          paddingAngle={3}
+                          dataKey="value"
+                          strokeWidth={0}
+                        >
+                          {responseData.map((entry, i) => (
+                            <Cell key={i} fill={entry.color} />
+                          ))}
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="db-donut-center" style={{ height: donutHeight }}>
+                      <span className="db-donut-value" style={{ fontSize: isMobile ? '22px' : '28px' }}>
+                        {Math.round((responseRate.responded / totalForRate) * 100)}%
+                      </span>
+                      <span className="db-donut-label">Responded</span>
+                    </div>
                   </div>
                 </div>
-                <div className="db-donut-legend" style={{ marginTop: 'auto', paddingTop: '16px' }}>
+                <div className="db-donut-legend">
                   {responseData.map((entry, i) => (
                     <div key={i} className="db-donut-legend-item">
                       <div className="db-continent-dot" style={{ backgroundColor: entry.color }} />
@@ -125,42 +128,44 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
                     </div>
                   ))}
                 </div>
-              </>
+              </div>
             )}
           </div>
         )}
 
         {/* Salary Distribution */}
         {FEATURES.dashboard.salaryDist && (
-          <div className="db-chart-card glass-container">
+          <div className="db-chart-card db-chart-card-salary glass-container">
             <h3 className="db-chart-title">Salary Distribution</h3>
             {salaryDist.length === 0 ? (
               <div className="db-empty-chart">
                 <span className="db-empty-chart-text">No salary data</span>
               </div>
             ) : (
-              <ResponsiveContainer width="100%" height={chartHeight}>
-                <BarChart data={salaryDist} margin={{ top: 4, right: 24, bottom: 4, left: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" horizontal={false} />
-                  <XAxis
-                    dataKey="range"
-                    tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
-                    tickLine={false}
-                    axisLine={false}
-                    interval={0}
-                    angle={-30}
-                    textAnchor="end"
-                    height={50}
-                  />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickLine={false} axisLine={false} allowDecimals={false} />
-                  <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={36}>
-                    {salaryDist.map((_, i) => (
-                      <Cell key={i} fill={isDark ? `rgba(175,82,222,${0.9 - i * 0.1})` : `rgba(175,82,222,${0.85 - i * 0.1})`} />
-                    ))}
-                    <LabelList dataKey="count" position="top" style={{ fontSize: 12, fontWeight: 600, fill: 'var(--text-primary)' }} />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="db-salary-chart-area" style={{ minHeight: minSalaryChartHeight }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={salaryDist} margin={{ top: 4, right: 24, bottom: 4, left: 4 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" horizontal={false} />
+                    <XAxis
+                      dataKey="range"
+                      tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
+                      tickLine={false}
+                      axisLine={false}
+                      interval={0}
+                      angle={-30}
+                      textAnchor="end"
+                      height={50}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickLine={false} axisLine={false} allowDecimals={false} />
+                    <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={36}>
+                      {salaryDist.map((_, i) => (
+                        <Cell key={i} fill={isDark ? `rgba(175,82,222,${0.9 - i * 0.1})` : `rgba(175,82,222,${0.85 - i * 0.1})`} />
+                      ))}
+                      <LabelList dataKey="count" position="top" style={{ fontSize: 12, fontWeight: 600, fill: 'var(--text-primary)' }} />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             )}
           </div>
         )}

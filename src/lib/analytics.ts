@@ -144,6 +144,22 @@ export function getEmploymentTypeStats(apps: JobApplication[]): EmploymentTypeSt
     .sort((a, b) => b.count - a.count);
 }
 
+/* ── Referral breakdown ─────────────────────────────────────── */
+export interface ReferralStat {
+  name: 'with-referral' | 'without-referral';
+  count: number;
+}
+
+export function getReferralStats(apps: JobApplication[]): ReferralStat[] {
+  const withReferral = apps.filter((app) => !!app.referral?.referrer?.trim()).length;
+  const withoutReferral = apps.length - withReferral;
+
+  return [
+    { name: 'with-referral', count: withReferral },
+    { name: 'without-referral', count: withoutReferral },
+  ];
+}
+
 /* ── Country heat (for the world map) ──────────────────────────── */
 export interface CountryStat {
   code: string; // ISO alpha-2
@@ -282,32 +298,34 @@ export interface FunnelStage {
 
 export function getStatusFunnel(apps: JobApplication[]): FunnelStage[] {
   const total = apps.length || 1;
-  const stages = [
-    { stage: 'Applied', statuses: ['applied', 'pending'] as JobStatus[], color: '#007AFF' },
-    { stage: 'Interviewing', statuses: ['interviewing'] as JobStatus[], color: '#34C759' },
-    { stage: 'Offer', statuses: ['offer'] as JobStatus[], color: '#AF52DE' },
-    { stage: 'Accepted', statuses: ['accepted'] as JobStatus[], color: '#30D158' },
+  const direct = getStatusCounts(apps);
+
+  const stages: Array<{ stage: string; count: number; color: string }> = [
+    // Pipeline progression (cumulative)
+    { stage: 'Applied', count: direct.total, color: '#007AFF' },
+    {
+      stage: 'Interviewing',
+      count: direct.interviewing + direct.offer + direct.accepted + direct.declined + direct.rejected,
+      color: '#34C759',
+    },
+    {
+      stage: 'Offer',
+      count: direct.offer + direct.accepted + direct.declined,
+      color: '#AF52DE',
+    },
+    { stage: 'Accepted', count: direct.accepted, color: '#30D158' },
+    // Terminal outcomes (direct)
+    { stage: 'Declined', count: direct.declined, color: '#FF9500' },
+    { stage: 'Rejected', count: direct.rejected, color: '#FF3B30' },
+    { stage: 'No Response', count: direct['no-response'], color: '#8E8E93' },
   ];
 
-  // For a funnel, each stage includes all downstream stages too
-  const stageCounts = stages.map(({ stage, statuses, color }) => {
-    const count = apps.filter((app) => statuses.includes(app.status)).length;
-    return { stage, count, percentage: Math.round((count / total) * 100), color };
-  });
-
-  // Make it cumulative-like: Applied should include all apps at that stage or further
-  const cumulativeCounts: FunnelStage[] = [];
-  let cumulative = 0;
-  for (let i = stageCounts.length - 1; i >= 0; i--) {
-    cumulative += stageCounts[i].count;
-    cumulativeCounts.unshift({
-      ...stageCounts[i],
-      count: cumulative,
-      percentage: Math.round((cumulative / total) * 100),
-    });
-  }
-
-  return cumulativeCounts;
+  return stages.map(({ stage, count, color }) => ({
+    stage,
+    count,
+    percentage: Math.round((count / total) * 100),
+    color,
+  }));
 }
 
 /* ── Response rate ────────────────────────────────────── */

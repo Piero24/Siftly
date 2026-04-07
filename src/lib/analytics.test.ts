@@ -6,6 +6,7 @@ import {
   getStatusCounts,
   getTopCompaniesByRejections,
   getWorkTypeStats,
+  getReferralStats,
   getApplicationTimeline,
   getStatusFunnel,
   getResponseRate,
@@ -114,6 +115,33 @@ describe('analytics', () => {
     expect(stats[1]).toEqual({ name: 'onsite', count: 1 });
   });
 
+  it('computes referral stats with and without referral', () => {
+    const apps: JobApplication[] = [
+      makeApp({
+        referral: {
+          referrer: 'Alice',
+          date: '2026-01-01',
+          note: 'Former colleague',
+        },
+      }),
+      makeApp({ referral: undefined }),
+      makeApp({
+        referral: {
+          referrer: 'Bob',
+          date: '2026-01-03',
+          note: 'Employee referral',
+        },
+      }),
+    ];
+
+    const stats = getReferralStats(apps);
+
+    expect(stats).toEqual([
+      { name: 'with-referral', count: 2 },
+      { name: 'without-referral', count: 1 },
+    ]);
+  });
+
   it('computes top rejected companies', () => {
     const apps: JobApplication[] = [
       makeApp({ company: 'Acme', status: 'rejected' }),
@@ -157,6 +185,29 @@ describe('analytics', () => {
     expect(funnel.find((s) => s.stage === 'Applied')?.count).toBe(3);
     expect(funnel.find((s) => s.stage === 'Interviewing')?.count).toBe(2);
     expect(funnel.find((s) => s.stage === 'Offer')?.count).toBe(1);
+  });
+
+  it('includes declined, rejected, and no response in cumulative funnel', () => {
+    const apps: JobApplication[] = [
+      makeApp({ status: 'pending' }),
+      makeApp({ status: 'applied' }),
+      makeApp({ status: 'interviewing' }),
+      makeApp({ status: 'offer' }),
+      makeApp({ status: 'accepted' }),
+      makeApp({ status: 'declined' }),
+      makeApp({ status: 'rejected' }),
+      makeApp({ status: 'no-response' }),
+    ];
+
+    const funnel = getStatusFunnel(apps);
+
+    expect(funnel.find((s) => s.stage === 'No Response')?.count).toBe(1);
+    expect(funnel.find((s) => s.stage === 'Rejected')?.count).toBe(1);
+    expect(funnel.find((s) => s.stage === 'Declined')?.count).toBe(1);
+    expect(funnel.find((s) => s.stage === 'Accepted')?.count).toBe(1);
+    expect(funnel.find((s) => s.stage === 'Offer')?.count).toBe(3);
+    expect(funnel.find((s) => s.stage === 'Interviewing')?.count).toBe(5);
+    expect(funnel.find((s) => s.stage === 'Applied')?.count).toBe(8);
   });
 
   it('computes salary distribution correctly', () => {
