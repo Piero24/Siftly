@@ -113,7 +113,11 @@ function appToRow(app: JobApplication) {
 export class SupabaseAdapter implements StorageAdapter {
   async getAll(): Promise<JobApplication[]> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { data, error } = await supabase.from('job_applications').select('*').order('date', { ascending: false });
+    const { data, error } = await supabase
+      .from('job_applications')
+      .select('*')
+      .is('deleted_at', null)
+      .order('date', { ascending: false });
     if (error) {
       logger.error('[SupabaseAdapter] getAll:', error);
       throw error;
@@ -132,18 +136,18 @@ export class SupabaseAdapter implements StorageAdapter {
 
   async remove(id: string): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { error } = await supabase.from('job_applications').delete().eq('id', id);
+    const { error } = await supabase.rpc('soft_delete_application', { app_id: id });
     if (error) {
-      logger.error('[SupabaseAdapter] remove:', error);
+      logger.error('[SupabaseAdapter] remove (soft):', error);
       throw error;
     }
   }
 
   async removeAll(): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { error } = await supabase.from('job_applications').delete().neq('id', '');
+    const { error } = await supabase.rpc('soft_delete_all_applications');
     if (error) {
-      logger.error('[SupabaseAdapter] removeAll:', error);
+      logger.error('[SupabaseAdapter] removeAll (soft):', error);
       throw error;
     }
   }
