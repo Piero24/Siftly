@@ -61,6 +61,19 @@ In self-hosted mode, Siftly uses **simple profile creation** — just enter your
 Data is stored in the browser's IndexedDB, **not** in a Docker volume. If you clear your browser data, your applications will be lost. Use **CSV Export** in Settings to back up your data regularly.
 :::
 
+### What Is Persistent vs. Not
+
+- **Container restart/recreate**: your data remains, because it lives in the browser storage for the same URL (origin).
+- **Docker volume changes**: do not affect job application data (volumes are for server-side files, while Siftly web data is client-side).
+- **Browser data cleanup** (clear site data, private/incognito profile reset, or switching browser profile/device): your data is lost.
+- **Origin changes** (`http` vs `https`, different host, different port): the browser treats it as a different app storage bucket.
+
+### How To Avoid Losing Data
+
+1. Keep a stable URL for your deployment (same host/protocol/port).
+2. Use a persistent browser profile (avoid private/incognito mode).
+3. Export backups from **Settings -> Data & Storage -> Export CSV** before upgrades or browser cleanup.
+
 ## Reverse Proxy
 
 To run behind Nginx or Traefik at a subpath:

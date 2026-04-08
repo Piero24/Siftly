@@ -12,9 +12,27 @@ Siftly uses GitHub Actions for continuous integration and delivery. All workflow
 
 Runs on every pull request and push to `main`.
 
-- **Linting**: Checks formatting with Prettier and runs TypeScript type checks.
-- **Testing**: Executes unit tests and generates coverage reports.
-- **Build**: Verifies that both the web and extension targets build successfully.
+- **Install**: `npm ci --legacy-peer-deps`
+- **Linting**: `npm run format:check`
+- **Type Check**: `npx tsc --noEmit`
+- **Testing**: `npm run test:coverage`
+- **Build (web)**: `npm run build:web`
+- **Build (extension)**: `npm run build:extension`
+- **Docs Build**: `cd documentation && npm ci --legacy-peer-deps && npm run build`
+
+### Local Pre-Push Checklist (CI Parity)
+
+Run this sequence locally to match CI behavior as closely as possible:
+
+```bash
+npm ci --legacy-peer-deps
+npm run format:check
+npx tsc --noEmit
+npm run test:coverage
+npm run build:web
+npm run build:extension
+cd documentation && npm ci --legacy-peer-deps && npm run build && cd ..
+```
 
 ### 2. Deploy Docs (`deploy-docs.yml`)
 

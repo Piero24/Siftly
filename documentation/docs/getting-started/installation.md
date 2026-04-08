@@ -23,6 +23,12 @@ cd Siftly
 npm install --legacy-peer-deps
 ```
 
+### Why `--legacy-peer-deps`?
+
+Siftly currently pins dependency versions that can trigger npm peer-resolution conflicts on strict installs. The project CI uses the same compatibility mode (`npm ci --legacy-peer-deps`), so using `--legacy-peer-deps` locally keeps your environment aligned with CI and avoids `ERESOLVE` failures.
+
+Use plain `npm install` only if peer-resolution is fully clean for the current lockfile and CI workflow has been updated accordingly.
+
 For the documentation site:
 
 ```bash
@@ -97,3 +103,19 @@ npm run test:coverage   # Tests with coverage
 npm run format:check    # Prettier formatting
 npx tsc --noEmit        # TypeScript type check
 ```
+
+## Full CI Parity Commands
+
+To run the same checks as GitHub Actions before pushing:
+
+```bash
+npm ci --legacy-peer-deps
+npm run format:check
+npx tsc --noEmit
+npm run test:coverage
+npm run build:web
+npm run build:extension
+cd documentation && npm ci --legacy-peer-deps && npm run build && cd ..
+```
+
+This mirrors the current workflow behavior in `.github/workflows/ci.yml`.

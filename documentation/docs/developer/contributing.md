@@ -24,7 +24,7 @@ Run the full CI check suite locally:
 ```bash
 npm run format:check      # Prettier formatting
 npx tsc --noEmit          # TypeScript type check
-npm run test:run          # Unit & integration tests
+npm run test:coverage     # Unit tests with coverage
 npm run build:web         # Web build
 npm run build:extension   # Extension build
 npm run docs:build        # Documentation build
