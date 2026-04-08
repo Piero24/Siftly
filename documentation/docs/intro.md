@@ -5,8 +5,7 @@ slug: /intro
 
 # Welcome to Siftly
 
-<!-- TODO: Replace with actual dashboard screenshot -->
-![Siftly Dashboard Overview](/img/guides/dashboard_hero.webp)
+> TODO: Add a dashboard hero screenshot in documentation/static/img/guides/dashboard_hero.webp.
 
 **Siftly** is a professional job application tracker designed to give you full control over your job search. Available as a **Chrome extension** and a **self-hosted web app**, it combines powerful analytics with a clean, modern interface.
 
