@@ -5,13 +5,7 @@
   "packages": {
     ".": {
       "package-name": "siftly",
-      "version-file": "metadata.json",
-      "extra-files": [
-        "package.json",
-        "documentation/package.json",
-        "public/manifest.json",
-        "README.md"
-      ]
+      "version-file": "metadata.json"
     }
   }
 }
