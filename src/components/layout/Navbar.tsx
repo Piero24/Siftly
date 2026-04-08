@@ -93,8 +93,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
   return (
     <header className="main-navbar">
       <div className="nav-left">
-        <img src={APP_INFO.logo.path} alt={APP_INFO.logo.alt} width={32} height={32} />
-        <span className="app-name">{APP_INFO.name}</span>
+        <button
+          type="button"
+          className="nav-brand-btn"
+          onClick={() => handleNavClick('dashboard')}
+          aria-label="Go to dashboard"
+        >
+          <img src={APP_INFO.logo.path} alt={APP_INFO.logo.alt} width={32} height={32} />
+          <span className="app-name">{APP_INFO.name}</span>
+        </button>
       </div>
 
       {/* Hamburger button — visible on mobile only */}

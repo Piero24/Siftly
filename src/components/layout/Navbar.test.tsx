@@ -43,4 +43,23 @@ describe('Navbar', () => {
 
     expect(onViewChange).toHaveBeenCalledWith('table');
   });
+
+  it('calls onViewChange with dashboard when brand is clicked', async () => {
+    const user = userEvent.setup();
+    const onViewChange = vi.fn();
+
+    render(
+      <ToastProvider>
+        <AuthProvider>
+          <MemoryRouter>
+            <Navbar currentView="table" onViewChange={onViewChange} />
+          </MemoryRouter>
+        </AuthProvider>
+      </ToastProvider>
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Go to dashboard' }));
+
+    expect(onViewChange).toHaveBeenCalledWith('dashboard');
+  });
 });
