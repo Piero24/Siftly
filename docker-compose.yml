@@ -9,7 +9,6 @@ services:
         # Supabase — leave empty to disable remote sync and run local-only
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
         VITE_SUPABASE_PUBLISHABLE_KEY: ${VITE_SUPABASE_PUBLISHABLE_KEY:-}
-        VITE_SUPABASE_SECRET_KEY: ${VITE_SUPABASE_SECRET_KEY:-}
         # Allow users to skip login in Docker (local-only mode)
         VITE_ALLOW_LOCAL_ONLY: 'true'
     image: siftly-web:latest
