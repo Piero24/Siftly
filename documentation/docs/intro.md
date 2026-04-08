@@ -5,6 +5,9 @@ slug: /intro
 
 # Welcome to Siftly
 
+<!-- TODO: Replace with actual dashboard screenshot -->
+![Siftly Dashboard Overview](/img/guides/dashboard_hero.webp)
+
 **Siftly** is a professional job application tracker designed to give you full control over your job search. Available as a **Chrome extension** and a **self-hosted web app**, it combines powerful analytics with a clean, modern interface.
 
 ## What is Siftly?
@@ -39,9 +42,9 @@ Both modes share the same codebase and feature set.
 If you're contributing to Siftly or building on top of it:
 
 - [Architecture overview](./developer/architecture)
-- [Project structure](./developer/project-structure)
+- [Storage system](./developer/storage)
 - [Contributing guide](./developer/contributing)
 
 ## License
 
-Siftly is open source under the [MIT License](https://github.com/Piero24/Siftly/blob/main/LICENSE).
+Siftly is released under the [Prosperity Public License 3.0.0](https://github.com/Piero24/Siftly/blob/main/LICENSE).
