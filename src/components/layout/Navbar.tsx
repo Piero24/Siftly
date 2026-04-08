@@ -1,6 +1,6 @@
 /**
  * Navbar — Sticky liquid-glass navigation bar.
- * App logo from public/icons/logo.svg; icons from lucide-react.
+ * App logo from APP_INFO config (base-aware public logo); icons from lucide-react.
  *
  * Includes hamburger menu for mobile responsive layout.
  * The Profile button opens a dropdown with user info and sign-out.

@@ -1,5 +1,6 @@
-import logoPath from '../assets/logo.svg';
 import { LINKS } from './links';
+
+const logoPath = `${import.meta.env.BASE_URL}logo.svg`;
 
 export const IS_DEBUG = import.meta.env.VITE_DEBUG_MODE === 'true';
 
