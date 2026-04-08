@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Siftly Docs',
   tagline: 'Your job search control panel — comprehensive documentation for users and developers.',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.svg',
 
   future: {
     v4: true,
@@ -37,19 +37,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/Piero24/Siftly/tree/main/documentation/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl: 'https://github.com/Piero24/Siftly/tree/main/documentation/',
-          blogTitle: 'Siftly Blog',
-          blogDescription: 'Updates, changelogs, and announcements from the Siftly team.',
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -84,11 +72,7 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
-        {
-          to: '/blog',
-          label: 'Blog',
-          position: 'left',
-        },
+
         {
           href: 'https://github.com/Piero24/Siftly',
           label: 'GitHub',
