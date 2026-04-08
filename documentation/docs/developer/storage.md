@@ -74,8 +74,8 @@ All adapters implement the same interface:
 interface StorageAdapter {
   getAll(): Promise<JobApplication[]>;
   upsert(app: JobApplication): Promise<void>;
-  remove(id: string): Promise<void>;      // Soft delete in Supabase
-  removeAll(): Promise<void>;             // Soft delete in Supabase
+  remove(id: string): Promise<void>; // Soft delete in Supabase
+  removeAll(): Promise<void>; // Soft delete in Supabase
   importBatch(apps: JobApplication[]): Promise<void>;
 }
 ```

@@ -48,11 +48,11 @@ erDiagram
 
 ### Tables
 
-| Table | Purpose | Key columns |
-|-------|---------|-------------|
-| `profiles` | User identity, synced from Supabase Auth | `id`, `email`, `full_name`, `is_active` |
-| `job_applications` | All tracked job applications | `id`, `user_id`, `company`, `position`, `status` |
-| `user_settings` | Per-user preferences | `user_id`, `language`, `currency`, `theme` |
+| Table              | Purpose                                  | Key columns                                      |
+| ------------------ | ---------------------------------------- | ------------------------------------------------ |
+| `profiles`         | User identity, synced from Supabase Auth | `id`, `email`, `full_name`, `is_active`          |
+| `job_applications` | All tracked job applications             | `id`, `user_id`, `company`, `position`, `status` |
+| `user_settings`    | Per-user preferences                     | `user_id`, `language`, `currency`, `theme`       |
 
 ## Row Level Security (RLS)
 
@@ -81,11 +81,11 @@ From the user's perspective, deleted items disappear immediately. The RLS polici
 
 ### Server-Side Functions
 
-| RPC | Description |
-|-----|-------------|
-| `soft_delete_application(app_id)` | Archives a single job application |
-| `soft_delete_all_applications()` | Archives all applications for the current user |
-| `soft_delete_account()` | Deactivates the user's profile and archives all associated data |
+| RPC                               | Description                                                     |
+| --------------------------------- | --------------------------------------------------------------- |
+| `soft_delete_application(app_id)` | Archives a single job application                               |
+| `soft_delete_all_applications()`  | Archives all applications for the current user                  |
+| `soft_delete_account()`           | Deactivates the user's profile and archives all associated data |
 
 ## Migrations
 
