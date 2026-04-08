@@ -18,11 +18,6 @@ const config: Config = {
   projectName: metadata.docs.projectName,
 
   onBrokenLinks: 'warn',
-  markdown: {
-    hooks: {
-      onBrokenMarkdownLinks: 'warn',
-    },
-  },
 
   i18n: {
     defaultLocale: 'en',
