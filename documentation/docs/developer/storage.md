@@ -8,26 +8,27 @@ Siftly uses an adapter pattern for data storage, allowing the same codebase to w
 
 ## Adapters
 
-### LocalAdapter
+### IndexedDBAdapter
 
-- Uses **IndexedDB** via the Dexie.js library
-- No network requests
-- Data persists in the browser
-- Used in `web` deployment mode
+- Uses the browser's native **IndexedDB** API (no ORM or wrapper library)
+- No network requests — fully offline capable
+- Data persists in the browser across sessions
+- Used in `web` (self-hosted) deployment mode
 
-### RemoteAdapter
+### SupabaseAdapter
 
-- Uses **Supabase** (PostgreSQL + REST API)
-- Requires authentication
-- Data syncs across devices
+- Uses **Supabase** (PostgreSQL + PostgREST API)
+- Requires authentication — all queries are scoped via Row Level Security
+- Data syncs across devices automatically
+- All deletions are **soft deletes** — records are archived, not removed (see [Database](./database))
 - Used in `extension` deployment mode
 
-### DualAdapter
+### DualSyncAdapter
 
 - Writes to **both** local and remote
-- Uses local as primary (faster reads)
-- Syncs to remote in background
-- Available in `dev` mode
+- Reads from **remote first**, falls back to local if unavailable
+- Keeps local IndexedDB in sync with the remote database
+- Available in `dev` mode for testing
 
 ## Storage Mode Selection
 
@@ -56,15 +57,29 @@ In dev mode, the debug toolbar provides a 3-way toggle to switch between local, 
 export function createAdapter(mode: StorageMode): StorageAdapter {
   switch (mode) {
     case 'local':
-      return new LocalAdapter();
+      return new IndexedDBAdapter();
     case 'remote':
-      return new RemoteAdapter();
+      return new SupabaseAdapter();
     case 'both':
-      return new DualAdapter();
+      return new DualSyncAdapter();
   }
+}
+```
+
+## Interface
+
+All adapters implement the same interface:
+
+```typescript
+interface StorageAdapter {
+  getAll(): Promise<JobApplication[]>;
+  upsert(app: JobApplication): Promise<void>;
+  remove(id: string): Promise<void>;      // Soft delete in Supabase
+  removeAll(): Promise<void>;             // Soft delete in Supabase
+  importBatch(apps: JobApplication[]): Promise<void>;
 }
 ```
 
 ## Schema
 
-Both adapters use the same `JobApplication` interface. The Supabase schema is defined in `supabase/supabase-schema.sql`.
+Both adapters use the same `JobApplication` TypeScript interface. The Supabase schema is defined in `supabase/migrations/` and includes automatic camelCase ↔ snake_case mapping in the storage adapter.

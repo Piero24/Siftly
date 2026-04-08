@@ -4,13 +4,13 @@ sidebar_position: 6
 
 # Testing
 
-Siftly uses **Vitest** for unit and integration testing.
+Siftly uses **Vitest** with **React Testing Library** for unit and integration testing.
 
 ## Running Tests
 
 ```bash
 npm run test:run        # Run all tests once
-npm run test:watch      # Watch mode
+npm run test            # Watch mode (re-runs on file changes)
 npm run test:coverage   # With coverage report
 ```
 
@@ -22,10 +22,25 @@ Tests live alongside or near the code they test:
 src/
 ├── lib/
 │   ├── analytics.ts
-│   └── analytics.test.ts
+│   ├── analytics.test.ts
+│   ├── countries.ts
+│   ├── countries.test.ts
+│   ├── csv.ts
+│   ├── csv.test.ts
+│   └── iconColor.test.ts
 ├── hooks/
-│   ├── useJobApplications.ts
-│   └── useJobApplications.test.ts
+│   ├── useApplicationFilters.ts
+│   ├── useApplicationFilters.test.ts
+│   ├── useInterviewingFilters.ts
+│   └── useInterviewingFilters.test.ts
+├── context/
+│   ├── SettingsContext.tsx
+│   ├── SettingsContext.test.tsx
+│   ├── SelectionContext.test.tsx
+│   ├── UIContext.test.tsx
+│   └── TableFilterContext.test.tsx
+├── dashboard/
+│   └── App.integration.test.tsx
 └── test/
     └── setup.ts          # Global test setup
 ```
@@ -52,10 +67,14 @@ describe('computeKPIs', () => {
 | Layer             | What to Test                                               |
 | ----------------- | ---------------------------------------------------------- |
 | `lib/` utilities  | Pure functions (analytics, CSV parsing, salary formatting) |
-| Hooks             | State transitions, data loading logic                      |
-| Normalizers       | Scraper data normalization                                 |
-| Context providers | Auth flow, settings persistence                            |
+| Hooks             | State transitions, filtering logic, data loading           |
+| Context providers | Auth flow, settings persistence, selection state           |
+| Integration       | Full component interaction flows (table, modal, filters)   |
 
 ## Mock Data
 
-The `src/test/mockData.ts` file provides 50 realistic job applications for testing. This data is also used by the debug toolbar's "Mock Mode".
+The `src/lib/mockData.ts` file provides 50+ realistic job applications for testing. This data is also used by the debug toolbar's "Mock Mode" for UI development and demos.
+
+## CI Integration
+
+Tests run automatically in the CI pipeline on every push and pull request. The pipeline requires all tests to pass before the build stage begins. See [CI/CD Pipeline](../deployment/ci-cd) for the full pipeline flow.

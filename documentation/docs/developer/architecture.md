@@ -43,11 +43,21 @@ A central `DeploymentMode` module (`src/config/deploymentMode.ts`) derives the r
 
 The storage layer uses an adapter pattern with three implementations:
 
-- **LocalAdapter** — IndexedDB via Dexie.js
-- **RemoteAdapter** — Supabase PostgreSQL
-- **DualAdapter** — Syncs both local and remote
+- **IndexedDBAdapter** — Browser-local IndexedDB (raw API, no ORM)
+- **SupabaseAdapter** — Supabase PostgreSQL with Row Level Security
+- **DualSyncAdapter** — Writes to both; reads from remote, falls back to local
 
-The active adapter is determined by the deployment mode.
+The active adapter is determined by the deployment mode. All write operations go through the same `StorageAdapter` interface, so the rest of the codebase is storage-agnostic.
+
+### Data Integrity
+
+All data operations use **soft deletion** — records are marked with a `deleted_at` timestamp rather than being physically removed. This enables:
+
+- **Undo / recovery** — accidentally deleted applications can be restored
+- **Graceful account management** — account deactivation preserves data for potential reactivation
+- **Audit trail** — full history of user activity is preserved
+
+See [Database](./database) for schema details.
 
 ### Context Provider Hierarchy
 
@@ -75,13 +85,13 @@ Each provider has a single responsibility and clear boundary.
 
 | Layer         | Technology                             |
 | ------------- | -------------------------------------- |
-| UI Framework  | React 18                               |
+| UI Framework  | React 19                               |
 | Build Tool    | Vite                                   |
 | Language      | TypeScript (strict)                    |
 | Styling       | Vanilla CSS with design tokens         |
-| Local DB      | IndexedDB (Dexie.js)                   |
-| Remote DB     | Supabase (PostgreSQL)                  |
+| Local DB      | IndexedDB (raw API)                    |
+| Remote DB     | Supabase (PostgreSQL + RLS)            |
 | Auth          | Supabase Auth (OAuth) / Local profiles |
-| Testing       | Vitest                                 |
+| Testing       | Vitest + React Testing Library         |
 | Documentation | Docusaurus                             |
 | CI/CD         | GitHub Actions                         |

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Authentication
@@ -67,3 +67,25 @@ The `LoginPage` component checks `FEATURES.auth` to determine what to render:
 - `showLocalProfile = true` → Shows the profile creation form
 - `showOAuth = true` → Shows OAuth provider buttons
 - Both → Shows both with a divider (dev mode only)
+
+## Account Deletion
+
+When a user deletes their account:
+
+1. All active job applications are archived (soft-deleted)
+2. User settings are archived
+3. The user profile is marked as inactive
+4. The user is signed out
+
+This is a **graceful deactivation**, not a hard delete. Data is preserved to allow potential recovery if the user contacts support.
+
+## Re-registration
+
+If a previously deactivated user signs up again with the same email:
+
+1. The old profile and all its associated data are moved to an **archive identity**
+2. A brand new profile is created for the fresh registration
+3. The new account starts completely clean — no data carries over
+4. The archived data remains in the database under the old identity for audit purposes
+
+This is handled automatically by the `handle_new_user()` database trigger.
