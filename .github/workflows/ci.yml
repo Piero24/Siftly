@@ -45,15 +45,19 @@ jobs:
 
       - name: Verify metadata sync
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.user.login }}" == "github-actions[bot]" ]; then
-            echo "Auto-syncing metadata for Release Please PR..."
+          if [ "${{ github.actor }}" == "github-actions[bot]" ]; then
+            echo "Auto-syncing metadata for Release Please..."
             npm run metadata:sync
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add README.md
+            
+            # Identify the target branch (PR head ref or current branch)
+            TARGET_BRANCH=${{ github.head_ref || github.ref_name }}
+            
+            git add package.json documentation/package.json public/manifest.json README.md .release-please-manifest.json
             if ! git diff --staged --quiet; then
               git commit -m "chore: sync metadata for automated release"
-              git push origin HEAD:${{ github.event.pull_request.head.ref }}
+              git push origin HEAD:$TARGET_BRANCH
             fi
           else
             npm run metadata:verify
