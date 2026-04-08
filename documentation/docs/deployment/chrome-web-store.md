@@ -37,8 +37,19 @@ You must set up the following secrets in your GitHub repository:
 
 The `Release Extension` workflow triggers when a new tag starting with `v` is pushed:
 
-- **Beta/Alpha tags** (e.g., `v1.0.0-beta`): Create a pre-release on GitHub and upload the artifact, but **do not** publish to the Web Store.
-- **Production tags** (e.g., `v1.0.0`): Create a release on GitHub and **automatically publish** to the Chrome Web Store.
+- **Prerelease versions** (e.g., `v1.0.0-alpha.1`, `v1.0.0-beta.1`, `v1.0.0-rc.1`): Create a GitHub prerelease and upload the artifact, but **do not** publish to the Web Store.
+- **Stable versions** (e.g., `v1.0.0`): Create a normal GitHub release and **automatically publish** to the Chrome Web Store.
+
+### Important Consistency Rule
+
+Prerelease detection is based on `package.json` version content (`alpha`, `beta`, `rc`, `dev`), not tag text alone.
+
+Always keep the tag and package version aligned:
+
+- `package.json`: `1.0.0-beta.1`
+- Git tag: `v1.0.0-beta.1`
+
+Use the complete runbook in [Versioning and Releases](./versioning-and-releases).
 
 ## Store Assets Needed
 

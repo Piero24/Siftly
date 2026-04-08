@@ -54,7 +54,11 @@ Runs when a version tag (`v*`) is pushed.
 
 - Builds the Chrome extension.
 - Creates a GitHub Release with the extension ZIP attached.
-- If it's a stable version (no beta/rc), it publishes to the **Chrome Web Store**.
+- If `package.json` version is stable (no `alpha`, `beta`, `rc`, `dev`), it publishes to the **Chrome Web Store**.
+
+## Release Versioning
+
+For the official alpha/beta/rc/prod strategy, required tag format, and release checklist, see [Versioning and Releases](./versioning-and-releases).
 
 ### 5. DB Migration (`db-migration.yml`)
 

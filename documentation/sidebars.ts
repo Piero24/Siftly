@@ -47,7 +47,12 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Deployment',
-      items: ['deployment/docker', 'deployment/chrome-web-store', 'deployment/ci-cd'],
+      items: [
+        'deployment/docker',
+        'deployment/chrome-web-store',
+        'deployment/ci-cd',
+        'deployment/versioning-and-releases',
+      ],
     },
   ],
 };
