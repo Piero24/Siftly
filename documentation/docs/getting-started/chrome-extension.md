@@ -27,9 +27,9 @@ sidebar_position: 2
 
 Click the Siftly icon in your toolbar to open the quick-access popup. From here you can:
 
-- View recent applications
-- Quick-add a new application
-- Open the full dashboard
+- Open the dashboard
+- Manually insert the job application
+- Automatically capture the job application
 
 ### Dashboard
 
@@ -46,7 +46,7 @@ The Chrome extension uses **OAuth authentication** via Supabase:
 
 - **Google** — Sign in with your Google account
 - **GitHub** — Sign in with your GitHub account
-- **Apple** — Sign in with your Apple ID
+- **Apple** — Sign in with your Apple ID (NOT IMPLMENTED YET)
 
 Your data is stored securely in the cloud and synced across devices.
 

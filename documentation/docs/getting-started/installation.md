@@ -40,13 +40,19 @@ cp .env.example .env
 Edit `.env` with your configuration:
 
 ```bash
-# Supabase (optional — leave defaults for local-only mode)
+# ─── Supabase ─────────────────────────────────────────────
+# Get these from: https://app.supabase.com → Project Settings → API
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key-here
 VITE_SUPABASE_SECRET_KEY=your-secret-key-here
+SUPABASE_DB_PASSWORD=your-db-password-here
 
-# Enable debug mode for development
+# ─── Local-only mode ─────────────────────────────────────
+# Set to "true" to allow users to skip login and use local IndexedDB storage.
+# Typically only enabled for self-hosted Docker deployments.
+VITE_ALLOW_LOCAL_ONLY=false
 VITE_DEBUG_MODE=true
+
 ```
 
 ## Run Locally

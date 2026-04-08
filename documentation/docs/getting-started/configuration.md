@@ -13,6 +13,7 @@ Siftly is configured via Vite environment variables in the `.env` file.
 | `VITE_SUPABASE_URL`             | `string`           | —           | Supabase project URL                      |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | `string`           | —           | Supabase publishable key                  |
 | `VITE_SUPABASE_SECRET_KEY`      | `string`           | —           | Supabase secret key                       |
+| `SUPABASE_DB_PASSWORD`          | `string`           | —           | Supabase database password                |
 | `VITE_ALLOW_LOCAL_ONLY`         | `boolean`          | `false`     | Allow skipping login                      |
 | `VITE_DEBUG_MODE`               | `boolean`          | `false`     | Enable debug toolbar and auth bypass      |
 | `VITE_BUILD_TARGET`             | `web \| extension` | `extension` | Build target (determines deployment mode) |
