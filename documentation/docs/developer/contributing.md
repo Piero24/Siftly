@@ -22,6 +22,7 @@ VITE_DEBUG_MODE=true npm run dev:web
 Run the full CI check suite locally:
 
 ```bash
+npm run metadata:verify    # Metadata/source-of-truth consistency
 npm run format:check      # Prettier formatting
 npx tsc --noEmit          # TypeScript type check
 npm run test:coverage     # Unit tests with coverage
@@ -30,7 +31,7 @@ npm run build:extension   # Extension build
 npm run docs:build        # Documentation build
 ```
 
-All six must pass — these are the exact checks that run in CI.
+All checks must pass — these are the exact checks that run in CI.
 
 ### Commit Convention
 
@@ -72,6 +73,9 @@ src/
 ├── test/            # Test setup
 ├── types/           # TypeScript type definitions
 └── web/             # Web (self-hosted) entrypoint
+
+metadata.json         # Canonical product metadata (version/name/links/images)
+scripts/              # Repo scripts (metadata sync/check)
 ```
 
 ### Directory Conventions
@@ -88,7 +92,15 @@ src/
 - Use design tokens from `tokens.css` — no hardcoded colors
 - Use the `logger` utility — not `console.log`
 - Import from centralized configs (`APP_INFO`, `FEATURES`, `DEPLOYMENT`)
+- Update product metadata only in `metadata.json` and run `npm run metadata:sync`
 - All database schemas are in `supabase/migrations/` — never modify the database manually
+
+## Commit and Release Rules
+
+- PR commits must follow Conventional Commits. CI enforces this via commitlint.
+- Do not create release tags manually in normal flow.
+- Releases are prepared by Release Please from `main` and published by tag-triggered workflows after the release PR is merged.
+- See [Product Metadata](./product-metadata) and [Versioning and Releases](../deployment/versioning-and-releases) for the complete process.
 
 ## Provider Boundaries
 

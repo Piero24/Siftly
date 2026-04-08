@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "VITE_BUILD_TARGET=extension vite",
     "dev:web": "VITE_BUILD_TARGET=web vite",
+    "metadata:sync": "node scripts/sync-metadata.mjs",
+    "metadata:verify": "node scripts/sync-metadata.mjs --check",
     "build": "VITE_BUILD_TARGET=extension vite build",
     "build:extension": "VITE_BUILD_TARGET=extension vite build",
     "build:web": "VITE_BUILD_TARGET=web vite build",
@@ -16,13 +18,16 @@
     "format:check": "prettier --check \"documentation/**/*.{md,ts,tsx,js,jsx,json,yml,yaml,css}\" \".github/workflows/*.{yml,yaml}\" \"src/**/*.test.{ts,tsx}\" \"src/test/**/*.{ts,tsx}\" \"*.{json,md,yml,yaml}\"",
     "docs:dev": "npm --prefix documentation run start",
     "docs:build": "npm --prefix documentation run build",
-    "docs:serve": "npm --prefix documentation run serve"
+    "docs:serve": "npm --prefix documentation run serve",
+    "release:prepare": "npm run metadata:sync && npm run format"
   },
   "keywords": [],
   "author": "",
   "license": "Prosperity-3.0.0",
   "description": "Your job search control panel",
   "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

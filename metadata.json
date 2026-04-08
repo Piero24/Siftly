@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "product": {
+    "packageName": "siftly",
+    "name": "Siftly",
+    "fullName": "Siftly Tracker",
+    "popupName": "Siftly Tracker",
+    "tagline": "Your job search control panel",
+    "manifestDescription": "Professional job application tracker for LinkedIn."
+  },
+  "branding": {
+    "appLogo": "logo.svg",
+    "docsLogo": "img/logo.svg",
+    "readmeLogo": "src/assets/logo.svg",
+    "logoAlt": "Siftly logo",
+    "docsFavicon": "img/logo.svg",
+    "docsSocialCard": "img/siftly-social-card.png"
+  },
+  "links": {
+    "github": "https://github.com/Piero24/Siftly",
+    "community": "https://github.com/Piero24/Siftly/discussions",
+    "docs": "https://piero24.github.io/Siftly/",
+    "support": "mailto:support@example.com",
+    "geoData": "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
+    "privacy": "https://github.com/Piero24/Siftly/blob/main/PRIVACY.md",
+    "terms": "https://github.com/Piero24/Siftly/blob/main/TERMS.md",
+    "issues": "https://github.com/Piero24/Siftly/issues",
+    "contributing": "https://github.com/Piero24/Siftly/blob/main/CONTRIBUTING.md",
+    "changelog": "https://github.com/Piero24/Siftly/blob/main/CHANGELOG.md",
+    "license": "https://github.com/Piero24/Siftly/blob/main/LICENSE"
+  },
+  "docs": {
+    "title": "Siftly Docs",
+    "tagline": "Your job search control panel — comprehensive documentation for users and developers.",
+    "url": "https://piero24.github.io",
+    "baseUrl": "/Siftly/",
+    "organizationName": "Piero24",
+    "projectName": "Siftly",
+    "editPath": "tree/main/documentation/"
+  },
+  "extension": {
+    "defaultTitle": "Siftly"
+  }
+}

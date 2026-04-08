@@ -99,6 +99,9 @@ src/
 ├── test/            # Test setup
 ├── types/           # TypeScript type definitions
 └── web/             # Web (self-hosted) entrypoint
+
+metadata.json         # Canonical product metadata (name/version/links/branding)
+scripts/              # Repository automation scripts (metadata sync/check)
 ```
 
 ## Making Changes
@@ -112,6 +115,7 @@ src/
 - **Import from centralized configs** — `APP_INFO`, `FEATURES`, `DEPLOYMENT`, `LINKS`.
 - **Use the logger** — `import { logger } from '../lib/logger'` instead of `console.log`.
 - **Write tests** for new utilities, hooks, and complex logic.
+- **Keep metadata centralized** — update `metadata.json`, then run `npm run metadata:sync`.
 
 ### Provider Boundaries
 
@@ -140,6 +144,19 @@ chore: update dependencies
 ci: add Docker multi-arch build
 style: fix button alignment in settings
 ```
+
+Commits are validated in CI via `commitlint`, so non-conventional commit messages will fail checks.
+
+## Release Process
+
+Releases are managed by Release Please:
+
+1. Merge conventional commits into `main`.
+2. Release Please opens/updates a release PR with version and changelog changes.
+3. Review and merge the release PR.
+4. Tag-based workflows publish the extension and Docker image automatically.
+
+Avoid manual version edits in multiple files. If you change product metadata, update only `metadata.json` and run `npm run metadata:sync`.
 
 ## Pull Request Process
 

@@ -36,6 +36,7 @@ const sidebars: SidebarsConfig = {
         'developer/deployment-modes',
         'developer/theming',
         'developer/testing',
+        'developer/product-metadata',
         'developer/contributing',
       ],
     },

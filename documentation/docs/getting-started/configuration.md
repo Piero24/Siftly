@@ -48,3 +48,26 @@ Feature visibility is controlled in `src/config/features.ts`. Features can be to
 - Dashboard sections
 - Settings sections
 - Debug tools
+
+## Product Metadata (Single Source of Truth)
+
+Siftly product metadata is centralized in `metadata.json` at the repository root.
+
+Use this file for:
+
+- Version
+- Product/app names
+- Tagline and extension description
+- Shared links (GitHub/docs/support/privacy)
+- Branding assets (logo paths and docs images)
+
+After editing metadata, run:
+
+```bash
+npm run metadata:sync
+npm run metadata:verify
+```
+
+This keeps `package.json`, `public/manifest.json`, `documentation/package.json`, and the README version badge synchronized.
+
+For full ownership rules and field-by-field guidance, see [Product Metadata](../developer/product-metadata).

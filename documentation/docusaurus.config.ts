@@ -1,21 +1,21 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import metadata from '../metadata.json';
+
+const docsEditUrl = `${metadata.links.github}/${metadata.docs.editPath}`;
+const docsIntroLink = `${metadata.docs.baseUrl}docs/intro`;
 
 const config: Config = {
-  title: 'Siftly Docs',
-  tagline: 'Your job search control panel — comprehensive documentation for users and developers.',
-  favicon: 'img/logo.svg',
+  title: metadata.docs.title,
+  tagline: metadata.docs.tagline,
+  favicon: metadata.branding.docsFavicon,
 
-  future: {
-    v4: true,
-  },
+  url: metadata.docs.url,
+  baseUrl: metadata.docs.baseUrl,
 
-  url: 'https://piero24.github.io',
-  baseUrl: '/Siftly/',
-
-  organizationName: 'Piero24',
-  projectName: 'Siftly',
+  organizationName: metadata.docs.organizationName,
+  projectName: metadata.docs.projectName,
 
   onBrokenLinks: 'warn',
   markdown: {
@@ -35,7 +35,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/Piero24/Siftly/tree/main/documentation/',
+          editUrl: docsEditUrl,
         },
         blog: false,
         theme: {
@@ -46,24 +46,23 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/siftly-social-card.png',
+    image: metadata.branding.docsSocialCard,
     colorMode: {
       defaultMode: 'dark',
       respectPrefersColorScheme: true,
     },
     announcementBar: {
       id: 'beta_notice',
-      content:
-        '🚀 Siftly is in active development. <a href="/Siftly/docs/intro">Check the docs</a> for the latest updates!',
+      content: `🚀 Siftly is in active development. <a href="${docsIntroLink}">Check the docs</a> for the latest updates!`,
       backgroundColor: '#007AFF',
       textColor: '#ffffff',
       isCloseable: true,
     },
     navbar: {
-      title: 'Siftly',
+      title: metadata.product.name,
       logo: {
-        alt: 'Siftly logo',
-        src: 'img/logo.svg',
+        alt: metadata.branding.logoAlt,
+        src: metadata.branding.docsLogo,
       },
       items: [
         {
@@ -74,7 +73,7 @@ const config: Config = {
         },
 
         {
-          href: 'https://github.com/Piero24/Siftly',
+          href: metadata.links.github,
           label: 'GitHub',
           position: 'right',
         },
@@ -87,37 +86,37 @@ const config: Config = {
           title: 'Documentation',
           items: [
             { label: 'Getting Started', to: '/docs/intro' },
-            { label: 'User Guide', to: '/docs/category/user-guide' },
-            { label: 'Developer Guide', to: '/docs/category/developer-guide' },
+            { label: 'User Guide', to: '/docs/user-guide/dashboard' },
+            { label: 'Developer Guide', to: '/docs/developer/architecture' },
           ],
         },
         {
           title: 'Community',
           items: [
-            { label: 'GitHub Discussions', href: 'https://github.com/Piero24/Siftly/discussions' },
-            { label: 'Issues', href: 'https://github.com/Piero24/Siftly/issues' },
+            { label: 'GitHub Discussions', href: metadata.links.community },
+            { label: 'Issues', href: metadata.links.issues },
             {
               label: 'Contributing',
-              href: 'https://github.com/Piero24/Siftly/blob/main/CONTRIBUTING.md',
+              href: metadata.links.contributing,
             },
           ],
         },
         {
           title: 'Project',
           items: [
-            { label: 'Repository', href: 'https://github.com/Piero24/Siftly' },
+            { label: 'Repository', href: metadata.links.github },
             {
               label: 'Changelog',
-              href: 'https://github.com/Piero24/Siftly/blob/main/CHANGELOG.md',
+              href: metadata.links.changelog,
             },
             {
               label: 'License (Prosperity-3.0.0)',
-              href: 'https://github.com/Piero24/Siftly/blob/main/LICENSE',
+              href: metadata.links.license,
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Siftly — Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} ${metadata.product.name} — Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

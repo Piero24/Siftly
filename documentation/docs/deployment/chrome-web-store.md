@@ -22,7 +22,9 @@ If you want to manually create a package for upload:
 
 ## Automated Publishing (CI/CD)
 
-The Siftly repository includes a GitHub Action to automate publishing on tag releases.
+The Siftly repository includes GitHub Actions to automate publishing on release tags.
+
+In the standard process, those tags are created by **Release Please** after a release PR is merged.
 
 ### Prerequisites
 
@@ -44,10 +46,11 @@ The `Release Extension` workflow triggers when a new tag starting with `v` is pu
 
 Prerelease detection is based on `package.json` version content (`alpha`, `beta`, `rc`, `dev`), not tag text alone.
 
-Always keep the tag and package version aligned:
+Siftly keeps these aligned through centralized metadata sync:
 
-- `package.json`: `1.0.0-beta.1`
-- Git tag: `v1.0.0-beta.1`
+- `metadata.json` -> `version`
+- `npm run metadata:sync` -> updates `package.json` and `public/manifest.json`
+- Release Please -> creates matching `v*` tag
 
 Use the complete runbook in [Versioning and Releases](./versioning-and-releases).
 

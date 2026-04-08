@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
+      - name: Verify metadata sync
+        run: npm run metadata:verify
+
       - name: Run tests
         run: npm run test:run
 

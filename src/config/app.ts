@@ -1,6 +1,7 @@
 import { LINKS } from './links';
+import metadata from '../../metadata.json';
 
-const logoPath = `${import.meta.env.BASE_URL}logo.svg`;
+const logoPath = `${import.meta.env.BASE_URL}${metadata.branding.appLogo.replace(/^\//, '')}`;
 
 export const IS_DEBUG = import.meta.env.VITE_DEBUG_MODE === 'true';
 
@@ -14,15 +15,15 @@ export const DEBUG_CONFIG = {
 };
 
 export const APP_INFO = {
-  name: 'Siftly',
-  fullName: 'Siftly Tracker',
-  popupName: 'Siftly Tracker',
-  version: '1.0.0', // Update this based on your version strategy
+  name: metadata.product.name,
+  fullName: metadata.product.fullName,
+  popupName: metadata.product.popupName,
+  version: metadata.version,
   logo: {
     path: logoPath,
-    alt: 'Siftly logo'
+    alt: metadata.branding.logoAlt
   },
-  tagLine: 'Your job search control panel',
+  tagLine: metadata.product.tagline,
   links: {
     docs: LINKS.docs,
     support: LINKS.support,
