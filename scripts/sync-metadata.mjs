@@ -13,6 +13,7 @@ const packageJsonPath = path.join(rootDir, 'package.json');
 const docsPackageJsonPath = path.join(rootDir, 'documentation', 'package.json');
 const manifestPath = path.join(rootDir, 'public', 'manifest.json');
 const readmePath = path.join(rootDir, 'README.md');
+const releasePleaseManifestPath = path.join(rootDir, '.release-please-manifest.json');
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -97,11 +98,21 @@ function main() {
   const readme = fs.readFileSync(readmePath, 'utf8');
   const nextReadme = withVersionBadge(readme, metadata.version);
 
+  const releasePleaseManifest = fs.existsSync(releasePleaseManifestPath)
+    ? readJson(releasePleaseManifestPath)
+    : {};
+  releasePleaseManifest['.'] = metadata.version;
+
   const plannedUpdates = [];
   planUpdate(packageJsonPath, writeJson(packageJsonPath, packageJson), plannedUpdates);
   planUpdate(docsPackageJsonPath, writeJson(docsPackageJsonPath, docsPackageJson), plannedUpdates);
   planUpdate(manifestPath, writeJson(manifestPath, manifest), plannedUpdates);
   planUpdate(readmePath, nextReadme, plannedUpdates);
+  planUpdate(
+    releasePleaseManifestPath,
+    writeJson(releasePleaseManifestPath, releasePleaseManifest),
+    plannedUpdates
+  );
 
   if (plannedUpdates.length === 0) {
     console.log(`metadata sync: no changes (${checkOnly ? 'check mode' : 'write mode'})`);
