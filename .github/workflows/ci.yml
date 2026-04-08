@@ -44,7 +44,20 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Verify metadata sync
-        run: npm run metadata:verify
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ] && [ "${{ github.event.pull_request.user.login }}" == "github-actions[bot]" ]; then
+            echo "Auto-syncing metadata for Release Please PR..."
+            npm run metadata:sync
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            if ! git diff --staged --quiet; then
+              git commit -m "chore: sync metadata for automated release"
+              git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            fi
+          else
+            npm run metadata:verify
+          fi
 
       - name: Prettier check
         run: npm run format:check
