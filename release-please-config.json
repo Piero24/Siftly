@@ -6,7 +6,8 @@
   "packages": {
     ".": {
       "package-name": "siftly",
-      "version-file": "metadata.json"
+      "version-file": "metadata.json",
+      "versioning": "always-bump-patch"
     }
   }
 }

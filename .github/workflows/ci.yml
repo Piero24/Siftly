@@ -43,25 +43,21 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Verify metadata sync
+      - name: Sync metadata on Release Please PR
+        if: ${{ github.event_name == 'pull_request' && startsWith(github.head_ref, 'release-please--') }}
         run: |
-          if [ "${{ github.actor }}" == "github-actions[bot]" ]; then
-            echo "Auto-syncing metadata for Release Please..."
-            npm run metadata:sync
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            
-            # Identify the target branch (PR head ref or current branch)
-            TARGET_BRANCH=${{ github.head_ref || github.ref_name }}
-            
-            git add package.json documentation/package.json public/manifest.json README.md .release-please-manifest.json
-            if ! git diff --staged --quiet; then
-              git commit -m "chore: sync metadata for automated release"
-              git push origin HEAD:$TARGET_BRANCH
-            fi
-          else
-            npm run metadata:verify
+          echo "Auto-syncing metadata for Release Please PR..."
+          npm run metadata:sync
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json documentation/package.json public/manifest.json README.md .release-please-manifest.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: sync metadata for automated release"
+            git push origin HEAD:${{ github.head_ref }}
           fi
+
+      - name: Verify metadata sync
+        run: npm run metadata:verify
 
       - name: Prettier check
         run: npm run format:check
