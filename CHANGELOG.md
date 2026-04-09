@@ -5,6 +5,13 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8](https://github.com/Piero24/Siftly/compare/siftly-v1.0.7...siftly-v1.0.8) (2026-04-09)
+
+
+### Features
+
+* add trigger for handling new user signups in Supabase Auth ([dcacdce](https://github.com/Piero24/Siftly/commit/dcacdcecae7d28c044e7d72f0cc58ae0975251c2))
+
 ## [1.0.7](https://github.com/Piero24/Siftly/compare/siftly-v1.0.6...siftly-v1.0.7) (2026-04-09)
 
 
