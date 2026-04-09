@@ -59,4 +59,26 @@ describe('SettingsContext', () => {
     expect(window.localStorage.getItem('siftly-default-time-range')).toBe('30d');
     expect(window.localStorage.getItem('siftly-default-overview-scope')).toBe('current');
   });
+
+  it('uses popup behavior defaults when nothing is stored', () => {
+    const { result } = renderHook(() => useSettings(), { wrapper });
+
+    expect(result.current.isDraggable).toBe(true);
+    expect(result.current.autoCloseEnabled).toBe(true);
+    expect(result.current.autoCloseTimer).toBe(5);
+  });
+
+  it('persists popup behavior settings', () => {
+    const { result } = renderHook(() => useSettings(), { wrapper });
+
+    act(() => {
+      result.current.setIsDraggable(false);
+      result.current.setAutoCloseEnabled(false);
+      result.current.setAutoCloseTimer(8);
+    });
+
+    expect(window.localStorage.getItem('siftly-draggable-popup')).toBe('false');
+    expect(window.localStorage.getItem('siftly-auto-close-enabled')).toBe('false');
+    expect(window.localStorage.getItem('siftly-auto-close-timer')).toBe('8');
+  });
 });
