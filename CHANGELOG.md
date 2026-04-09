@@ -5,6 +5,13 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.14](https://github.com/Piero24/Siftly/compare/siftly-v1.0.13...siftly-v1.0.14) (2026-04-09)
+
+
+### Bug Fixes
+
+* enhance chart card styling and empty state handling ([4b9466f](https://github.com/Piero24/Siftly/commit/4b9466ff5f8658d1be6bd6b8d3bd81b4baa5d522))
+
 ## [1.0.13](https://github.com/Piero24/Siftly/compare/siftly-v1.0.12...siftly-v1.0.13) (2026-04-09)
 
 
