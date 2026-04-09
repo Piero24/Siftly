@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   commitlint:
     if: github.event_name == 'pull_request'
