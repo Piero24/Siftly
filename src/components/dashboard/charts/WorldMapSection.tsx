@@ -51,6 +51,11 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
   const mapCenter: [number, number] = windowWidth < 520 ? [-18, 37] : windowWidth < 680 ? [-8, 30] : [10, 24];
 
   const maxCount = Math.max(...[...countryMap.values()], 1);
+  const isEmploymentEmpty = employmentTypes.every((stat) => stat.count === 0);
+  const isReferralEmpty = referralStats.every((stat) => stat.count === 0);
+  const isBreakdownFullyEmpty =
+    workTypes.length === 0 && cvStats.length === 0 && isEmploymentEmpty && isReferralEmpty;
+
   const heatOpacity = (code: string) => {
     const n = countryMap.get(code) ?? 0;
     return n === 0 ? 0 : 0.15 + (n / maxCount) * 0.75;
@@ -141,7 +146,7 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
           </div>
         )}
 
-        <div className="db-breakdown-stack">
+        <div className={`db-breakdown-stack${isBreakdownFullyEmpty ? ' db-breakdown-stack-empty' : ''}`}>
           {FEATURES.dashboard.workTypes && (
             <div className="db-chart-card glass-container">
               {workTypes.length === 0 ? (
@@ -183,7 +188,7 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
 
           {FEATURES.dashboard.employmentTypes && (
             <div className="db-chart-card glass-container">
-              {employmentTypes.every((stat) => stat.count === 0) ? (
+              {isEmploymentEmpty ? (
                 <div className="db-empty-chart">
                   <span className="db-empty-chart-text">No applications added yet</span>
                 </div>
@@ -203,7 +208,7 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
 
           {FEATURES.dashboard.employmentTypes && (
             <div className="db-chart-card glass-container">
-              {referralStats.every((stat) => stat.count === 0) ? (
+              {isReferralEmpty ? (
                 <div className="db-empty-chart">
                   <span className="db-empty-chart-text">No applications added yet</span>
                 </div>

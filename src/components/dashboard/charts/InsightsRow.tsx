@@ -53,7 +53,7 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
       <div className="db-charts-row">
         {/* Status Funnel */}
         {FEATURES.dashboard.funnel && (
-          <div className="db-chart-card glass-container">
+          <div className="db-chart-card db-chart-card-funnel glass-container">
             <h3 className="db-chart-title">Application Funnel</h3>
             {funnel.every(s => s.count === 0) ? (
               <div className="db-empty-chart">
