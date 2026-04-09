@@ -14,6 +14,8 @@ Runs on every pull request and push to `main`.
 
 - **Install**: `npm ci --legacy-peer-deps`
 - **Commit message policy (PRs)**: commitlint enforces Conventional Commits
+- **Release PR auto-sync**: on `release-please--*` PR branches, CI runs `npm run metadata:sync` and pushes synced generated files back to that branch
+- **Main fallback sync**: on push to `main`, CI runs a fallback metadata sync before verify (self-healing if release PR sync was missed)
 - **Metadata consistency**: `npm run metadata:verify`
 - **Linting**: `npm run format:check`
 - **Type Check**: `npx tsc --noEmit`
@@ -50,9 +52,25 @@ Runs on push to `main`.
 
 - Scans Conventional Commits.
 - Opens/updates a release PR with calculated version bumps and changelog updates.
+- Default auto-bump policy is patch-only (`always-bump-patch`).
+- Also updates `metadata.json` version through JSONPath (`extra-files`), so metadata remains source-of-truth.
 - On release PR merge, creates the Git tag and GitHub release.
 
 This is the canonical release entrypoint. Avoid manual tagging in normal flow.
+
+### Metadata Drift Troubleshooting
+
+If CI fails after merging a release PR with an error like:
+
+`metadata sync check failed ... documentation/package.json, public/manifest.json, README.md`
+
+Use this recovery flow:
+
+1. Run `npm run metadata:sync` locally.
+2. Commit and push synced files to `main`.
+3. Re-run failed workflow.
+
+This means metadata changed, but one or more derived files did not land in the merged release commit.
 
 ### 4. Deploy Docker (`deploy-docker.yml`)
 

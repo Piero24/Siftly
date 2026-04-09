@@ -44,6 +44,7 @@ npm run metadata:verify
 - `public/manifest.json`
 - `documentation/package.json`
 - `README.md` (version badge)
+- `.release-please-manifest.json` (Release Please state)
 
 ## Which File to Edit for Common Changes
 
@@ -67,3 +68,14 @@ CI enforces metadata consistency:
 
 - Keep legal and author identity fields where they already live (for example LICENSE and CasaOS author fields).
 - Product metadata belongs in `metadata.json`.
+- Release Please bumps `metadata.json` version and CI syncs the derived files listed above.
+
+## Troubleshooting Release Merge Drift
+
+If after merging a release PR CI reports metadata drift in derived files:
+
+1. Run `npm run metadata:sync`.
+2. Commit updated derived files.
+3. Push to `main` and rerun CI.
+
+The most common stale targets are `documentation/package.json`, `public/manifest.json`, and the `README.md` badge.

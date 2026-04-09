@@ -156,7 +156,15 @@ Releases are managed by Release Please:
 3. Review and merge the release PR.
 4. Tag-based workflows publish the extension and Docker image automatically.
 
+Notes:
+
+- Default automatic version bump is patch-only.
+- `metadata.json` is the only version source to edit manually.
+- The merge actor can be your user account (that is normal when you click merge).
+
 Avoid manual version edits in multiple files. If you change product metadata, update only `metadata.json` and run `npm run metadata:sync`.
+
+If CI fails after merging a release PR with metadata drift, run `npm run metadata:sync`, commit the generated updates, and push to `main`.
 
 ## Pull Request Process
 
