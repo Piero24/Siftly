@@ -81,6 +81,23 @@ Each provider has a single responsibility and clear boundary.
 - Environment-specific feature sets
 - A/B testing (future)
 
+## UI Patterns & Behaviors
+
+### Popup Navigation
+
+The primary Chrome Extension popup uses a structured navigation pattern to handle user intent clearly:
+
+- **Graceful Navigation (`onBack`)**: Standard "Back Arrow" buttons navigate the user back to the main dashboard within the popup, maintaining the extension instance.
+- **Session Termination (`onCancel` / `onSuccess`)**: terminal states (like a successful job save or an unrecoverable error) trigger `window.close()`. This immediately kills the extension instance to clear the screen and prevent stale UI states.
+
+### Interactive Auto-Close
+
+Siftly implements a mouse-aware auto-close mechanism for terminal screens:
+
+- **AutoCloseTimer**: A circular SVG visual that only activates when the user's cursor physically leaves the popup viewport (`mouseleave`).
+- **State Preservation**: The timer resets instantly if the mouse re-enters (`mouseenter`), ensuring users don't accidentally lose confirmation messages.
+- **Native Binding**: Listens to a combination of React state and native `document.body` events for precision.
+
 ## Technology Stack
 
 | Layer         | Technology                             |

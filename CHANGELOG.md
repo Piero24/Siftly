@@ -7,25 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.8](https://github.com/Piero24/Siftly/compare/siftly-v1.0.7...siftly-v1.0.8) (2026-04-09)
 
-
 ### Features
 
-* add trigger for handling new user signups in Supabase Auth ([dcacdce](https://github.com/Piero24/Siftly/commit/dcacdcecae7d28c044e7d72f0cc58ae0975251c2))
+- add trigger for handling new user signups in Supabase Auth ([dcacdce](https://github.com/Piero24/Siftly/commit/dcacdcecae7d28c044e7d72f0cc58ae0975251c2))
 
 ## [1.0.7](https://github.com/Piero24/Siftly/compare/siftly-v1.0.6...siftly-v1.0.7) (2026-04-09)
 
-
 ### Features
 
-* add database and security checklist to developer guide ([7430c7f](https://github.com/Piero24/Siftly/commit/7430c7f2abe9f1c07a524fe08daf2609ff77adbf))
+- add database and security checklist to developer guide ([7430c7f](https://github.com/Piero24/Siftly/commit/7430c7f2abe9f1c07a524fe08daf2609ff77adbf))
 
 ## [1.0.6](https://github.com/Piero24/Siftly/compare/siftly-v1.0.5...siftly-v1.0.6) (2026-04-09)
 
-
 ### Bug Fixes
 
-* format changelog entries for consistency ([eb63e49](https://github.com/Piero24/Siftly/commit/eb63e4917dadeaca91a7e999964f33e30930d541))
-* format changelog entries for consistency ([1a60ae6](https://github.com/Piero24/Siftly/commit/1a60ae6513bcc9cda472a450cd3c75258c904466))
+- format changelog entries for consistency ([eb63e49](https://github.com/Piero24/Siftly/commit/eb63e4917dadeaca91a7e999964f33e30930d541))
+- format changelog entries for consistency ([1a60ae6](https://github.com/Piero24/Siftly/commit/1a60ae6513bcc9cda472a450cd3c75258c904466))
 
 ## [1.0.5](https://github.com/Piero24/Siftly/compare/siftly-v1.0.4...siftly-v1.0.5) (2026-04-09)
 

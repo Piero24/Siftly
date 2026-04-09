@@ -8,11 +8,11 @@ Siftly uses deployment-aware authentication — different auth flows depending o
 
 ## Auth Modes
 
-| Deployment     | Auth Mode     | Flow                                       |
-| -------------- | ------------- | ------------------------------------------ |
-| `web` (Docker) | Local profile | Name-only sign-up, stored in localStorage  |
-| `extension`    | OAuth         | Google, GitHub, or Apple via Supabase Auth |
-| `dev`          | Debug bypass  | Auto-authenticated as "Debug User"         |
+| Deployment     | Auth Mode     | Flow                                      |
+| -------------- | ------------- | ----------------------------------------- |
+| `web` (Docker) | Local profile | Name-only sign-up, stored in localStorage |
+| `extension`    | OAuth         | Google or GitHub via Supabase Auth        |
+| `dev`          | Debug bypass  | Auto-authenticated as "Debug User"        |
 
 ## Local Profile (Web Mode)
 
@@ -37,7 +37,7 @@ interface LocalProfile {
 For the Chrome extension:
 
 - Uses Supabase Auth with OAuth providers
-- Supported providers: Google, GitHub, Apple
+- Supported providers: Google and GitHub
 - Session is persisted and refreshed automatically
 - Implemented via `@supabase/supabase-js`
 

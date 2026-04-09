@@ -32,7 +32,7 @@ Use plain `npm install` only if peer-resolution is fully clean for the current l
 For the documentation site:
 
 ```bash
-cd documentation && npm install && cd ..
+cd documentation && npm install --legacy-peer-deps && cd ..
 ```
 
 ## Environment Setup
@@ -50,7 +50,6 @@ Edit `.env` with your configuration:
 # Get these from: https://app.supabase.com → Project Settings → API
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key-here
-VITE_SUPABASE_SECRET_KEY=your-secret-key-here
 SUPABASE_DB_PASSWORD=your-db-password-here
 
 # ─── Local-only mode ─────────────────────────────────────

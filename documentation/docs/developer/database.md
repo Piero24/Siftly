@@ -94,7 +94,8 @@ Database schema changes are managed as SQL migration files in `supabase/migratio
 ```
 supabase/migrations/
 ├── 20260404120000_initial_schema.sql
-└── 20260408120000_soft_delete.sql
+├── 20260408120000_soft_delete.sql
+└── 20260409180000_enable_auth_trigger.sql
 ```
 
 ### Applying Migrations
@@ -113,3 +114,13 @@ When a user deletes their account:
 4. The user is signed out
 
 If the same email is used to create a new account later, a brand new profile is created. The previous data remains archived and is never visible to the new account.
+
+## Automatic Profile Creation
+
+To ensure a seamless onboarding experience and maintain RLS integrity, Siftly uses a database trigger to automatically create a row in the `public.profiles` table whenever a new user signs up via Supabase Auth.
+
+- **Trigger**: `on_auth_user_created` on `auth.users`
+- **Function**: `public.handle_new_user()`
+- **Migration**: `20260409180000_enable_auth_trigger.sql`
+
+This automation ensures that Row-Level Security policies (which often depend on the existence of a profile) do not block initial data insertions for new users.
