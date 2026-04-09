@@ -3,8 +3,15 @@
    ───────────────────────────────────────────── */
 
 body {
+  margin: 0;
   min-height: 0 !important;
   height: auto !important;
+}
+
+html,
+body,
+#root {
+  width: 100%;
 }
 
 .popup-shell {
@@ -105,7 +112,9 @@ body {
   width: 34px;
   height: 34px;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .popup-icon-button:hover {
@@ -138,7 +147,10 @@ body {
   gap: 10px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .popup-action-card:hover {
@@ -254,7 +266,9 @@ body {
 }
 
 @keyframes popupSpin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .popup-spinner {
   animation: popupSpin 1s linear infinite;

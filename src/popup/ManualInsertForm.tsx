@@ -11,7 +11,12 @@ import { LocationSection } from '../components/dashboard/form-sections/LocationS
 import { LinksSection } from '../components/dashboard/form-sections/LinksSection';
 import { ApplicationSection } from '../components/dashboard/form-sections/ApplicationSection';
 import { DetailsSection } from '../components/dashboard/form-sections/DetailsSection';
-import { ArrowLeftIcon, SpinnerIcon, CheckCircleIcon, XCircleIcon } from '../components/common/Icons';
+import {
+  ArrowLeftIcon,
+  SpinnerIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from '../components/common/Icons';
 import { AutoCloseTimer } from '../components/common/AutoCloseTimer';
 
 interface ManualInsertFormProps {
@@ -20,14 +25,18 @@ interface ManualInsertFormProps {
   onSuccess: () => void;
 }
 
-export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, onBack, onSuccess }) => {
+export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
+  onCancel,
+  onBack,
+  onSuccess,
+}) => {
   const { cvProfiles, autoNoResponse, autoNoResponseDays, storageMode } = useSettings();
   const { isAuthenticated } = useAuth();
   const { addApplication } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
 
   const [form, setForm] = useState<FormState>({ ...DEFAULT_FORM_STATE });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorState, setErrorState] = useState<string | null>(null);
   const [successResult, setSuccessResult] = useState<string | null>(null);
@@ -52,12 +61,12 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
 
   const handleSend = async () => {
     if (!validate()) return;
-    
+
     if (!navigator.onLine) {
       setErrorState('No internet connection. Please verify your network and try again.');
       return;
     }
-    
+
     if (!isAuthenticated) {
       setErrorState('You are logged out. Please log in from the dashboard first.');
       return;
@@ -79,7 +88,7 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
   const handleRetry = async () => {
     setIsSubmitting(true);
     // Artificial delay for better UX
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 600));
 
     try {
       const newApp = toJobApplication(form);
@@ -95,7 +104,9 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
 
   const handleShowApplication = () => {
     if (successResult) {
-      chrome.tabs.create({ url: chrome.runtime.getURL(`src/dashboard/index.html?jobId=${successResult}`) });
+      chrome.tabs.create({
+        url: chrome.runtime.getURL(`src/dashboard/index.html?jobId=${successResult}`),
+      });
     }
     onSuccess();
   };
@@ -105,33 +116,62 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
       <div className="popup-form-view">
         <div className="popup-form-header" style={{ justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button type="button" className="popup-icon-button" onClick={onBack} aria-label="Go back" disabled={isSubmitting}>
+            <button
+              type="button"
+              className="popup-icon-button"
+              onClick={onBack}
+              aria-label="Go back"
+              disabled={isSubmitting}
+            >
               <ArrowLeftIcon size={18} />
             </button>
             <span className="popup-form-title">Error</span>
           </div>
-          {!isSubmitting && <AutoCloseTimer onComplete={() => window.close()} durationMs={5000} color="#d93025" />}
+          {!isSubmitting && (
+            <AutoCloseTimer onComplete={onCancel} durationMs={5000} color="#d93025" />
+          )}
         </div>
-        <div className="popup-form-body" style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', flex: 1 }}>
+        <div
+          className="popup-form-body"
+          style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', flex: 1 }}
+        >
           {isSubmitting ? (
             <>
               <div className="popup-spinner" style={{ marginBottom: '16px', color: '#007AFF' }}>
                 <SpinnerIcon size={48} />
               </div>
               <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Retrying...</h3>
-              <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>Attempting to save application</p>
+              <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                Attempting to save application
+              </p>
             </>
           ) : (
             <>
-              <XCircleIcon size={48} color="#d93025" style={{ marginBottom: '16px', flexShrink: 0 }} />
+              <XCircleIcon
+                size={48}
+                color="#d93025"
+                style={{ marginBottom: '16px', flexShrink: 0 }}
+              />
               <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Submission Failed</h3>
-              <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>{errorState}</p>
+              <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                {errorState}
+              </p>
             </>
           )}
         </div>
         <div className="popup-form-footer">
-          <button className="btn-apple btn-outline popup-form-btn" onClick={() => window.close()} disabled={isSubmitting}>Close</button>
-          <button className="btn-apple btn-primary popup-form-btn" onClick={handleRetry} disabled={isSubmitting}>
+          <button
+            className="btn-apple btn-outline popup-form-btn"
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
+            Close
+          </button>
+          <button
+            className="btn-apple btn-primary popup-form-btn"
+            onClick={handleRetry}
+            disabled={isSubmitting}
+          >
             Retry
           </button>
         </div>
@@ -143,17 +183,32 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
     return (
       <div className="popup-form-view">
         <div className="popup-form-header" style={{ justifyContent: 'space-between' }}>
-          <span className="popup-form-title" style={{ paddingLeft: '8px' }}>Success</span>
-          <AutoCloseTimer onComplete={() => window.close()} durationMs={5000} color="#34C759" />
+          <span className="popup-form-title" style={{ paddingLeft: '8px' }}>
+            Success
+          </span>
+          <AutoCloseTimer onComplete={onSuccess} durationMs={5000} color="#34C759" />
         </div>
-        <div className="popup-form-body" style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', flex: 1 }}>
-          <CheckCircleIcon size={48} color="#34C759" style={{ marginBottom: '16px', flexShrink: 0 }} />
+        <div
+          className="popup-form-body"
+          style={{ alignItems: 'center', justifyContent: 'center', textAlign: 'center', flex: 1 }}
+        >
+          <CheckCircleIcon
+            size={48}
+            color="#34C759"
+            style={{ marginBottom: '16px', flexShrink: 0 }}
+          />
           <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Application Saved!</h3>
-          <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>Your job application has been successfully added.</p>
+          <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>
+            Your job application has been successfully added.
+          </p>
         </div>
         <div className="popup-form-footer" style={{ flexDirection: 'column' }}>
-          <button className="btn-apple btn-primary popup-form-btn" onClick={handleShowApplication}>Show in Application Table</button>
-          <button className="btn-apple btn-outline popup-form-btn" onClick={() => window.close()}>Close</button>
+          <button className="btn-apple btn-primary popup-form-btn" onClick={handleShowApplication}>
+            Show in Application Table
+          </button>
+          <button className="btn-apple btn-outline popup-form-btn" onClick={onSuccess}>
+            Close
+          </button>
         </div>
       </div>
     );
@@ -162,13 +217,22 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
   return (
     <div className="popup-form-view">
       <div className="popup-form-header">
-        <button type="button" className="popup-icon-button" onClick={onBack} aria-label="Go back" disabled={isSubmitting}>
+        <button
+          type="button"
+          className="popup-icon-button"
+          onClick={onBack}
+          aria-label="Go back"
+          disabled={isSubmitting}
+        >
           <ArrowLeftIcon size={18} />
         </button>
         <span className="popup-form-title">Add Application</span>
       </div>
 
-      <div className="popup-form-body" style={{ opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}>
+      <div
+        className="popup-form-body"
+        style={{ opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}
+      >
         <CompanySection form={form} errors={errors} onChange={handleChange} />
         <RoleSection form={form} errors={errors} cvProfiles={cvProfiles} onChange={handleChange} />
         <LocationSection form={form} errors={errors} setForm={setForm} />
@@ -178,11 +242,25 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({ onCancel, on
       </div>
 
       <div className="popup-form-footer">
-        <button className="btn-apple btn-outline popup-form-btn" onClick={onCancel} disabled={isSubmitting}>
+        <button
+          className="btn-apple btn-outline popup-form-btn"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
           Cancel
         </button>
-        <button className="btn-apple btn-primary popup-form-btn" onClick={handleSend} disabled={isSubmitting}>
-          {isSubmitting ? <span className="popup-spinner"><SpinnerIcon size={16} /></span> : 'Send'}
+        <button
+          className="btn-apple btn-primary popup-form-btn"
+          onClick={handleSend}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <span className="popup-spinner">
+              <SpinnerIcon size={16} />
+            </span>
+          ) : (
+            'Send'
+          )}
         </button>
       </div>
     </div>
