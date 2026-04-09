@@ -5,6 +5,14 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5](https://github.com/Piero24/Siftly/compare/siftly-v1.0.4...siftly-v1.0.5) (2026-04-09)
+
+
+### Bug Fixes
+
+* exclude .release-please-manifest.json from metadata sync and upd… ([32f9946](https://github.com/Piero24/Siftly/commit/32f9946f47ffe6a9e9f83210784b360a1cf7c16f))
+* exclude .release-please-manifest.json from metadata sync and update documentation ([ae794cf](https://github.com/Piero24/Siftly/commit/ae794cf37af08f7c39c69033b61102652dff548a))
+
 ## [1.0.4](https://github.com/Piero24/Siftly/compare/siftly-v1.0.3...siftly-v1.0.4) (2026-04-09)
 
 
