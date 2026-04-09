@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.2](https://github.com/Piero24/Siftly/compare/siftly-vv1.0.1...siftly-vv1.0.2) (2026-04-09)
 
-
 ### Bug Fixes
 
-* stabilize release metadata sync and patch-only bumps ([3c34083](https://github.com/Piero24/Siftly/commit/3c340833cd8a206446900f0ce7617ef13332a37a))
+- stabilize release metadata sync and patch-only bumps ([3c34083](https://github.com/Piero24/Siftly/commit/3c340833cd8a206446900f0ce7617ef13332a37a))
 
 ## [1.0.1](https://github.com/Piero24/Siftly/compare/siftly-vv1.0.0...siftly-vv1.0.1) (2026-04-08)
 

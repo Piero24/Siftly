@@ -59,6 +59,22 @@ jobs:
             git push origin HEAD:${{ github.head_ref }}
           fi
 
+      - name: Sync metadata on main after merge fallback
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          echo "Auto-syncing metadata after merge to main..."
+          npm run metadata:sync
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json documentation/package.json public/manifest.json README.md .release-please-manifest.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: sync metadata after merge [skip ci]"
+            if ! push_output=$(git push origin HEAD:main 2>&1); then
+              echo "$push_output"
+              echo "::warning::Could not push metadata sync commit to main (likely branch protection). Continuing."
+            fi
+          fi
+
       - name: Verify metadata sync
         run: npm run metadata:verify
 
