@@ -32,7 +32,9 @@ const sidebars: SidebarsConfig = {
       items: [
         'developer/architecture',
         'developer/storage',
+        'developer/database',
         'developer/auth',
+        'developer/security-checklist',
         'developer/deployment-modes',
         'developer/theming',
         'developer/testing',
