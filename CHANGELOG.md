@@ -5,6 +5,19 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4](https://github.com/Piero24/Siftly/compare/siftly-v1.0.3...siftly-v1.0.4) (2026-04-09)
+
+
+### Features
+
+* add per-provider visibility controls for OAuth buttons in LoginPage ([0f73c1d](https://github.com/Piero24/Siftly/commit/0f73c1d461735637870758ca45ac55003591819b))
+* expand mock applications dataset for richer documentation screenshots ([aa4072f](https://github.com/Piero24/Siftly/commit/aa4072f470206b695c1c478c1784f7d82d554b73))
+
+
+### Bug Fixes
+
+* Improved filtering in ComboBox and geo functions ([fa967a3](https://github.com/Piero24/Siftly/commit/fa967a3384df00b8cf931115650731eb71ea5674))
+
 ## [1.0.3](https://github.com/Piero24/Siftly/compare/siftly-v1.0.2...siftly-v1.0.3) (2026-04-09)
 
 ### Features
