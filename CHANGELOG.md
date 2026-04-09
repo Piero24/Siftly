@@ -5,6 +5,13 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.15](https://github.com/Piero24/Siftly/compare/siftly-v1.0.14...siftly-v1.0.15) (2026-04-09)
+
+
+### Features
+
+* add scroll to top functionality on view change ([c3a2467](https://github.com/Piero24/Siftly/commit/c3a24675154a39e5e0331507eef98ab59d43dd24))
+
 ## [1.0.14](https://github.com/Piero24/Siftly/compare/siftly-v1.0.13...siftly-v1.0.14) (2026-04-09)
 
 ### Bug Fixes
