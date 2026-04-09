@@ -7,24 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.14](https://github.com/Piero24/Siftly/compare/siftly-v1.0.13...siftly-v1.0.14) (2026-04-09)
 
-
 ### Bug Fixes
 
-* enhance chart card styling and empty state handling ([4b9466f](https://github.com/Piero24/Siftly/commit/4b9466ff5f8658d1be6bd6b8d3bd81b4baa5d522))
+- enhance chart card styling and empty state handling ([4b9466f](https://github.com/Piero24/Siftly/commit/4b9466ff5f8658d1be6bd6b8d3bd81b4baa5d522))
 
 ## [1.0.13](https://github.com/Piero24/Siftly/compare/siftly-v1.0.12...siftly-v1.0.13) (2026-04-09)
 
-
 ### Features
 
-* split Appearance and Dashboard card ([7cdd2ef](https://github.com/Piero24/Siftly/commit/7cdd2efcf1d6dcde83b5221f57ade3880c46cd6e))
+- split Appearance and Dashboard card ([7cdd2ef](https://github.com/Piero24/Siftly/commit/7cdd2efcf1d6dcde83b5221f57ade3880c46cd6e))
 
 ## [1.0.12](https://github.com/Piero24/Siftly/compare/siftly-v1.0.11...siftly-v1.0.12) (2026-04-09)
 
-
 ### Features
 
-* consolidate database migrations into a full schema baseline and remove obsolete migration files ([3fad693](https://github.com/Piero24/Siftly/commit/3fad6939c723ca418fe535e67e7db8f042bb668a))
+- consolidate database migrations into a full schema baseline and remove obsolete migration files ([3fad693](https://github.com/Piero24/Siftly/commit/3fad6939c723ca418fe535e67e7db8f042bb668a))
 
 ## [1.0.11](https://github.com/Piero24/Siftly/compare/siftly-v1.0.10...siftly-v1.0.11) (2026-04-09)
 

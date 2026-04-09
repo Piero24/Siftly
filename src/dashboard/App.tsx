@@ -57,6 +57,12 @@ const App: React.FC = () => {
     }
   }, [isAppsLoading, applications, selectedJob, setSelectedJob]);
 
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [currentView]);
+
   const {
     handleDelete, handleStatusChange, handleNewSave, handleEditSave,
     handleBulkDelete, handleBulkStatus,
