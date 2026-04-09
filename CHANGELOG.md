@@ -5,6 +5,14 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6](https://github.com/Piero24/Siftly/compare/siftly-v1.0.5...siftly-v1.0.6) (2026-04-09)
+
+
+### Bug Fixes
+
+* format changelog entries for consistency ([eb63e49](https://github.com/Piero24/Siftly/commit/eb63e4917dadeaca91a7e999964f33e30930d541))
+* format changelog entries for consistency ([1a60ae6](https://github.com/Piero24/Siftly/commit/1a60ae6513bcc9cda472a450cd3c75258c904466))
+
 ## [1.0.5](https://github.com/Piero24/Siftly/compare/siftly-v1.0.4...siftly-v1.0.5) (2026-04-09)
 
 ### Bug Fixes
