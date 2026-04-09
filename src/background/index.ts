@@ -23,6 +23,13 @@ function delay(ms: number): Promise<void> {
   });
 }
 
+function isNoReceiverError(error: unknown): boolean {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  return /Receiving end does not exist/i.test(error.message);
+}
+
 function sendPanelToggleMessage(tabId: number): Promise<ExtensionPanelRuntimeResponse | null> {
   return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(
@@ -99,8 +106,22 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 
   try {
-    await tryTogglePanelWithRetries(tab.id, 3, 90);
+    await delay(40);
+    await tryTogglePanelWithRetries(tab.id, 8, 120);
   } catch (error) {
+    if (isNoReceiverError(error)) {
+      bgLogger.warn('Panel receiver missing after initial injection; retrying injection once');
+      try {
+        await injectContentRuntime(tab.id);
+        await delay(40);
+        await tryTogglePanelWithRetries(tab.id, 8, 120);
+        return;
+      } catch (retryError) {
+        bgLogger.error('Failed to toggle panel after reinjection', retryError);
+        return;
+      }
+    }
+
     bgLogger.error('Failed to toggle panel after injection', error);
   }
 });

@@ -3,6 +3,7 @@ const EXTENSION_PANEL_TOGGLE = 'SIFTLY_PANEL_TOGGLE';
 const EXTENSION_PANEL_CLOSE = 'SIFTLY_PANEL_CLOSE';
 const EXTENSION_IFRAME_CLOSE = 'SIFTLY_IFRAME_CLOSE';
 const EXTENSION_IFRAME_RESIZE = 'SIFTLY_IFRAME_RESIZE';
+const EXTENSION_IFRAME_DRAG_START = 'SIFTLY_IFRAME_DRAG_START';
 
 type ExtensionPanelRuntimeMessage = {
   source: typeof EXTENSION_PANEL_SOURCE;
@@ -16,8 +17,13 @@ type ExtensionPanelRuntimeResponse = {
 
 type ExtensionPanelIframeMessage = {
   source: typeof EXTENSION_PANEL_SOURCE;
-  type: typeof EXTENSION_IFRAME_CLOSE | typeof EXTENSION_IFRAME_RESIZE;
+  type:
+    | typeof EXTENSION_IFRAME_CLOSE
+    | typeof EXTENSION_IFRAME_RESIZE
+    | typeof EXTENSION_IFRAME_DRAG_START;
   height?: number;
+  clientX?: number;
+  clientY?: number;
 };
 
 function isExtensionPanelRuntimeMessage(message: unknown): message is ExtensionPanelRuntimeMessage {
@@ -41,7 +47,9 @@ function isExtensionPanelIframeMessage(message: unknown): message is ExtensionPa
   const value = message as Partial<ExtensionPanelIframeMessage>;
   return (
     value.source === EXTENSION_PANEL_SOURCE &&
-    (value.type === EXTENSION_IFRAME_CLOSE || value.type === EXTENSION_IFRAME_RESIZE)
+    (value.type === EXTENSION_IFRAME_CLOSE ||
+      value.type === EXTENSION_IFRAME_RESIZE ||
+      value.type === EXTENSION_IFRAME_DRAG_START)
   );
 }
 
@@ -66,6 +74,11 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
   let panelHeight = PANEL_DEFAULT_HEIGHT;
   let isFrameVisible = false;
   let revealFallbackTimer: number | null = null;
+  let currentTranslateX = 0;
+  let currentTranslateY = 0;
+  let pendingTranslateX = 0;
+  let pendingTranslateY = 0;
+  let dragFrameRequest: number | null = null;
 
   const iframeUrl = chrome.runtime.getURL('src/popup/index.html?embedded=1');
 
@@ -95,6 +108,47 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
     }
   }
 
+  function clamp(value: number, min: number, max: number): number {
+    if (max < min) {
+      return min;
+    }
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function clampTranslation(nextX: number, nextY: number): { x: number; y: number } {
+    if (!hostElement) {
+      return { x: nextX, y: nextY };
+    }
+
+    const rect = hostElement.getBoundingClientRect();
+    const baseLeft = window.innerWidth - PANEL_OFFSET - rect.width;
+    const baseTop = PANEL_OFFSET;
+
+    const minX = PANEL_OFFSET - baseLeft;
+    const maxX = window.innerWidth - PANEL_OFFSET - rect.width - baseLeft;
+    const minY = PANEL_OFFSET - baseTop;
+    const maxY = Math.max(minY, window.innerHeight - PANEL_OFFSET - rect.height - baseTop);
+
+    return {
+      x: clamp(nextX, minX, maxX),
+      y: clamp(nextY, minY, maxY),
+    };
+  }
+
+  function scheduleTransformFlush(): void {
+    if (!hostElement || dragFrameRequest !== null) {
+      return;
+    }
+
+    dragFrameRequest = window.requestAnimationFrame(() => {
+      dragFrameRequest = null;
+      if (!hostElement) {
+        return;
+      }
+      hostElement.style.transform = `translate(${pendingTranslateX}px, ${pendingTranslateY}px)`;
+    });
+  }
+
   function getHostFromDom(): HTMLDivElement | null {
     const existing = document.getElementById(PANEL_HOST_ID);
     return existing instanceof HTMLDivElement ? existing : null;
@@ -115,8 +169,11 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
     host.style.maxHeight = `calc(100vh - ${PANEL_OFFSET * 2}px)`;
     host.style.zIndex = String(PANEL_Z_INDEX);
     host.style.pointerEvents = 'auto';
+    host.style.transform = 'translate(0px, 0px)';
 
     const shadowRoot = host.attachShadow({ mode: 'open' });
+    currentTranslateX = 0;
+    currentTranslateY = 0;
     const style = document.createElement('style');
     style.textContent = `
 			:host {
@@ -193,13 +250,27 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
       revealFallbackTimer = null;
     }
 
+    if (dragFrameRequest !== null) {
+      window.cancelAnimationFrame(dragFrameRequest);
+      dragFrameRequest = null;
+    }
+
     hostElement = null;
     iframeElement = null;
     isFrameVisible = false;
+    currentTranslateX = 0;
+    currentTranslateY = 0;
+    pendingTranslateX = 0;
+    pendingTranslateY = 0;
   }
 
   function togglePanel(): boolean {
     const existingHost = hostElement ?? getHostFromDom();
+    if (!existingHost) {
+      currentTranslateX = 0;
+      currentTranslateY = 0;
+    }
+
     if (existingHost) {
       closePanel();
       return false;
@@ -256,6 +327,59 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
     if (!isExtensionPanelIframeMessage(event.data)) {
       return;
     }
+
+    if (event.data.type === EXTENSION_IFRAME_DRAG_START && hostElement) {
+      const rect = hostElement.getBoundingClientRect();
+      const parentStartX = rect.left + (event.data.clientX ?? 0);
+      const parentStartY = rect.top + (event.data.clientY ?? 0);
+      const initialTranslateX = currentTranslateX;
+      const initialTranslateY = currentTranslateY;
+
+      const iframe = iframeElement;
+      if (iframe) iframe.style.pointerEvents = 'none';
+
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.zIndex = '2147483001';
+      overlay.style.cursor = 'grabbing';
+      document.body.appendChild(overlay);
+
+      const onPointerMove = (e: PointerEvent) => {
+        const deltaX = e.clientX - parentStartX;
+        const deltaY = e.clientY - parentStartY;
+        const clamped = clampTranslation(initialTranslateX + deltaX, initialTranslateY + deltaY);
+        currentTranslateX = clamped.x;
+        currentTranslateY = clamped.y;
+        pendingTranslateX = clamped.x;
+        pendingTranslateY = clamped.y;
+        scheduleTransformFlush();
+      };
+
+      const onPointerUp = () => {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+
+        if (dragFrameRequest !== null) {
+          window.cancelAnimationFrame(dragFrameRequest);
+          dragFrameRequest = null;
+        }
+        if (hostElement) {
+          hostElement.style.transform = `translate(${pendingTranslateX}px, ${pendingTranslateY}px)`;
+        }
+
+        if (iframe) iframe.style.pointerEvents = 'auto';
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      };
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      return;
+    }
+
     if (event.data.type === EXTENSION_IFRAME_CLOSE) {
       closePanel();
       return;
