@@ -32,7 +32,8 @@ Version starts in `metadata.json` (`version`).
 - `public/manifest.json`
 - `documentation/package.json`
 - `README.md` version badge
-- `.release-please-manifest.json`
+
+Release state file `.release-please-manifest.json` is managed by Release Please and should not be rewritten by metadata sync.
 
 CI and release workflows run `npm run metadata:verify` to prevent drift.
 

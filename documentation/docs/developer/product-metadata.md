@@ -44,7 +44,8 @@ npm run metadata:verify
 - `public/manifest.json`
 - `documentation/package.json`
 - `README.md` (version badge)
-- `.release-please-manifest.json` (Release Please state)
+
+Release Please state file `.release-please-manifest.json` is maintained by Release Please and is intentionally excluded from metadata sync.
 
 ## Which File to Edit for Common Changes
 
