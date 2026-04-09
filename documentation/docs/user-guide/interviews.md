@@ -15,6 +15,8 @@ Navigate to **Interviewing** in the sidebar to see a filtered table of all appli
 - Next scheduled interview
 - Recruiter contact info
 
+![Interviewing table view](/img/screenshots/interviewing-table.png)
+
 ## Managing Interview Rounds
 
 Each application can have multiple interview rounds. To manage them:
@@ -22,6 +24,8 @@ Each application can have multiple interview rounds. To manage them:
 1. Open an application in the `interviewing` status
 2. Scroll to the **Interview Rounds** section
 3. Click **Add Round** to create a new round
+
+![Interview rounds inside application detail](/img/screenshots/job-card.png)
 
 ### Round Details
 

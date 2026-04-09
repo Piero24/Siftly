@@ -6,6 +6,8 @@ sidebar_position: 4
 
 Siftly provides rich analytics to help you understand and optimize your job search.
 
+![Dashboard analytics overview](/img/screenshots/dashboard-center.png)
+
 ## Available Charts
 
 ### Application Timeline
@@ -57,3 +59,5 @@ All charts respect the time range selector:
 ## Data Accuracy
 
 Analytics are computed in real-time from your application data. There is no separate analytics database — charts always reflect the current state.
+
+![Dashboard funnel, response rate, and salary charts](/img/screenshots/dashboard-end.png)

@@ -18,6 +18,8 @@ The sidebar provides access to all sections:
 | **Settings**     | App configuration, CV profiles, data management |
 | **Account**      | Profile info and sign-out                       |
 
+![Dashboard top section](/img/screenshots/dashboard-top.png)
+
 ## KPI Strip
 
 At the top of the Overview, a strip of key performance indicators supports two modes:
@@ -43,6 +45,10 @@ The dashboard includes interactive charts:
 - **Salary Distribution** — salary ranges across applications
 - **Top Companies** — most-applied companies
 - **World Map** — geographic distribution of applications
+
+![Dashboard middle analytics cards](/img/screenshots/dashboard-center.png)
+
+![Dashboard lower analytics charts](/img/screenshots/dashboard-end.png)
 
 ## Time Range Filter
 
