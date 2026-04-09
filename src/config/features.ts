@@ -45,8 +45,9 @@ export const FEATURES = {
   settings: {
     automation: true,
     popupBehavior: true,
+    dashboard: true,
     localization: true,
-    notifications: true,
+    notifications: false,
     appearance: true,
     tableDisplay: true,
     privacy: false,

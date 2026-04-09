@@ -2,7 +2,7 @@
  * SettingsView — Application settings panel.
  *
  * Composed from focused settings card components:
- *   AppearanceCard, AutomationCard, PopupBehaviorCard, LocalizationCard, NotificationsCard,
+ *   AppearanceCard, DashboardCard, AutomationCard, PopupBehaviorCard, LocalizationCard,
  *   CvProfilesCard, TableDisplayCard, DataStorageCard, SupportCard
  */
 import React from 'react';
@@ -10,6 +10,7 @@ import { JobApplication } from '../../types/job';
 import { FEATURES } from '../../config/features';
 
 import { AppearanceCard } from '../settings/AppearanceCard';
+import { DashboardCard } from '../settings/DashboardCard';
 import { AutomationCard } from '../settings/AutomationCard';
 import { PopupBehaviorCard } from '../settings/PopupBehaviorCard';
 import { LocalizationCard } from '../settings/LocalizationCard';
@@ -36,6 +37,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       <div className="settings-grid">
         {FEATURES.settings.appearance && <AppearanceCard />}
+        {FEATURES.settings.dashboard && <DashboardCard />}
         {FEATURES.settings.automation && <AutomationCard />}
         {FEATURES.settings.popupBehavior && <PopupBehaviorCard />}
         {FEATURES.settings.localization && <LocalizationCard />}
