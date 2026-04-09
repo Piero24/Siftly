@@ -83,3 +83,34 @@ interface StorageAdapter {
 ## Schema
 
 Both adapters use the same `JobApplication` TypeScript interface. The Supabase schema is defined in `supabase/migrations/` and includes automatic camelCase ↔ snake_case mapping in the storage adapter.
+
+## Settings Persistence
+
+Application settings are persisted through a hybrid strategy:
+
+- **Local-first**: `SettingsContext` hydrates immediately from localStorage for instant UI boot.
+- **Remote sync (when available)**: in extension/remote-capable modes, settings are loaded and saved to Supabase `user_settings`.
+
+This behavior is implemented in:
+
+- `src/context/SettingsContext.tsx` (state + hydration + debounced save)
+- `src/lib/settingsStorage.ts` (Supabase row mapping and upsert logic)
+
+### Sync Behavior
+
+1. Read localStorage defaults immediately.
+2. If an authenticated Supabase session exists, fetch `user_settings` and apply remote values.
+3. Persist setting changes to localStorage and (debounced) to Supabase.
+
+### Persisted Settings Scope
+
+The remote snapshot includes dashboard and popup preferences, including:
+
+- language, currency, theme
+- automation settings (`auto_no_response`, days)
+- dashboard defaults (`default_time_range`, `default_overview_scope`)
+- storage mode and CV profiles
+- notifications/privacy/table display JSON fields
+- popup behavior (`is_draggable`, `auto_close_enabled`, `auto_close_timer`)
+
+In pure web/local deployment mode, remote sync is disabled and local persistence remains the active source.

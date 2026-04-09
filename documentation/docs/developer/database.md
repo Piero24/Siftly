@@ -37,6 +37,19 @@ erDiagram
         text language
         text currency
         text theme
+      boolean auto_no_response
+      integer auto_no_response_days
+      text default_time_range
+      text default_overview_scope
+      text storage_mode
+      jsonb cv_profiles
+      jsonb notifications
+      jsonb privacy
+      jsonb table_display
+      boolean use_soft_icon_background
+      boolean is_draggable
+      boolean auto_close_enabled
+      integer auto_close_timer
         timestamptz deleted_at
         timestamptz created_at
         timestamptz updated_at
@@ -48,11 +61,11 @@ erDiagram
 
 ### Tables
 
-| Table              | Purpose                                  | Key columns                                      |
-| ------------------ | ---------------------------------------- | ------------------------------------------------ |
-| `profiles`         | User identity, synced from Supabase Auth | `id`, `email`, `full_name`, `is_active`          |
-| `job_applications` | All tracked job applications             | `id`, `user_id`, `company`, `position`, `status` |
-| `user_settings`    | Per-user preferences                     | `user_id`, `language`, `currency`, `theme`       |
+| Table              | Purpose                                  | Key columns                                                                                                                                         |
+| ------------------ | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `profiles`         | User identity, synced from Supabase Auth | `id`, `email`, `full_name`, `is_active`                                                                                                             |
+| `job_applications` | All tracked job applications             | `id`, `user_id`, `company`, `position`, `status`                                                                                                    |
+| `user_settings`    | Per-user preferences                     | `user_id`, `language`, `currency`, `theme`, `default_time_range`, `default_overview_scope`, `storage_mode`, popup behavior and UI preference fields |
 
 ## Row Level Security (RLS)
 
@@ -95,7 +108,8 @@ Database schema changes are managed as SQL migration files in `supabase/migratio
 supabase/migrations/
 ├── 20260404120000_initial_schema.sql
 ├── 20260408120000_soft_delete.sql
-└── 20260409180000_enable_auth_trigger.sql
+├── 20260409180000_enable_auth_trigger.sql
+└── 20260410100000_expand_user_settings.sql
 ```
 
 ### Applying Migrations

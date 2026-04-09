@@ -19,6 +19,11 @@ The selected time range is shared by both KPI modes.
 ## Automation
 
 - **Auto-mark "No Response"** — Automatically change status to "no-response" after a configurable number of days (default: 60)
+- **Draggable Popup Headers** — Allow dragging the extension popup by grabbing the header/top bar area (action buttons are excluded)
+- **Auto-Close on Success/Error** — Enable or disable automatic close behavior after terminal manual-insert states
+- **Auto-Close Delay** — Configure the close delay in seconds when auto-close is enabled
+
+All settings are persisted across sessions. In extension mode, authenticated users also sync settings to cloud storage for cross-device consistency.
 
 ## Localization
 
