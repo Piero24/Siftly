@@ -73,9 +73,14 @@ const toFormState = (app: JobApplication): FormState => {
 const toJobApplication = (form: FormState, existingId?: string): JobApplication => {
   const id = existingId || `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
-  const salaryObj = form.salaryType === 'range'
-    ? { amount: Number(form.salaryMin) || 0, currency: form.salaryCurrency, max: Number(form.salaryMax) || 0 }
-    : { amount: Number(form.salaryAmount) || 0, currency: form.salaryCurrency };
+  const salaryObj =
+    form.salaryType === 'range'
+      ? {
+          amount: Number(form.salaryMin) || 0,
+          currency: form.salaryCurrency,
+          max: Number(form.salaryMax) || 0,
+        }
+      : { amount: Number(form.salaryAmount) || 0, currency: form.salaryCurrency };
 
   const app: JobApplication = {
     id,
@@ -104,7 +109,11 @@ const toJobApplication = (form: FormState, existingId?: string): JobApplication 
   };
 
   if (form.referrer.trim()) {
-    app.referral = { referrer: form.referrer.trim(), date: form.referralDate, note: form.referralNote };
+    app.referral = {
+      referrer: form.referrer.trim(),
+      date: form.referralDate,
+      note: form.referralNote,
+    };
     if (form.referralLink.trim()) app.referral.link = form.referralLink.trim();
     if (form.referralCode.trim()) app.referral.code = form.referralCode.trim();
   }
@@ -121,16 +130,21 @@ const toJobApplication = (form: FormState, existingId?: string): JobApplication 
 // ── Component ────────────────────────────────────────────
 
 export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({
-  onClose, onSave, editingApplication, cvProfiles,
+  onClose,
+  onSave,
+  editingApplication,
+  cvProfiles,
 }) => {
   const [form, setForm] = useState<FormState>(
-    editingApplication ? toFormState(editingApplication) : { ...DEFAULT_FORM_STATE },
+    editingApplication ? toFormState(editingApplication) : { ...DEFAULT_FORM_STATE }
   );
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
   // Close on Escape
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
@@ -142,7 +156,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       },
-    [],
+    []
   );
 
   const validate = (): boolean => {
@@ -165,17 +179,29 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content glass-container new-app-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content glass-container new-app-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="modal-header">
-          <h2 className="modal-title">{isEditing ? 'Edit Application' : 'New Application'}</h2>
-          <button className="modal-close-btn" onClick={onClose} title="Close"><XIcon size={14} /></button>
+        <div className="new-app-modal-header">
+          <h2 className="new-app-modal-title">
+            {isEditing ? 'Edit Application' : 'New Application'}
+          </h2>
+          <button className="modal-close-btn" onClick={onClose} title="Close">
+            <XIcon size={14} />
+          </button>
         </div>
 
         {/* Body — scrollable form */}
-        <div className="modal-body-scrollable">
+        <div className="new-app-form-body">
           <CompanySection form={form} errors={errors} onChange={handleChange} />
-          <RoleSection form={form} errors={errors} cvProfiles={cvProfiles} onChange={handleChange} />
+          <RoleSection
+            form={form}
+            errors={errors}
+            cvProfiles={cvProfiles}
+            onChange={handleChange}
+          />
           <LocationSection form={form} errors={errors} setForm={setForm} />
           <ApplicationSection form={form} onChange={handleChange} setForm={setForm} />
           <LinksSection form={form} onChange={handleChange} />
@@ -185,8 +211,10 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="modal-footer">
-          <button className="btn-apple btn-outline" onClick={onClose}>Cancel</button>
+        <div className="new-app-modal-footer">
+          <button className="btn-apple btn-outline" onClick={onClose}>
+            Cancel
+          </button>
           <button className="btn-apple btn-primary" onClick={handleSubmit}>
             {isEditing ? 'Save Changes' : 'Add Application'}
           </button>

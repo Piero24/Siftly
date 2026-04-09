@@ -22,6 +22,14 @@ interface ComboBoxProps {
   disabled?:    boolean;
 }
 
+function normalizeText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
 export const ComboBox: React.FC<ComboBoxProps> = ({
   items, value, onChange, placeholder = 'Type to search…', className = '', hasError, disabled,
 }) => {
@@ -38,8 +46,21 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
     setQuery(items.find((i) => i.value === value)?.label ?? '');
   }, [value, items]);
 
-  const filtered = query.trim()
-    ? items.filter((i) => i.label.toLowerCase().includes(query.toLowerCase())).slice(0, 50)
+  const normalizedQuery = normalizeText(query);
+  const filtered = normalizedQuery
+    ? [...items]
+        .filter((i) => normalizeText(i.label).includes(normalizedQuery))
+        .sort((a, b) => {
+          const aNorm = normalizeText(a.label);
+          const bNorm = normalizeText(b.label);
+
+          const aStarts = aNorm.startsWith(normalizedQuery) ? 1 : 0;
+          const bStarts = bNorm.startsWith(normalizedQuery) ? 1 : 0;
+          if (aStarts !== bStarts) return bStarts - aStarts;
+
+          return a.label.localeCompare(b.label);
+        })
+        .slice(0, 50)
     : items.slice(0, 50);
 
   const select = useCallback((item: ComboBoxItem) => {
@@ -55,7 +76,8 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
       if (!wrapRef.current?.contains(document.activeElement)) {
         setOpen(false);
         // Revert to last accepted label if query doesn't match any item
-        const match = items.find((i) => i.label.toLowerCase() === query.toLowerCase());
+        const normalizedInput = normalizeText(query);
+        const match = items.find((i) => normalizeText(i.label) === normalizedInput);
         if (match) {
           select(match);
         } else if (value) {
