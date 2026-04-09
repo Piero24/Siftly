@@ -1,678 +1,355 @@
-import { JobApplication, JobStatus, WorkType, EmploymentType } from '../types/job';
+import { EmploymentType, JobApplication, JobStatus, WorkType } from '../types/job';
 
-/**
- * 50 Trustable Job Applications for Siftly Mock Mode.
- * Covers diverse sectors, statuses, and currencies to stress-test the dashboard.
- */
-export const MOCK_APPLICATIONS: JobApplication[] = [
-  // --- Applied (15) ---
-  {
-    id: 'm1',
-    company: 'Stripe',
-    sector: 'Fintech',
-    position: 'Product Designer',
-    country: 'IE',
-    city: 'Dublin',
-    workType: 'remote',
-    employmentType: 'permanent',
-    status: 'applied',
-    salary: { amount: 85000, currency: 'EUR' },
-    date: '2024-03-25',
-    links: { job: '#', linkedin: '#', website: 'https://stripe.com' },
-    description: 'Design the future of online payments.',
-  },
-  {
-    id: 'm2',
-    company: 'Klarna',
-    sector: 'Fintech',
-    position: 'Backend Engineer (Go)',
-    country: 'SE',
-    city: 'Stockholm',
-    workType: 'hybrid',
-    employmentType: 'permanent',
-    status: 'applied',
-    salary: { amount: 750000, currency: 'SEK' },
-    date: '2024-03-24',
-    links: { job: '#', linkedin: '#', website: 'https://klarna.com' },
-  },
-  {
-    id: 'm3',
-    company: 'Revolut',
-    sector: 'Fintech',
-    position: 'Security Engineer',
-    country: 'GB',
-    city: 'London',
-    workType: 'onsite',
-    employmentType: 'permanent',
-    status: 'applied',
-    salary: { amount: 95000, currency: 'GBP' },
-    date: '2024-03-23',
-    links: { job: '#', linkedin: '#', website: 'https://revolut.com' },
-  },
-  {
-    id: 'm4',
-    company: 'Adyen',
-    sector: 'Fintech',
-    position: 'Fullstack Developer',
-    country: 'NL',
-    city: 'Amsterdam',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 82000, currency: 'EUR' },
-    date: '2024-03-22',
-    links: { job: '#', linkedin: '#', website: 'https://adyen.com' },
-  },
-  {
-    id: 'm5',
-    company: 'Wise',
-    sector: 'Fintech',
-    position: 'iOS Developer',
-    country: 'EE',
-    city: 'Tallinn',
-    workType: 'remote',
-    status: 'applied',
-    salary: { amount: 65000, currency: 'EUR' },
-    date: '2024-03-21',
-    links: { job: '#', linkedin: '#', website: 'https://wise.com' },
-  },
-  {
-    id: 'm6',
-    company: 'Northvolt',
-    sector: 'Green Tech',
-    position: 'Battery Systems Engineer',
-    country: 'SE',
-    city: 'Skellefteå',
-    workType: 'onsite',
-    status: 'applied',
-    salary: { amount: 680000, currency: 'SEK' },
-    date: '2024-03-20',
-    links: { job: '#', linkedin: '#', website: 'https://northvolt.com' },
-  },
-  {
-    id: 'm7',
-    company: 'Einride',
-    sector: 'Autonomous',
-    position: 'Robotics Engineer',
-    country: 'SE',
-    city: 'Stockholm',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 720000, currency: 'SEK' },
-    date: '2024-03-19',
-    links: { job: '#', linkedin: '#', website: 'https://einride.tech' },
-  },
-  {
-    id: 'm8',
-    company: 'Volvo Cars',
-    sector: 'Automotive',
-    position: 'Embedded Software Engineer',
-    country: 'SE',
-    city: 'Gothenburg',
-    workType: 'onsite',
-    status: 'applied',
-    salary: { amount: 650000, currency: 'SEK' },
-    date: '2024-03-18',
-    links: { job: '#', linkedin: '#', website: 'https://volvocars.com' },
-  },
-  {
-    id: 'm9',
-    company: 'Ericsson',
-    sector: 'Telecom',
-    position: '5G Systems Architect',
-    country: 'SE',
-    city: 'Stockholm',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 800000, currency: 'SEK' },
-    date: '2024-03-17',
-    links: { job: '#', linkedin: '#', website: 'https://ericsson.com' },
-  },
-  {
-    id: 'm10',
-    company: 'H&M Group',
-    sector: 'Retail',
-    position: 'Data Scientist',
-    country: 'SE',
-    city: 'Stockholm',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 700000, currency: 'SEK' },
-    date: '2024-03-16',
-    links: { job: '#', linkedin: '#', website: 'https://hmgroup.com' },
-  },
-  {
-    id: 'm11',
-    company: 'Spotify',
-    sector: 'Entertainment',
-    position: 'Engineering Manager',
-    country: 'US',
-    city: 'New York',
-    workType: 'remote',
-    status: 'applied',
-    salary: { amount: 245000, currency: 'USD' },
-    date: '2024-03-15',
-    links: { job: '#', linkedin: '#', website: 'https://spotify.com' },
-  },
-  {
-    id: 'm12',
-    company: 'Netflix',
-    sector: 'Entertainment',
-    position: 'Senior UI Engineer',
-    country: 'US',
-    city: 'Los Gatos',
-    workType: 'remote',
-    status: 'applied',
-    salary: { amount: 350000, currency: 'USD' },
-    date: '2024-03-14',
-    links: { job: '#', linkedin: '#', website: 'https://netflix.com' },
-  },
-  {
-    id: 'm13',
-    company: 'Airbnb',
-    sector: 'Travel',
-    position: 'Infra Engineer',
-    country: 'US',
-    city: 'San Francisco',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 220000, currency: 'USD' },
-    date: '2024-03-13',
-    links: { job: '#', linkedin: '#', website: 'https://airbnb.com' },
-  },
-  {
-    id: 'm14',
-    company: 'DoorDash',
-    sector: 'Logistics',
-    position: 'Backend Developer',
-    country: 'US',
-    city: 'Seattle',
-    workType: 'remote',
-    status: 'applied',
-    salary: { amount: 195000, currency: 'USD' },
-    date: '2024-03-12',
-    links: { job: '#', linkedin: '#', website: 'https://doordash.com' },
-  },
-  {
-    id: 'm15',
-    company: 'Instacart',
-    sector: 'Logistics',
-    position: 'Machine Learning Lead',
-    country: 'CA',
-    city: 'Toronto',
-    workType: 'hybrid',
-    status: 'applied',
-    salary: { amount: 180000, currency: 'USD' },
-    date: '2024-03-11',
-    links: { job: '#', linkedin: '#', website: 'https://instacart.com' },
-  },
+const STATUS_DISTRIBUTION: Array<{ status: JobStatus; count: number }> = [
+  { status: 'applied', count: 35 },
+  { status: 'interviewing', count: 30 },
+  { status: 'offer', count: 12 },
+  { status: 'rejected', count: 20 },
+  { status: 'no-response', count: 15 },
+  { status: 'declined', count: 8 },
+];
 
-  // --- Interviewing (10) ---
-  {
-    id: 'm16',
+const EMPLOYMENT_CYCLE: EmploymentType[] = ['permanent', 'intern', 'fixed-term'];
+const WORK_CYCLE: WorkType[] = ['remote', 'hybrid', 'onsite'];
+const CV_PROFILE_IDS = [
+  'cv-backend',
+  'cv-frontend',
+  'cv-product',
+  'cv-data',
+  'cv-ml',
+  'cv-mobile',
+  'cv-cloud',
+  'cv-security',
+];
+
+const RECRUITER_NAMES = [
+  'Alex Rivera',
+  'Jamie Chen',
+  'Morgan White',
+  'Priya Nair',
+  'Luca Romano',
+  'Sofia Petrov',
+  'Noah Brooks',
+  'Emma Carter',
+  'Daniel Kim',
+  'Sara Lopez',
+];
+
+const REFERRAL_NAMES = [
+  'Giulia Bianchi',
+  'Marco Silva',
+  'Sven Karlsson',
+  'Nora Ahmed',
+  'Yuki Tanaka',
+  'Ivan Horvat',
+  'Marta Ruiz',
+  'Omar Khalid',
+];
+
+const POSITIONS = [
+  'Backend Engineer',
+  'Frontend Engineer',
+  'Product Designer',
+  'Data Scientist',
+  'DevOps Engineer',
+  'Platform Engineer',
+  'Cloud Architect',
+  'ML Engineer',
+  'Security Engineer',
+  'SRE Engineer',
+  'QA Automation Engineer',
+  'Business Analyst',
+  'Product Manager',
+  'Technical Writer',
+  'Mobile Engineer',
+  'AI Research Engineer',
+  'Solutions Architect',
+  'Analytics Engineer',
+  'Staff Engineer',
+  'Engineering Manager',
+];
+
+const COMPANY_CATALOG: Array<{
+  company: string;
+  sector: string;
+  country: string;
+  city: string;
+  website: string;
+  salaryBase: number;
+  currency: string;
+}> = [
+  { company: 'Stripe', sector: 'Fintech', country: 'IE', city: 'Dublin', website: 'https://stripe.com', salaryBase: 90000, currency: 'EUR' },
+  { company: 'Klarna', sector: 'Fintech', country: 'SE', city: 'Stockholm', website: 'https://klarna.com', salaryBase: 760000, currency: 'SEK' },
+  { company: 'Revolut', sector: 'Fintech', country: 'GB', city: 'London', website: 'https://revolut.com', salaryBase: 98000, currency: 'GBP' },
+  { company: 'Adyen', sector: 'Fintech', country: 'NL', city: 'Amsterdam', website: 'https://adyen.com', salaryBase: 88000, currency: 'EUR' },
+  { company: 'Wise', sector: 'Fintech', country: 'EE', city: 'Tallinn', website: 'https://wise.com', salaryBase: 70000, currency: 'EUR' },
+  { company: 'Datadog', sector: 'SaaS', country: 'DE', city: 'Berlin', website: 'https://datadoghq.com', salaryBase: 115000, currency: 'EUR' },
+  { company: 'Snowflake', sector: 'Data', country: 'NL', city: 'Utrecht', website: 'https://snowflake.com', salaryBase: 125000, currency: 'EUR' },
+  { company: 'HashiCorp', sector: 'Infrastructure', country: 'FR', city: 'Lyon', website: 'https://hashicorp.com', salaryBase: 110000, currency: 'EUR' },
+  { company: 'Cloudflare', sector: 'Infrastructure', country: 'US', city: 'Austin', website: 'https://cloudflare.com', salaryBase: 185000, currency: 'USD' },
+  { company: 'Vercel', sector: 'Developer Tools', country: 'US', city: 'San Francisco', website: 'https://vercel.com', salaryBase: 195000, currency: 'USD' },
+  { company: 'GitLab', sector: 'Developer Tools', country: 'US', city: 'Remote', website: 'https://gitlab.com', salaryBase: 175000, currency: 'USD' },
+  { company: 'GitHub', sector: 'Developer Tools', country: 'US', city: 'Remote', website: 'https://github.com', salaryBase: 185000, currency: 'USD' },
+  { company: 'Shopify', sector: 'E-commerce', country: 'CA', city: 'Toronto', website: 'https://shopify.com', salaryBase: 170000, currency: 'USD' },
+  { company: 'Zalando', sector: 'Retail', country: 'DE', city: 'Berlin', website: 'https://zalando.com', salaryBase: 95000, currency: 'EUR' },
+  { company: 'H and M Group', sector: 'Retail', country: 'SE', city: 'Stockholm', website: 'https://hmgroup.com', salaryBase: 720000, currency: 'SEK' },
+  { company: 'Booking', sector: 'Travel', country: 'NL', city: 'Amsterdam', website: 'https://booking.com', salaryBase: 98000, currency: 'EUR' },
+  { company: 'Skyscanner', sector: 'Travel', country: 'GB', city: 'Edinburgh', website: 'https://skyscanner.net', salaryBase: 92000, currency: 'GBP' },
+  { company: 'Airbnb', sector: 'Travel', country: 'US', city: 'San Francisco', website: 'https://airbnb.com', salaryBase: 230000, currency: 'USD' },
+  { company: 'Spotify', sector: 'Entertainment', country: 'US', city: 'New York', website: 'https://spotify.com', salaryBase: 240000, currency: 'USD' },
+  { company: 'Netflix', sector: 'Entertainment', country: 'US', city: 'Los Gatos', website: 'https://netflix.com', salaryBase: 300000, currency: 'USD' },
+  { company: 'Discord', sector: 'Social Media', country: 'NL', city: 'Amsterdam', website: 'https://discord.com', salaryBase: 160000, currency: 'EUR' },
+  { company: 'Reddit', sector: 'Social Media', country: 'CA', city: 'Vancouver', website: 'https://reddit.com', salaryBase: 190000, currency: 'USD' },
+  { company: 'Notion', sector: 'Productivity', country: 'US', city: 'San Francisco', website: 'https://notion.so', salaryBase: 200000, currency: 'USD' },
+  { company: 'Figma', sector: 'Design Tools', country: 'US', city: 'San Francisco', website: 'https://figma.com', salaryBase: 210000, currency: 'USD' },
+  { company: 'Canva', sector: 'Design Tools', country: 'AU', city: 'Sydney', website: 'https://canva.com', salaryBase: 150000, currency: 'USD' },
+  { company: 'Atlassian', sector: 'Developer Tools', country: 'AU', city: 'Sydney', website: 'https://atlassian.com', salaryBase: 155000, currency: 'USD' },
+  { company: 'HubSpot', sector: 'Marketing Tech', country: 'US', city: 'Boston', website: 'https://hubspot.com', salaryBase: 165000, currency: 'USD' },
+  { company: 'Salesforce', sector: 'SaaS', country: 'US', city: 'Indianapolis', website: 'https://salesforce.com', salaryBase: 210000, currency: 'USD' },
+  { company: 'Oracle', sector: 'Enterprise Software', country: 'US', city: 'Austin', website: 'https://oracle.com', salaryBase: 190000, currency: 'USD' },
+  { company: 'ServiceNow', sector: 'Enterprise Software', country: 'US', city: 'Santa Clara', website: 'https://servicenow.com', salaryBase: 205000, currency: 'USD' },
+  { company: 'Siemens', sector: 'Industrial Tech', country: 'DE', city: 'Munich', website: 'https://siemens.com', salaryBase: 98000, currency: 'EUR' },
+  { company: 'ABB', sector: 'Industrial Tech', country: 'SE', city: 'Vasteras', website: 'https://abb.com', salaryBase: 640000, currency: 'SEK' },
+  { company: 'Ericsson', sector: 'Telecom', country: 'SE', city: 'Stockholm', website: 'https://ericsson.com', salaryBase: 760000, currency: 'SEK' },
+  { company: 'Nokia', sector: 'Telecom', country: 'FI', city: 'Espoo', website: 'https://nokia.com', salaryBase: 94000, currency: 'EUR' },
+  { company: 'Cisco', sector: 'Networking', country: 'US', city: 'San Jose', website: 'https://cisco.com', salaryBase: 180000, currency: 'USD' },
+  { company: 'Palo Alto Networks', sector: 'Security', country: 'US', city: 'Santa Clara', website: 'https://paloaltonetworks.com', salaryBase: 225000, currency: 'USD' },
+  { company: 'CrowdStrike', sector: 'Security', country: 'US', city: 'Austin', website: 'https://crowdstrike.com', salaryBase: 215000, currency: 'USD' },
+  { company: 'Snyk', sector: 'Security', country: 'GB', city: 'London', website: 'https://snyk.io', salaryBase: 115000, currency: 'GBP' },
+  { company: 'DeepMind', sector: 'AI', country: 'GB', city: 'London', website: 'https://deepmind.google', salaryBase: 180000, currency: 'GBP' },
+  { company: 'OpenAI', sector: 'AI', country: 'US', city: 'San Francisco', website: 'https://openai.com', salaryBase: 350000, currency: 'USD' },
+  { company: 'Anthropic', sector: 'AI', country: 'US', city: 'San Francisco', website: 'https://anthropic.com', salaryBase: 340000, currency: 'USD' },
+  { company: 'Mistral AI', sector: 'AI', country: 'FR', city: 'Paris', website: 'https://mistral.ai', salaryBase: 150000, currency: 'EUR' },
+  { company: 'NVIDIA', sector: 'Hardware', country: 'US', city: 'Santa Clara', website: 'https://nvidia.com', salaryBase: 300000, currency: 'USD' },
+  { company: 'AMD', sector: 'Hardware', country: 'CA', city: 'Toronto', website: 'https://amd.com', salaryBase: 210000, currency: 'USD' },
+  { company: 'Intel', sector: 'Hardware', country: 'IL', city: 'Haifa', website: 'https://intel.com', salaryBase: 125000, currency: 'USD' },
+  { company: 'TSMC', sector: 'Hardware', country: 'TW', city: 'Hsinchu', website: 'https://tsmc.com', salaryBase: 145000, currency: 'USD' },
+  { company: 'ASML', sector: 'Semiconductors', country: 'NL', city: 'Veldhoven', website: 'https://asml.com', salaryBase: 120000, currency: 'EUR' },
+  { company: 'Northvolt', sector: 'Green Tech', country: 'SE', city: 'Skelleftea', website: 'https://northvolt.com', salaryBase: 650000, currency: 'SEK' },
+  { company: 'Volvo Cars', sector: 'Automotive', country: 'SE', city: 'Gothenburg', website: 'https://volvocars.com', salaryBase: 630000, currency: 'SEK' },
+  { company: 'Rivian', sector: 'Automotive', country: 'US', city: 'Irvine', website: 'https://rivian.com', salaryBase: 240000, currency: 'USD' },
+  { company: 'Tesla', sector: 'Automotive', country: 'US', city: 'Austin', website: 'https://tesla.com', salaryBase: 265000, currency: 'USD' },
+  { company: 'Einride', sector: 'Autonomous', country: 'SE', city: 'Stockholm', website: 'https://einride.tech', salaryBase: 700000, currency: 'SEK' },
+  { company: 'DoorDash', sector: 'Logistics', country: 'US', city: 'Seattle', website: 'https://doordash.com', salaryBase: 195000, currency: 'USD' },
+  { company: 'Instacart', sector: 'Logistics', country: 'US', city: 'San Francisco', website: 'https://instacart.com', salaryBase: 185000, currency: 'USD' },
+  { company: 'Uber', sector: 'Logistics', country: 'NL', city: 'Amsterdam', website: 'https://uber.com', salaryBase: 140000, currency: 'EUR' },
+  { company: 'Bolt', sector: 'Mobility', country: 'EE', city: 'Tallinn', website: 'https://bolt.eu', salaryBase: 88000, currency: 'EUR' },
+  { company: 'WiseScale', sector: 'Analytics', country: 'PT', city: 'Lisbon', website: 'https://wisescale.io', salaryBase: 72000, currency: 'EUR' },
+  { company: 'Monzo', sector: 'Fintech', country: 'GB', city: 'London', website: 'https://monzo.com', salaryBase: 85000, currency: 'GBP' },
+  { company: 'N26', sector: 'Fintech', country: 'DE', city: 'Berlin', website: 'https://n26.com', salaryBase: 93000, currency: 'EUR' },
+  { company: 'Sopra Steria', sector: 'Consulting', country: 'FR', city: 'Paris', website: 'https://soprasteria.com', salaryBase: 72000, currency: 'EUR' },
+  { company: 'Capgemini', sector: 'Consulting', country: 'IT', city: 'Milan', website: 'https://capgemini.com', salaryBase: 64000, currency: 'EUR' },
+  { company: 'Accenture', sector: 'Consulting', country: 'ES', city: 'Madrid', website: 'https://accenture.com', salaryBase: 68000, currency: 'EUR' },
+  { company: 'Thoughtworks', sector: 'Consulting', country: 'BR', city: 'Sao Paulo', website: 'https://thoughtworks.com', salaryBase: 76000, currency: 'USD' },
+  { company: 'Mercado Libre', sector: 'E-commerce', country: 'AR', city: 'Buenos Aires', website: 'https://mercadolibre.com', salaryBase: 68000, currency: 'USD' },
+  { company: 'Rappi', sector: 'Logistics', country: 'CO', city: 'Bogota', website: 'https://rappi.com', salaryBase: 62000, currency: 'USD' },
+  { company: 'WiseOcean', sector: 'Climate Tech', country: 'DK', city: 'Copenhagen', website: 'https://wiseocean.io', salaryBase: 85000, currency: 'EUR' },
+  { company: 'Helios Grid', sector: 'Energy', country: 'NO', city: 'Oslo', website: 'https://heliosgrid.no', salaryBase: 98000, currency: 'EUR' },
+];
+
+function toSlug(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function toDateOnly(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function dateWithOffset(days: number): string {
+  const d = new Date('2026-04-09T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  return toDateOnly(d);
+}
+
+function dateTimeWithOffset(days: number, hour = 10): string {
+  const d = new Date('2026-04-09T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + days);
+  d.setUTCHours(hour, 0, 0, 0);
+  return d.toISOString();
+}
+
+function statusAt(index: number): JobStatus {
+  let running = 0;
+  for (const { status, count } of STATUS_DISTRIBUTION) {
+    running += count;
+    if (index < running) return status;
+  }
+  return 'applied';
+}
+
+function appDateByStatus(status: JobStatus, index: number): string {
+  switch (status) {
+    case 'applied':
+      return dateWithOffset(-(index % 40));
+    case 'interviewing':
+      return dateWithOffset(-15 - (index % 45));
+    case 'offer':
+      return dateWithOffset(-25 - (index % 55));
+    case 'declined':
+      return dateWithOffset(-35 - (index % 65));
+    case 'rejected':
+      return dateWithOffset(-45 - (index % 75));
+    case 'no-response':
+      return dateWithOffset(-90 - (index % 120));
+    default:
+      return dateWithOffset(-10);
+  }
+}
+
+function buildRounds(index: number, count: number) {
+  return Array.from({ length: count }, (_, roundIndex) => {
+    const isFinalRound = roundIndex === count - 1;
+    const upcomingFinalRound = isFinalRound && index % 2 === 0;
+    const offset = upcomingFinalRound ? 7 + roundIndex * 4 : -25 + roundIndex * 6;
+
+    return {
+      id: `m${index + 1}-r${roundIndex + 1}`,
+      roundNumber: roundIndex + 1,
+      interviewerName: RECRUITER_NAMES[(index + roundIndex) % RECRUITER_NAMES.length],
+      interviewerContact: `interviewer${(index + roundIndex) % 40}@example.com`,
+      date: dateTimeWithOffset(offset, 9 + (roundIndex % 6)),
+      meetingLink: roundIndex % 2 === 0 ? `https://meet.example.com/m${index + 1}r${roundIndex + 1}` : undefined,
+      location: roundIndex % 2 === 1 ? 'HQ Office' : 'Video Call',
+    };
+  });
+}
+
+function buildApplication(index: number): JobApplication {
+  const companyInfo = COMPANY_CATALOG[index % COMPANY_CATALOG.length];
+  const status = statusAt(index);
+  const employmentType = EMPLOYMENT_CYCLE[index % EMPLOYMENT_CYCLE.length];
+  const workType = WORK_CYCLE[(index + 1) % WORK_CYCLE.length];
+  const cvProfileId = CV_PROFILE_IDS[index % CV_PROFILE_IDS.length];
+  const salaryVariance = ((index % 7) - 3) * 3500;
+
+  const application: JobApplication = {
+    id: `m${index + 1}`,
+    company: companyInfo.company,
+    sector: companyInfo.sector,
+    position: POSITIONS[index % POSITIONS.length],
+    country: companyInfo.country,
+    city: companyInfo.city,
+    workType,
+    employmentType,
+    cvProfileId,
+    status,
+    salary: {
+      amount: Math.max(22000, companyInfo.salaryBase + salaryVariance),
+      currency: companyInfo.currency,
+    },
+    date: appDateByStatus(status, index),
+    links: {
+      job: `https://jobs.example.com/${toSlug(companyInfo.company)}/${toSlug(POSITIONS[index % POSITIONS.length])}`,
+      linkedin: `https://linkedin.com/company/${toSlug(companyInfo.company)}`,
+      website: companyInfo.website,
+    },
+    rating: (index % 5) + 1,
+    notes: index % 3 === 0 ? 'Strong mission fit. Follow-up needed after next round.' : undefined,
+    description:
+      index % 4 === 0 ? `Role focused on ${POSITIONS[index % POSITIONS.length].toLowerCase()} in ${companyInfo.sector}.` : undefined,
+  };
+
+  if (index % 3 === 0) {
+    const recruiterName = RECRUITER_NAMES[index % RECRUITER_NAMES.length];
+    application.recruiter = {
+      name: recruiterName,
+      email: `${toSlug(recruiterName)}@recruit.example.com`,
+      phone: `+1-555-${String(1000 + index).padStart(4, '0')}`,
+    };
+  }
+
+  if (index % 4 === 0) {
+    const referrerName = REFERRAL_NAMES[index % REFERRAL_NAMES.length];
+    application.referral = {
+      referrer: referrerName,
+      date: dateWithOffset(-30 - (index % 45)),
+      note: 'Referral submitted through internal talent program.',
+      link: index % 8 === 0 ? `https://referral.example.com/${toSlug(referrerName)}` : undefined,
+      code: index % 6 === 0 ? `REF-${1000 + index}` : undefined,
+    };
+  }
+
+  if (status === 'interviewing') {
+    const interviews = 1 + (index % 6);
+    const roundsCount = index % 5 === 0 ? 0 : 1 + (index % 4);
+
+    application.interviews = interviews;
+    application.phoneScreens = index % 3;
+    application.rounds = roundsCount > 0 ? buildRounds(index, roundsCount) : [];
+  }
+
+  return application;
+}
+
+const totalApplications = STATUS_DISTRIBUTION.reduce((sum, entry) => sum + entry.count, 0);
+
+const generatedApplications = Array.from({ length: totalApplications }, (_, index) =>
+  buildApplication(index)
+);
+
+const googleAnchorIndex = generatedApplications.findIndex((app) => app.status === 'interviewing');
+if (googleAnchorIndex >= 0) {
+  generatedApplications[googleAnchorIndex] = {
+    ...generatedApplications[googleAnchorIndex],
     company: 'Google',
     sector: 'Big Tech',
     position: 'Solution Architect',
     country: 'IT',
     city: 'Milan',
     workType: 'hybrid',
+    employmentType: 'permanent',
     status: 'interviewing',
-    salary: { amount: 95000, currency: 'EUR' },
-    date: '2024-02-28',
-    links: { job: '#', linkedin: '#', website: 'https://google.com' },
-    interviews: 2,
+    salary: { amount: 98000, currency: 'EUR' },
+    date: dateWithOffset(-22),
+    links: {
+      job: 'https://jobs.example.com/google/solution-architect',
+      linkedin: 'https://linkedin.com/company/google',
+      website: 'https://google.com',
+    },
+    interviews: 4,
+    phoneScreens: 2,
     rounds: [
-      { id: 'r1', roundNumber: 1, date: '2024-03-10T10:00:00Z', interviewerName: 'Mario Rossi' },
-      { id: 'r2', roundNumber: 2, date: '2024-03-20T15:00:00Z', interviewerName: 'Alice White' },
+      {
+        id: 'google-r1',
+        roundNumber: 1,
+        interviewerName: 'Mario Rossi',
+        interviewerContact: 'mario.rossi@example.com',
+        date: dateTimeWithOffset(-18, 10),
+        meetingLink: 'https://meet.example.com/google-r1',
+        location: 'Video Call',
+      },
+      {
+        id: 'google-r2',
+        roundNumber: 2,
+        interviewerName: 'Alice White',
+        interviewerContact: 'alice.white@example.com',
+        date: dateTimeWithOffset(-8, 15),
+        meetingLink: 'https://meet.example.com/google-r2',
+        location: 'Video Call',
+      },
+      {
+        id: 'google-r3',
+        roundNumber: 3,
+        interviewerName: 'Luca Romano',
+        interviewerContact: 'luca.romano@example.com',
+        date: dateTimeWithOffset(4, 9),
+        meetingLink: 'https://meet.example.com/google-r3',
+        location: 'Milan Office',
+      },
+      {
+        id: 'google-r4',
+        roundNumber: 4,
+        interviewerName: 'Emma Carter',
+        interviewerContact: 'emma.carter@example.com',
+        date: dateTimeWithOffset(15, 14),
+        meetingLink: 'https://meet.example.com/google-r4',
+        location: 'Milan Office',
+      },
     ],
-  },
-  {
-    id: 'm17',
-    company: 'Amazon Web Services',
-    sector: 'Big Tech',
-    position: 'Cloud Engineer',
-    country: 'IE',
-    city: 'Dublin',
-    workType: 'onsite',
-    status: 'interviewing',
-    salary: { amount: 110000, currency: 'EUR' },
-    date: '2024-03-01',
-    links: { job: '#', linkedin: '#', website: 'https://amazon.jobs' },
-    interviews: 1,
-  },
-  {
-    id: 'm18',
-    company: 'Microsoft',
-    sector: 'Big Tech',
-    position: 'Azure Specialist',
-    country: 'FR',
-    city: 'Paris',
-    workType: 'hybrid',
-    status: 'interviewing',
-    salary: { amount: 105000, currency: 'EUR' },
-    date: '2024-03-05',
-    links: { job: '#', linkedin: '#', website: 'https://microsoft.com' },
-  },
-  {
-    id: 'm19',
-    company: 'Meta',
-    sector: 'Big Tech',
-    position: 'React Core Contributor',
-    country: 'US',
-    city: 'Menlo Park',
-    workType: 'remote',
-    status: 'interviewing',
-    salary: { amount: 450000, currency: 'USD' },
-    date: '2024-03-08',
-    links: { job: '#', linkedin: '#', website: 'https://meta.com' },
-    phoneScreens: 1,
-  },
-  {
-    id: 'm20',
-    company: 'OpenAI',
-    sector: 'Artificial Intelligence',
-    position: 'LLM Fine-tuner',
-    country: 'US',
-    city: 'San Francisco',
-    workType: 'onsite',
-    status: 'interviewing',
-    salary: { amount: 550000, currency: 'USD' },
-    date: '2024-03-10',
-    links: { job: '#', linkedin: '#', website: 'https://openai.com' },
-  },
-  {
-    id: 'm21',
-    company: 'Anthropic',
-    sector: 'Artificial Intelligence',
-    position: 'Safety Research Lead',
-    country: 'US',
-    city: 'San Francisco',
-    workType: 'hybrid',
-    status: 'interviewing',
-    salary: { amount: 480000, currency: 'USD' },
-    date: '2024-03-12',
-    links: { job: '#', linkedin: '#', website: 'https://anthropic.com' },
-  },
-  {
-    id: 'm22',
-    company: 'Datadog',
-    sector: 'SaaS',
-    position: 'Reliability Engineer',
-    country: 'DE',
-    city: 'Berlin',
-    workType: 'remote',
-    status: 'interviewing',
-    salary: { amount: 130000, currency: 'EUR' },
-    date: '2024-03-14',
-    links: { job: '#', linkedin: '#', website: 'https://datadog.com' },
-  },
-  {
-    id: 'm23',
-    company: 'Snowflake',
-    sector: 'Data',
-    position: 'Warehouse Architect',
-    country: 'NL',
-    city: 'Utrecht',
-    workType: 'hybrid',
-    status: 'interviewing',
-    salary: { amount: 145000, currency: 'EUR' },
-    date: '2024-03-16',
-    links: { job: '#', linkedin: '#', website: 'https://snowflake.com' },
-  },
-  {
-    id: 'm24',
-    company: 'Palantir',
-    sector: 'Data',
-    position: 'Forward Deployed Engineer',
-    country: 'CH',
-    city: 'Zurich',
-    workType: 'onsite',
-    status: 'interviewing',
-    salary: { amount: 185000, currency: 'EUR' },
-    date: '2024-03-18',
-    links: { job: '#', linkedin: '#', website: 'https://palantir.com' },
-  },
-  {
-    id: 'm25',
-    company: 'HashiCorp',
-    sector: 'Infrastructure',
-    position: 'Terraform Engineer',
-    country: 'FR',
-    city: 'Lyon',
-    workType: 'hybrid',
-    status: 'interviewing',
-    salary: { amount: 120000, currency: 'EUR' },
-    date: '2024-03-20',
-    links: { job: '#', linkedin: '#', website: 'https://hashicorp.com' },
-  },
+  };
+}
 
-  // --- Offers (5) ---
-  {
-    id: 'm26',
-    company: 'Tesla',
-    sector: 'Automotive',
-    position: 'Autopilot Dev',
-    country: 'US',
-    city: 'Austin',
-    workType: 'onsite',
-    status: 'offer',
-    salary: { amount: 280000, currency: 'USD' },
-    date: '2024-02-15',
-    links: { job: '#', linkedin: '#', website: 'https://tesla.com' },
-  },
-  {
-    id: 'm27',
-    company: 'Rivian',
-    sector: 'Automotive',
-    position: 'Battery Management Lead',
-    country: 'US',
-    city: 'Irvine',
-    workType: 'hybrid',
-    status: 'offer',
-    salary: { amount: 250000, currency: 'USD' },
-    date: '2024-02-18',
-    links: { job: '#', linkedin: '#', website: 'https://rivian.com' },
-  },
-  {
-    id: 'm28',
-    company: 'Reddit',
-    sector: 'Social Media',
-    position: 'Algorithm Scientist',
-    country: 'CA',
-    city: 'Vancouver',
-    workType: 'remote',
-    status: 'offer',
-    salary: { amount: 190000, currency: 'USD' },
-    date: '2024-02-20',
-    links: { job: '#', linkedin: '#', website: 'https://reddit.com' },
-  },
-  {
-    id: 'm29',
-    company: 'Twitch',
-    sector: 'Entertainment',
-    position: 'Stream Infrastructure',
-    country: 'US',
-    city: 'San Francisco',
-    workType: 'hybrid',
-    status: 'offer',
-    salary: { amount: 210000, currency: 'USD' },
-    date: '2024-02-22',
-    links: { job: '#', linkedin: '#', website: 'https://twitch.tv' },
-  },
-  {
-    id: 'm30',
-    company: 'Discord',
-    sector: 'Social Media',
-    position: 'Voice Quality Lead',
-    country: 'NL',
-    city: 'Amsterdam',
-    workType: 'remote',
-    status: 'offer',
-    salary: { amount: 160000, currency: 'EUR' },
-    date: '2024-02-25',
-    links: { job: '#', linkedin: '#', website: 'https://discord.com' },
-  },
-
-  // --- Rejected (10) ---
-  {
-    id: 'm31',
-    company: 'Twitter / X',
-    sector: 'Social Media',
-    position: 'Everything App Specialist',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 0, currency: 'USD' },
-    date: '2024-01-10',
-    city: 'San Francisco',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://x.com' },
-  },
-  {
-    id: 'm32',
-    company: 'Uber',
-    sector: 'Logistics',
-    position: 'Payment Architect',
-    country: 'NL',
-    status: 'rejected',
-    salary: { amount: 140000, currency: 'EUR' },
-    date: '2024-01-15',
-    city: 'Amsterdam',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://uber.com' },
-  },
-  {
-    id: 'm33',
-    company: 'Lyft',
-    sector: 'Logistics',
-    position: 'Driver Experience',
-    country: 'CA',
-    status: 'rejected',
-    salary: { amount: 170000, currency: 'USD' },
-    date: '2024-01-20',
-    city: 'Montreal',
-    workType: 'remote',
-    links: { job: '#', linkedin: '#', website: 'https://lyft.com' },
-  },
-  {
-    id: 'm34',
-    company: 'Snap',
-    sector: 'Social Media',
-    position: 'AR Specialist',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 200000, currency: 'USD' },
-    date: '2024-01-25',
-    city: 'Santa Monica',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://snapchat.com' },
-  },
-  {
-    id: 'm35',
-    company: 'Intel',
-    sector: 'Hardware',
-    position: 'Chip Designer',
-    country: 'IL',
-    status: 'rejected',
-    salary: { amount: 120000, currency: 'USD' },
-    date: '2024-01-30',
-    city: 'Haifa',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://intel.com' },
-  },
-  {
-    id: 'm36',
-    company: 'NVIDIA',
-    sector: 'Hardware',
-    position: 'CUDA Optimizer',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 300000, currency: 'USD' },
-    date: '2024-02-05',
-    city: 'Santa Clara',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://nvidia.com' },
-  },
-  {
-    id: 'm37',
-    company: 'AMD',
-    sector: 'Hardware',
-    position: 'GPU Architect',
-    country: 'CA',
-    status: 'rejected',
-    salary: { amount: 220000, currency: 'USD' },
-    date: '2024-02-10',
-    city: 'Toronto',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://amd.com' },
-  },
-  {
-    id: 'm38',
-    company: 'Salesforce',
-    sector: 'SaaS',
-    position: 'Cloud Manager',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 240000, currency: 'USD' },
-    date: '2024-02-15',
-    city: 'Indianapolis',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://salesforce.com' },
-  },
-  {
-    id: 'm39',
-    company: 'Oracle',
-    sector: 'Big Tech',
-    position: 'DBA Lead',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 230000, currency: 'USD' },
-    date: '2024-02-20',
-    city: 'Austin',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://oracle.com' },
-  },
-  {
-    id: 'm40',
-    company: 'IBM',
-    sector: 'Big Tech',
-    position: 'Quantum Researcher',
-    country: 'US',
-    status: 'rejected',
-    salary: { amount: 260000, currency: 'USD' },
-    date: '2024-02-25',
-    city: 'Yorktown Heights',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://ibm.com' },
-  },
-
-  // --- No-Response (10) ---
-  {
-    id: 'm41',
-    company: 'Tencent',
-    sector: 'Entertainment',
-    position: 'Gaming Consultant',
-    country: 'CN',
-    status: 'no-response',
-    salary: { amount: 1000000, currency: 'USD' },
-    date: '2023-11-01',
-    city: 'Shenzhen',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://tencent.com' },
-  },
-  {
-    id: 'm42',
-    company: 'Alibaba',
-    sector: 'E-commerce',
-    position: 'Logistics Lead',
-    country: 'CN',
-    status: 'no-response',
-    salary: { amount: 850000, currency: 'USD' },
-    date: '2023-11-05',
-    city: 'Hangzhou',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://alibaba.com' },
-  },
-  {
-    id: 'm43',
-    company: 'Booking.com',
-    sector: 'Travel',
-    position: 'Senior Developer',
-    country: 'NL',
-    status: 'no-response',
-    salary: { amount: 95000, currency: 'EUR' },
-    date: '2023-11-10',
-    city: 'Amsterdam',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://booking.com' },
-  },
-  {
-    id: 'm44',
-    company: 'Skyscanner',
-    sector: 'Travel',
-    position: 'Flights Architect',
-    country: 'GB',
-    status: 'no-response',
-    salary: { amount: 90000, currency: 'GBP' },
-    date: '2023-11-15',
-    city: 'Edinburgh',
-    workType: 'remote',
-    links: { job: '#', linkedin: '#', website: 'https://skyscanner.net' },
-  },
-  {
-    id: 'm45',
-    company: 'Tripadvisor',
-    sector: 'Travel',
-    position: 'Review Auditor',
-    country: 'US',
-    status: 'no-response',
-    salary: { amount: 155000, currency: 'USD' },
-    date: '2023-11-20',
-    city: 'Needham',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://tripadvisor.com' },
-  },
-  {
-    id: 'm46',
-    company: 'Cisco',
-    sector: 'Networking',
-    position: 'Packet Sniffer Specialist',
-    country: 'US',
-    status: 'no-response',
-    salary: { amount: 185000, currency: 'USD' },
-    date: '2023-11-25',
-    city: 'San Jose',
-    workType: 'hybrid',
-    links: { job: '#', linkedin: '#', website: 'https://cisco.com' },
-  },
-  {
-    id: 'm47',
-    company: 'VMware',
-    sector: 'Virtualization',
-    position: 'Kernel Dev',
-    country: 'US',
-    status: 'no-response',
-    salary: { amount: 195000, currency: 'USD' },
-    date: '2023-12-01',
-    city: 'Palo Alto',
-    workType: 'remote',
-    links: { job: '#', linkedin: '#', website: 'https://vmware.com' },
-  },
-  {
-    id: 'm48',
-    company: 'Red Hat',
-    sector: 'Open Source',
-    position: 'Kernel Architect',
-    country: 'DE',
-    status: 'no-response',
-    salary: { amount: 115000, currency: 'EUR' },
-    date: '2023-12-05',
-    city: 'Munich',
-    workType: 'onsite',
-    links: { job: '#', linkedin: '#', website: 'https://redhat.com' },
-  },
-  {
-    id: 'm49',
-    company: 'GitLab',
-    sector: 'DevOps',
-    position: 'Sidekiq Specialist',
-    country: 'US',
-    status: 'no-response',
-    salary: { amount: 175000, currency: 'USD' },
-    date: '2023-12-10',
-    city: 'Remote',
-    workType: 'remote',
-    links: { job: '#', linkedin: '#', website: 'https://gitlab.com' },
-  },
-  {
-    id: 'm50',
-    company: 'GitHub',
-    sector: 'DevOps',
-    position: 'Actions Lead Developer',
-    country: 'US',
-    status: 'no-response',
-    salary: { amount: 185000, currency: 'USD' },
-    date: '2023-12-15',
-    city: 'Remote',
-    workType: 'remote',
-    links: { job: '#', linkedin: '#', website: 'https://github.com' },
-  },
-];
+export const MOCK_APPLICATIONS: JobApplication[] = generatedApplications;
