@@ -106,10 +106,7 @@ Database schema changes are managed as SQL migration files in `supabase/migratio
 
 ```
 supabase/migrations/
-├── 20260404120000_initial_schema.sql
-├── 20260408120000_soft_delete.sql
-├── 20260409180000_enable_auth_trigger.sql
-└── 20260410100000_expand_user_settings.sql
+└── 20260410120000_full_schema.sql
 ```
 
 ### Applying Migrations
@@ -135,6 +132,6 @@ To ensure a seamless onboarding experience and maintain RLS integrity, Siftly us
 
 - **Trigger**: `on_auth_user_created` on `auth.users`
 - **Function**: `public.handle_new_user()`
-- **Migration**: `20260409180000_enable_auth_trigger.sql`
+- **Migration**: `20260410120000_full_schema.sql`
 
 This automation ensures that Row-Level Security policies (which often depend on the existence of a profile) do not block initial data insertions for new users.

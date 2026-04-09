@@ -7,28 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.11](https://github.com/Piero24/Siftly/compare/siftly-v1.0.10...siftly-v1.0.11) (2026-04-09)
 
-
 ### Features
 
-* add drag functionality to extension panel and enhance message types ([5e7391f](https://github.com/Piero24/Siftly/commit/5e7391fd383f3d71e660bfab7cb0129d981a6a45))
-* add PopupBehaviorCard and integrate draggable functionality in popup forms ([cd25713](https://github.com/Piero24/Siftly/commit/cd25713faef31260504979e1d8da4ede49761e96))
-* add tests for popup behavior settings persistence and defaults ([19d3b81](https://github.com/Piero24/Siftly/commit/19d3b8138c08d929d4a68abf81fe250ab8d4804a))
-* enhance SettingsContext with remote settings synchronization and new state variables ([9fc5386](https://github.com/Piero24/Siftly/commit/9fc53865d9333081bafc88eee5796c5fc45155d0))
-* update documentation to include draggable panel and settings persistence details ([c01f058](https://github.com/Piero24/Siftly/commit/c01f058017c6c9bdb52286127af639ac0a7104b0))
+- add drag functionality to extension panel and enhance message types ([5e7391f](https://github.com/Piero24/Siftly/commit/5e7391fd383f3d71e660bfab7cb0129d981a6a45))
+- add PopupBehaviorCard and integrate draggable functionality in popup forms ([cd25713](https://github.com/Piero24/Siftly/commit/cd25713faef31260504979e1d8da4ede49761e96))
+- add tests for popup behavior settings persistence and defaults ([19d3b81](https://github.com/Piero24/Siftly/commit/19d3b8138c08d929d4a68abf81fe250ab8d4804a))
+- enhance SettingsContext with remote settings synchronization and new state variables ([9fc5386](https://github.com/Piero24/Siftly/commit/9fc53865d9333081bafc88eee5796c5fc45155d0))
+- update documentation to include draggable panel and settings persistence details ([c01f058](https://github.com/Piero24/Siftly/commit/c01f058017c6c9bdb52286127af639ac0a7104b0))
 
 ## [1.0.10](https://github.com/Piero24/Siftly/compare/siftly-v1.0.9...siftly-v1.0.10) (2026-04-09)
 
-
 ### Features
 
-* switched popup from dropdown to in-page shadowdom ([4f0eed5](https://github.com/Piero24/Siftly/commit/4f0eed5288305f6dfe422aa0390e7e4a58e3ec51))
+- switched popup from dropdown to in-page shadowdom ([4f0eed5](https://github.com/Piero24/Siftly/commit/4f0eed5288305f6dfe422aa0390e7e4a58e3ec51))
 
 ## [1.0.9](https://github.com/Piero24/Siftly/compare/siftly-v1.0.8...siftly-v1.0.9) (2026-04-09)
 
-
 ### Features
 
-* implement AutoCloseTimer component and integrate into ManualInsertForm; add authentication checks and improve session handling in AuthContext ([a5a678a](https://github.com/Piero24/Siftly/commit/a5a678a32f98ea61ee7f183f2d88e8fb9c75b4d2))
+- implement AutoCloseTimer component and integrate into ManualInsertForm; add authentication checks and improve session handling in AuthContext ([a5a678a](https://github.com/Piero24/Siftly/commit/a5a678a32f98ea61ee7f183f2d88e8fb9c75b4d2))
 
 ## [1.0.8](https://github.com/Piero24/Siftly/compare/siftly-v1.0.7...siftly-v1.0.8) (2026-04-09)
 
