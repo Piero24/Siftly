@@ -17,6 +17,12 @@ export const FEATURES = {
   auth: {
     /** Show OAuth buttons (Google, GitHub, Apple). */
     oauth: DEPLOYMENT.showOAuth,
+    /** Per-provider visibility controls for OAuth buttons. */
+    oauthProviders: {
+      google: true,
+      github: true,
+      apple: false,
+    },
     /** Show local profile creation form. */
     localProfile: DEPLOYMENT.showLocalProfile,
   },
