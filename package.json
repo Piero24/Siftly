@@ -1,6 +1,6 @@
 {
   "name": "siftly",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "index.js",
   "scripts": {
     "dev": "VITE_BUILD_TARGET=extension vite",
