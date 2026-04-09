@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
 import { useJobApplications } from '../hooks/useJobApplications';
+import { EXTENSION_IFRAME_DRAG_START, EXTENSION_PANEL_SOURCE } from '../lib/extensionPanelMessages';
 import { DEFAULT_FORM_STATE, FormState } from '../constants/form';
 import { toJobApplication } from '../components/dashboard/NewApplicationModal';
 
@@ -30,7 +31,15 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   onBack,
   onSuccess,
 }) => {
-  const { cvProfiles, autoNoResponse, autoNoResponseDays, storageMode } = useSettings();
+  const {
+    cvProfiles,
+    autoNoResponse,
+    autoNoResponseDays,
+    storageMode,
+    isDraggable,
+    autoCloseEnabled,
+    autoCloseTimer,
+  } = useSettings();
   const { isAuthenticated } = useAuth();
   const { addApplication } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
 
@@ -40,6 +49,21 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorState, setErrorState] = useState<string | null>(null);
   const [successResult, setSuccessResult] = useState<string | null>(null);
+
+  const handleDragStart = (e: React.PointerEvent) => {
+    if (!isDraggable) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    e.preventDefault();
+    window.parent.postMessage(
+      {
+        type: EXTENSION_IFRAME_DRAG_START,
+        source: EXTENSION_PANEL_SOURCE,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      },
+      '*'
+    );
+  };
 
   const handleChange = useCallback(
     (field: keyof FormState) =>
@@ -114,7 +138,15 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   if (errorState || (isSubmitting && errorState !== null)) {
     return (
       <div className="popup-form-view">
-        <div className="popup-form-header" style={{ justifyContent: 'space-between' }}>
+        <div
+          className="popup-form-header"
+          onPointerDown={handleDragStart}
+          style={{
+            justifyContent: 'space-between',
+            cursor: isDraggable ? 'grab' : 'default',
+            touchAction: 'none',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               type="button"
@@ -127,8 +159,12 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
             </button>
             <span className="popup-form-title">Error</span>
           </div>
-          {!isSubmitting && (
-            <AutoCloseTimer onComplete={onCancel} durationMs={5000} color="#d93025" />
+          {!isSubmitting && autoCloseEnabled && (
+            <AutoCloseTimer
+              onComplete={onCancel}
+              durationMs={autoCloseTimer * 1000}
+              color="#d93025"
+            />
           )}
         </div>
         <div
@@ -182,11 +218,25 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   if (successResult) {
     return (
       <div className="popup-form-view">
-        <div className="popup-form-header" style={{ justifyContent: 'space-between' }}>
+        <div
+          className="popup-form-header"
+          onPointerDown={handleDragStart}
+          style={{
+            justifyContent: 'space-between',
+            cursor: isDraggable ? 'grab' : 'default',
+            touchAction: 'none',
+          }}
+        >
           <span className="popup-form-title" style={{ paddingLeft: '8px' }}>
             Success
           </span>
-          <AutoCloseTimer onComplete={onSuccess} durationMs={5000} color="#34C759" />
+          {autoCloseEnabled && (
+            <AutoCloseTimer
+              onComplete={onSuccess}
+              durationMs={autoCloseTimer * 1000}
+              color="#34C759"
+            />
+          )}
         </div>
         <div
           className="popup-form-body"
@@ -216,7 +266,11 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
 
   return (
     <div className="popup-form-view">
-      <div className="popup-form-header">
+      <div
+        className="popup-form-header"
+        onPointerDown={handleDragStart}
+        style={{ cursor: isDraggable ? 'grab' : 'default', touchAction: 'none' }}
+      >
         <button
           type="button"
           className="popup-icon-button"

@@ -2,7 +2,7 @@
  * SettingsView — Application settings panel.
  *
  * Composed from focused settings card components:
- *   AppearanceCard, AutomationCard, LocalizationCard, NotificationsCard,
+ *   AppearanceCard, AutomationCard, PopupBehaviorCard, LocalizationCard, NotificationsCard,
  *   CvProfilesCard, TableDisplayCard, DataStorageCard, SupportCard
  */
 import React from 'react';
@@ -11,6 +11,7 @@ import { FEATURES } from '../../config/features';
 
 import { AppearanceCard } from '../settings/AppearanceCard';
 import { AutomationCard } from '../settings/AutomationCard';
+import { PopupBehaviorCard } from '../settings/PopupBehaviorCard';
 import { LocalizationCard } from '../settings/LocalizationCard';
 import { NotificationsCard } from '../settings/NotificationsCard';
 import { CvProfilesCard } from '../settings/CvProfilesCard';
@@ -25,7 +26,9 @@ interface SettingsViewProps {
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
-  applications = [], onImportCSV, onResetAll,
+  applications = [],
+  onImportCSV,
+  onResetAll,
 }) => {
   return (
     <div className="settings-container">
@@ -34,6 +37,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       <div className="settings-grid">
         {FEATURES.settings.appearance && <AppearanceCard />}
         {FEATURES.settings.automation && <AutomationCard />}
+        {FEATURES.settings.popupBehavior && <PopupBehaviorCard />}
         {FEATURES.settings.localization && <LocalizationCard />}
         {FEATURES.settings.notifications && <NotificationsCard />}
         {FEATURES.settings.cvProfiles && <CvProfilesCard />}

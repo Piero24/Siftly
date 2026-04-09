@@ -1,3 +1,5 @@
+import { useSettings } from '../context/SettingsContext';
+import { EXTENSION_IFRAME_DRAG_START } from '../lib/extensionPanelMessages';
 import React, { useState, useEffect } from 'react';
 import {
   BriefcaseIcon,
@@ -42,6 +44,22 @@ const PopupActionCard: React.FC<PopupActionCardProps> = ({
 };
 
 const Main: React.FC = () => {
+  const { isDraggable } = useSettings();
+  const handleDragStart = (e: React.PointerEvent) => {
+    if (!isDraggable) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    e.preventDefault();
+    window.parent.postMessage(
+      {
+        type: EXTENSION_IFRAME_DRAG_START,
+        source: EXTENSION_PANEL_SOURCE,
+        clientX: e.clientX,
+        clientY: e.clientY,
+      },
+      '*'
+    );
+  };
+
   const [view, setView] = useState<'main' | 'manual'>('main');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const { isAuthenticated } = useAuth();
@@ -129,7 +147,11 @@ const Main: React.FC = () => {
         />
       ) : (
         <>
-          <div className="popup-header">
+          <div
+            className="popup-header"
+            onPointerDown={handleDragStart}
+            style={{ cursor: isDraggable ? 'grab' : 'default', touchAction: 'none' }}
+          >
             <div className="popup-brand">
               <img
                 src={APP_INFO.logo.path}

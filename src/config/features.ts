@@ -44,6 +44,7 @@ export const FEATURES = {
   // Settings Sections (Cards)
   settings: {
     automation: true,
+    popupBehavior: true,
     localization: true,
     notifications: true,
     appearance: true,
