@@ -5,6 +5,13 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9](https://github.com/Piero24/Siftly/compare/siftly-v1.0.8...siftly-v1.0.9) (2026-04-09)
+
+
+### Features
+
+* implement AutoCloseTimer component and integrate into ManualInsertForm; add authentication checks and improve session handling in AuthContext ([a5a678a](https://github.com/Piero24/Siftly/commit/a5a678a32f98ea61ee7f183f2d88e8fb9c75b4d2))
+
 ## [1.0.8](https://github.com/Piero24/Siftly/compare/siftly-v1.0.7...siftly-v1.0.8) (2026-04-09)
 
 ### Features
