@@ -83,18 +83,64 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
+    const initSession = async () => {
+      if (!supabase) return;
+      const { data: { session: s } } = await supabase.auth.getSession();
+      if (s) {
+        const { error } = await supabase.auth.getUser();
+        if (error) {
+          authLogger.warn('Stale session detected on boot. Wiping local cache.');
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+        } else {
+          setSession(s);
+          setUser(s.user);
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+      }
       setIsLoading(false);
+    };
+    initSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === 'SIGNED_OUT') {
+        authLogger.info(`Auth event overridden eviction: ${event}`);
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(s);
+        setUser(s?.user ?? null);
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-    });
+    // Sub-minute Heartbeat mechanism: actively poll DB to detect remote deletions rapidly
+    const heartbeat = setInterval(async () => {
+      if (!supabase) return;
+      
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (!currentSession) return;
+      
+      const { error } = await supabase.auth.getUser();
+      if (error) {
+        const err = error as any;
+        if (err.status === 401 || err.status === 403 || err.message.toLowerCase().includes('user not found')) {
+          authLogger.warn('Heartbeat detected invalid user session. Evicting immediately.');
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          showToast('Your account is no longer active. You have been signed out.', 'error');
+        }
+      }
+    }, 60000);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(heartbeat);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signIn = async (provider: OAuthProvider) => {

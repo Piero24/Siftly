@@ -30,7 +30,7 @@ interface NewApplicationModalProps {
 // ── Helpers ──────────────────────────────────────────────
 
 /** Deserialize a JobApplication into form state for editing. */
-const toFormState = (app: JobApplication): FormState => {
+export const toFormState = (app: JobApplication): FormState => {
   const hasRange = (app.salary as any)?.max !== undefined;
   return {
     ...DEFAULT_FORM_STATE,
@@ -70,7 +70,7 @@ const toFormState = (app: JobApplication): FormState => {
 };
 
 /** Serialize form state back into a JobApplication. */
-const toJobApplication = (form: FormState, existingId?: string): JobApplication => {
+export const toJobApplication = (form: FormState, existingId?: string): JobApplication => {
   const id = existingId || `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
   const salaryObj =

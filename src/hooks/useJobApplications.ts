@@ -12,6 +12,7 @@ import { DEBUG_CONFIG } from '../config/app';
 import { MOCK_APPLICATIONS } from '../lib/mockData';
 import { logger } from '../lib/logger';
 import { useToast } from '../context/ToastContext';
+import { supabase } from '../lib/supabaseClient';
 
 const hookLogger = logger.for('useJobApplications');
 
@@ -153,12 +154,6 @@ export function useJobApplications(
   const { showToast } = useToast();
   const adapterRef = useRef<StorageAdapter>(createAdapter(storageMode));
 
-  // Re-create adapter when storageMode changes
-  useEffect(() => {
-    adapterRef.current = createAdapter(storageMode);
-    loadData();
-  }, [storageMode]);
-
   const loadData = useCallback(async () => {
     setIsLoading(true);
 
@@ -204,6 +199,33 @@ export function useJobApplications(
       setIsLoading(false);
     }
   }, [storageMode]);
+
+  // Re-create adapter when storageMode changes
+  useEffect(() => {
+    adapterRef.current = createAdapter(storageMode);
+    loadData();
+  }, [storageMode, loadData]);
+
+  // Realtime Supabase Hook
+  useEffect(() => {
+    if ((storageMode === 'remote' || storageMode === 'both') && supabase) {
+      hookLogger.info('Initializing Supabase Realtime channel for job_applications');
+      const channel = supabase.channel('job-applications-changes')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'job_applications' },
+          (payload) => {
+            hookLogger.info('Realtime change detected!', payload);
+            loadData(); // Seamlessly reload the dashboard when the table modifies
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase?.removeChannel(channel);
+      };
+    }
+  }, [storageMode, loadData]);
 
   // Auto no-response logic
   useEffect(() => {
@@ -280,14 +302,15 @@ export function useJobApplications(
     );
   };
 
-  const addApplication = async (app: JobApplication) => {
+  const addApplication = async (app: JobApplication, suppressToast: boolean = false) => {
     try {
       await adapterRef.current.upsert(app);
       setApplications((prev) => [app, ...prev]);
-      showToast('New application added!', 'success');
+      if (!suppressToast) showToast('New application added!', 'success');
     } catch (err) {
       hookLogger.error('Failed to add app:', err);
-      showToast('Failed to save new application.', 'error');
+      if (!suppressToast) showToast('Failed to save new application.', 'error');
+      throw err;
     }
   };
 

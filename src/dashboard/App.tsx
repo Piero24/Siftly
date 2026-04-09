@@ -42,6 +42,21 @@ const App: React.FC = () => {
   // ── Hooks ──
   useKeyboardShortcuts();
 
+  React.useEffect(() => {
+    if (!isAppsLoading && applications.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const jobId = params.get('jobId');
+      if (jobId && !selectedJob) {
+        const found = applications.find((a) => a.id === jobId);
+        if (found) {
+          setSelectedJob(found);
+          // Clean up the URL to prevent reopening on refresh
+          window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+        }
+      }
+    }
+  }, [isAppsLoading, applications, selectedJob, setSelectedJob]);
+
   const {
     handleDelete, handleStatusChange, handleNewSave, handleEditSave,
     handleBulkDelete, handleBulkStatus,

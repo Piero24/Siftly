@@ -127,7 +127,9 @@ export class SupabaseAdapter implements StorageAdapter {
 
   async upsert(app: JobApplication): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { error } = await supabase.from('job_applications').upsert(appToRow(app));
+    const { data: { session } } = await supabase.auth.getSession();
+    const row = { ...appToRow(app), user_id: session?.user?.id };
+    const { error } = await supabase.from('job_applications').upsert(row);
     if (error) {
       logger.error('[SupabaseAdapter] upsert:', error);
       throw error;
@@ -154,7 +156,8 @@ export class SupabaseAdapter implements StorageAdapter {
 
   async importBatch(apps: JobApplication[]): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const rows = apps.map(appToRow);
+    const { data: { session } } = await supabase.auth.getSession();
+    const rows = apps.map(app => ({ ...appToRow(app), user_id: session?.user?.id }));
     const { error } = await supabase.from('job_applications').upsert(rows);
     if (error) {
       logger.error('[SupabaseAdapter] importBatch:', error);
