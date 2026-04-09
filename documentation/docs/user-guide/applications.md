@@ -29,6 +29,8 @@ Click any row in the applications table to open the detail modal. From here you 
 - Manage referral and recruiter contacts
 - Track interview rounds
 
+![Application detail modal](/img/screenshots/job-card.png)
+
 ## Changing Status
 
 You can change an application's status in two ways:
@@ -43,3 +45,7 @@ Open the application detail modal and click the **Delete** button at the bottom.
 ## Search & Filter
 
 Use the search bar to filter applications by company, position, city, or sector. The table header also provides column-specific sorting.
+
+![Applications table](/img/screenshots/applications-table.png)
+
+![Applications table with filters and selection tools](/img/screenshots/applications-table-filters.png)

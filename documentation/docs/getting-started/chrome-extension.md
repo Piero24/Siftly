@@ -31,6 +31,8 @@ Click the Siftly icon in your toolbar to open the quick-access popup. From here 
 - Manually insert the job application
 - Automatically capture the job application
 
+![Siftly extension popup](/img/screenshots/extension-popup.png)
+
 ### Dashboard
 
 Click **Open Dashboard** in the popup (or navigate to the dashboard URL) to access:
@@ -40,13 +42,16 @@ Click **Open Dashboard** in the popup (or navigate to the dashboard URL) to acce
 - Interview management
 - Settings and CV profiles
 
+![Siftly dashboard from extension](/img/screenshots/dashboard-top.png)
+
 ## Authentication
 
 The Chrome extension uses **OAuth authentication** via Supabase:
 
+![Extension login screen](/img/screenshots/login-extension.png)
+
 - **Google** — Sign in with your Google account
 - **GitHub** — Sign in with your GitHub account
-- **Apple** — Sign in with your Apple ID (NOT IMPLMENTED YET)
 
 Your data is stored securely in the cloud and synced across devices.
 

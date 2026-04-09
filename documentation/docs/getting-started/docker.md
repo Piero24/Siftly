@@ -55,6 +55,8 @@ Siftly includes CasaOS metadata in `docker-compose.yml`. To install on CasaOS:
 
 In self-hosted mode, Siftly uses **simple profile creation** — just enter your name to get started. No passwords, no external accounts. All data is stored locally in the browser's IndexedDB.
 
+![Self-hosted login screen](/img/screenshots/login-web.png)
+
 ## Data Persistence
 
 :::warning

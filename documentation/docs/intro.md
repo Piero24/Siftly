@@ -5,9 +5,9 @@ slug: /intro
 
 # Welcome to Siftly
 
-> TODO: Add a dashboard hero screenshot in documentation/static/img/guides/dashboard_hero.webp.
-
 **Siftly** is a professional job application tracker designed to give you full control over your job search. Available as a **Chrome extension** and a **self-hosted web app**, it combines powerful analytics with a clean, modern interface.
+
+![Siftly dashboard overview](/img/screenshots/dashboard-top.png)
 
 ## What is Siftly?
 
@@ -25,7 +25,7 @@ Siftly runs in two modes depending on how you deploy it:
 
 | Mode                     | Storage           | Authentication                | Best For          |
 | ------------------------ | ----------------- | ----------------------------- | ----------------- |
-| **Chrome Extension**     | Cloud (Supabase)  | OAuth (Google, GitHub, Apple) | Multi-device sync |
+| **Chrome Extension**     | Cloud (Supabase)  | OAuth (Google, GitHub)        | Multi-device sync |
 | **Self-Hosted (Docker)** | Local (IndexedDB) | Simple profile creation       | Full privacy      |
 
 Both modes share the same codebase and feature set.
