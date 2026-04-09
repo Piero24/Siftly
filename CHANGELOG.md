@@ -5,6 +5,13 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.12](https://github.com/Piero24/Siftly/compare/siftly-v1.0.11...siftly-v1.0.12) (2026-04-09)
+
+
+### Features
+
+* consolidate database migrations into a full schema baseline and remove obsolete migration files ([3fad693](https://github.com/Piero24/Siftly/commit/3fad6939c723ca418fe535e67e7db8f042bb668a))
+
 ## [1.0.11](https://github.com/Piero24/Siftly/compare/siftly-v1.0.10...siftly-v1.0.11) (2026-04-09)
 
 ### Features
