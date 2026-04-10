@@ -191,6 +191,97 @@ input:checked + .toggle-slider:before {
   transform: translateX(20px);
 }
 
+.delete-confirm-box {
+  background: rgba(255, 59, 48, 0.08); /* Sophisticated red tint */
+  backdrop-filter: blur(16px) saturate(1.8);
+  -webkit-backdrop-filter: blur(16px) saturate(1.8);
+  border: 1px solid rgba(255, 59, 48, 0.25);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: deleteCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  width: 100%;
+  box-shadow: 
+    0 4px 20px rgba(255, 59, 48, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@keyframes deleteCardIn {
+  from { opacity: 0; transform: scale(0.98) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.auth-confirm-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff453a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-confirm-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--input-bg);
+  border: 1.5px solid rgba(255, 69, 58, 0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-confirm-input:focus {
+  border-color: #ff453a;
+  background: var(--input-bg-active);
+  box-shadow: 0 0 0 4px rgba(255, 69, 58, 0.15);
+}
+
+.auth-confirm-input::placeholder {
+  color: var(--placeholder);
+  opacity: 0.6;
+}
+
+.btn-confirm-delete {
+  background: linear-gradient(135deg, #ff453a, #ff2d55);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+}
+
+.btn-confirm-delete:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff5b52, #ff3b30);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
+}
+
+.btn-confirm-delete:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-confirm-cancel {
+  background: var(--surface-solid); /* Solid background for contrast */
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-soft);
+  font-weight: 600;
+}
+
+.btn-confirm-cancel:hover {
+  background: var(--bg-app);
+  border-color: var(--apple-blue);
+  color: var(--apple-blue);
+}
+
 @media (max-width: 900px) {
   .settings-grid {
     grid-template-columns: 1fr;

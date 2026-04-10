@@ -24,6 +24,8 @@ interface AuthContextValue {
   user: User | null;
   /** Local profile for web (self-hosted) mode, null otherwise. */
   localProfile: LocalProfile | null;
+  /** All profiles found on the backend for the Account Picker. */
+  profiles: LocalProfile[];
   /** Display name (works for both OAuth and local profile). */
   displayName: string;
   /** True when the user has authenticated (OAuth, local profile, or debug). */
@@ -34,6 +36,8 @@ interface AuthContextValue {
   isLocalOnly: boolean;
   /** Initiate OAuth sign-in with a provider. */
   signIn: (provider: OAuthProvider) => Promise<void>;
+  /** Login with a specific known profile. */
+  login: (profile: LocalProfile) => void;
   /** Sign out the current user. */
   signOut: () => Promise<void>;
   /** Create a local profile (web mode). */
@@ -48,8 +52,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [localProfile, setLocalProfile] = useState<LocalProfile | null>(null);
+  const [profiles, setProfiles] = useState<LocalProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
+
+  const fetchProfiles = async () => {
+    try {
+      const res = await fetch('/api/profiles');
+      if (res.ok) {
+        const data = await res.json();
+        setProfiles(data || []);
+        return data;
+      }
+    } catch (err) {
+      authLogger.warn('Backend profiles check failed.');
+    }
+    return [];
+  };
 
   // Restore session on mount
   useEffect(() => {
@@ -72,30 +91,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Web mode: check for existing local profile OR global profile on backend
     if (DEPLOYMENT_MODE === 'web') {
       const initWebAuth = async () => {
-        // 1. Check localStorage first (fastest)
+        const allProfiles = await fetchProfiles();
         const stored = getStoredProfile();
-        if (stored) {
+        
+        // If we have a local session AND it matches one on the backend, auto-login
+        if (stored && allProfiles.some((p: LocalProfile) => p.id === stored.id)) {
           setLocalProfile(stored);
-          setIsLoading(false);
-          return;
+        } else if (stored && !allProfiles.some((p: LocalProfile) => p.id === stored.id)) {
+          // Local session found but not in backend? Sync it up
+          await fetch('/api/profiles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(stored)
+          });
+          setLocalProfile(stored);
+          setProfiles(prev => [...prev, stored]);
         }
 
-        // 2. Check backend for "Single User Mode" (allows other browsers to auto-login)
-        try {
-          const res = await fetch('/api/profile');
-          if (res.ok) {
-            const globalProfile = await res.json();
-            if (globalProfile && globalProfile.id) {
-              authLogger.info('Found global profile on backend. Auto-logging in.');
-              persistProfile(globalProfile);
-              setLocalProfile(globalProfile);
-            }
-          }
-        } catch (err) {
-          authLogger.warn('Backend profile check failed. Connection might be down.');
-        } finally {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       };
       initWebAuth();
       return;
@@ -190,6 +203,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const login = (profile: LocalProfile) => {
+    persistProfile(profile);
+    setLocalProfile(profile);
+    showToast(`Welcome back, ${profile.displayName}!`, 'success');
+  };
+
   const signOut = async () => {
     // Local profile sign-out
     if (localProfile) {
@@ -215,40 +234,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const profile = createProfile(name, email);
       
-      // Sync to backend for Single User Mode (auto-login on other browsers)
-      await fetch('/api/profile', {
+      // Sync to backend
+      const res = await fetch('/api/profiles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile)
       });
 
+      if (res.status === 409) {
+        const data = await res.json();
+        throw new Error(data.error || 'Username or email already in use.');
+      }
+
+      if (!res.ok) throw new Error('Failed to save profile on server.');
+
       setLocalProfile(profile);
-      showToast(`Welcome, ${name}! Profile created and synced.`, 'success');
-    } catch (err) {
+      setProfiles(prev => [profile, ...prev]);
+      showToast(`Welcome, ${name}! Profile created.`, 'success');
+    } catch (err: any) {
       authLogger.error('Failed to create local profile:', err);
-      showToast('Failed to create profile. Check backend connection.', 'error');
+      // Re-throw so the UI can catch and show the error
+      throw err;
     }
   };
 
   const deleteAccount = async () => {
     if (localProfile) {
       try {
-        await fetch('/api/applications', {
-          method: 'DELETE',
-          headers: { 'X-User-Id': localProfile.id }
-        });
-        // Also clear global profile
-        await fetch('/api/profile', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(null)
-        });
+        const id = localProfile.id;
+        // 1. Delete on backend (cleans apps, settings, and profile record)
+        const res = await fetch(`/api/profiles/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete profile from server.');
+
+        // 2. Clear local session
+        clearProfile();
+        setLocalProfile(null);
+        
+        // 3. Refresh profiles list for account picker
+        await fetchProfiles();
+        
+        showToast('Local profile and all data deleted.', 'info');
       } catch (err) {
-        authLogger.warn('Failed to delete data on backend:', err);
+        authLogger.error('Failed to delete local profile:', err);
+        showToast('Failed to delete profile. Check connection.', 'error');
+        throw err;
       }
-      clearProfile();
-      setLocalProfile(null);
-      showToast('Local profile and data deleted.', 'info');
       return;
     }
     // OAuth account soft-deletion (starts 90-day retention period)
@@ -275,15 +305,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = useMemo<AuthContextValue>(() => ({
     user,
     localProfile,
+    profiles,
     displayName,
     isAuthenticated,
     isLoading,
     isLocalOnly,
     signIn,
+    login,
     signOut,
     createLocalProfile: handleCreateLocalProfile,
     deleteAccount,
-  }), [user, localProfile, isAuthenticated, isLoading, isLocalOnly, session, displayName]);
+  }), [user, localProfile, profiles, isAuthenticated, isLoading, isLocalOnly, session, displayName]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

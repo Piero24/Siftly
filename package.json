@@ -1,6 +1,9 @@
 {
   "name": "siftly",
   "version": "1.0.15",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "VITE_BUILD_TARGET=extension vite",

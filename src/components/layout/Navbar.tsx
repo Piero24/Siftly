@@ -6,7 +6,7 @@
  * The Profile button opens a dropdown with user info and sign-out.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { SettingsIcon, UserIcon } from '../common/Icons';
+import { LogOutIcon, SettingsIcon, UserIcon } from '../common/Icons';
 import { APP_INFO } from '../../config/app';
 import { ViewType } from '../../types/ui';
 import { useAuth } from '../../context/AuthContext';
@@ -23,12 +23,13 @@ const PRIMARY_VIEWS: Array<{ view: ViewType; label: string }> = [
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
-  const { user, isLocalOnly, signOut } = useAuth();
+  const { user, localProfile, displayName: authDisplayName, isLocalOnly, signOut } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const displayName = user?.user_metadata?.full_name ?? user?.email ?? 'Local User';
+  const displayName = authDisplayName || 'Local User';
+  const email = localProfile?.email ?? user?.email;
   const avatarUrl = user?.user_metadata?.avatar_url;
 
   // Close dropdown on outside click
@@ -168,8 +169,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
                 )}
                 <div>
                   <div className="profile-dropdown-name">{displayName}</div>
-                  {user?.email && <div className="profile-dropdown-email">{user.email}</div>}
-                  {isLocalOnly && <div className="profile-dropdown-email">Local mode</div>}
+                  {email ? (
+                    <div className="profile-dropdown-email">{email}</div>
+                  ) : isLocalOnly && (
+                    <div className="profile-dropdown-email">Local mode</div>
+                  )}
                 </div>
               </div>
               <div className="profile-dropdown-divider" />
@@ -177,13 +181,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
                 className="profile-dropdown-item"
                 onClick={() => { handleNavClick('account'); setShowProfile(false); }}
               >
-                Account Settings
+                <UserIcon size={14} style={{ marginRight: 8, opacity: 0.8 }} /> Account Settings
               </button>
               <button
                 className="profile-dropdown-item profile-dropdown-item--danger"
                 onClick={handleSignOut}
               >
-                Sign Out
+                <LogOutIcon size={14} style={{ marginRight: 8, opacity: 0.8 }} /> Sign Out
               </button>
             </div>
           )}
@@ -213,8 +217,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
             )}
             <div>
               <div className="profile-dropdown-name">{displayName}</div>
-              {user?.email && <div className="profile-dropdown-email">{user.email}</div>}
-              {isLocalOnly && <div className="profile-dropdown-email">Local mode</div>}
+              {email ? (
+                <div className="profile-dropdown-email">{email}</div>
+              ) : isLocalOnly && (
+                <div className="profile-dropdown-email">Local mode</div>
+              )}
             </div>
           </div>
           <button type="button" className="nav-mobile-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
