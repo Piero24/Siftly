@@ -8,6 +8,7 @@
 import React from 'react';
 import { JobApplication } from '../../types/job';
 import { FEATURES } from '../../config/features';
+import { DEPLOYMENT_MODE } from '../../config/deploymentMode';
 
 import { AppearanceCard } from '../settings/AppearanceCard';
 import { DashboardCard } from '../settings/DashboardCard';
@@ -39,7 +40,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {FEATURES.settings.appearance && <AppearanceCard />}
         {FEATURES.settings.dashboard && <DashboardCard />}
         {FEATURES.settings.automation && <AutomationCard />}
-        {FEATURES.settings.popupBehavior && <PopupBehaviorCard />}
+        {DEPLOYMENT_MODE === 'extension' && FEATURES.settings.popupBehavior && <PopupBehaviorCard />}
         {FEATURES.settings.localization && <LocalizationCard />}
         {FEATURES.settings.notifications && <NotificationsCard />}
         {FEATURES.settings.cvProfiles && <CvProfilesCard />}
