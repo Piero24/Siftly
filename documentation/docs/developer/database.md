@@ -4,7 +4,28 @@ sidebar_position: 3
 
 # Database
 
-Siftly uses **Supabase** (managed PostgreSQL) as its remote database. The schema, security policies, and migration files live in the `supabase/migrations/` directory.
+Siftly uses two persistence layers depending on deployment mode:
+
+- **Extension mode**: Supabase (managed PostgreSQL)
+- **Web self-hosted mode**: local SQLite (`data/siftly.db`) via Node API
+
+Supabase schema, security policies, and migrations live in `supabase/migrations/`.
+
+## Local SQLite Schema (Web Mode)
+
+The local API server (`server/index.mjs`) creates these tables automatically:
+
+- `profiles` (`id`, `displayName`, `email`, `avatarUrl`, `updated_at`)
+- `applications` (`id`, `user_id`, `data`, `updated_at`)
+- `settings` (`user_id`, `data`, `updated_at`)
+
+Notes:
+
+- `applications.data` and `settings.data` are JSON blobs.
+- `applications` rows are indexed by `user_id`.
+- Local profile deletion cascades app/settings cleanup through API logic.
+
+For API behavior and payload contracts, see [Local API](./local-api).
 
 ## Schema Overview
 

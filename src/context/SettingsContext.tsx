@@ -75,7 +75,8 @@ const settingsLogger = logger.for('SettingsContext');
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const remoteSyncEnabled =
-    Boolean(supabase) && (DEPLOYMENT.storageMode === 'remote' || DEPLOYMENT.storageEditable);
+    DEPLOYMENT.storageMode === 'local' || 
+    (Boolean(supabase) && (DEPLOYMENT.storageMode === 'remote' || DEPLOYMENT.storageEditable));
   const isApplyingRemoteSnapshotRef = useRef(false);
   const hasHydratedRemoteSnapshotRef = useRef(false);
   const remoteSaveTimerRef = useRef<number | null>(null);

@@ -23,10 +23,10 @@ Siftly helps you:
 
 Siftly runs in two modes depending on how you deploy it:
 
-| Mode                     | Storage           | Authentication          | Best For          |
-| ------------------------ | ----------------- | ----------------------- | ----------------- |
-| **Chrome Extension**     | Cloud (Supabase)  | OAuth (Google, GitHub)  | Multi-device sync |
-| **Self-Hosted (Docker)** | Local (IndexedDB) | Simple profile creation | Full privacy      |
+| Mode                     | Storage               | Authentication          | Best For          |
+| ------------------------ | --------------------- | ----------------------- | ----------------- |
+| **Chrome Extension**     | Cloud (Supabase)      | OAuth (Google, GitHub)  | Multi-device sync |
+| **Self-Hosted (Docker)** | Local (Server SQLite) | Simple profile creation | Full privacy      |
 
 Both modes share the same codebase and feature set.
 

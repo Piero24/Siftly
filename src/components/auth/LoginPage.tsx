@@ -60,20 +60,13 @@ const UserIcon: React.FC = () => (
 );
 
 export const LoginPage: React.FC = () => {
-  const { signIn, createLocalProfile, isLoading } = useAuth();
+  const { signIn, createLocalProfile, login, profiles, isLoading } = useAuth();
   const [profileName, setProfileName] = useState('');
   const [profileEmail, setProfileEmail] = useState('');
   const [formError, setFormError] = useState('');
+  const [isAddingNew, setIsAddingNew] = useState(false);
 
-  if (isLoading) {
-    return (
-      <div className="login-loading">
-        <div className="login-spinner" />
-      </div>
-    );
-  }
-
-  const handleCreateProfile = (e: React.FormEvent) => {
+  const handleCreateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     const name = profileName.trim();
     if (!name) {
@@ -81,7 +74,11 @@ export const LoginPage: React.FC = () => {
       return;
     }
     setFormError('');
-    createLocalProfile(name, profileEmail || undefined);
+    try {
+      await createLocalProfile(name, profileEmail || undefined);
+    } catch (err: any) {
+      setFormError(err.message || 'Failed to create profile.');
+    }
   };
 
   const showOAuth = FEATURES.auth.oauth;
@@ -91,6 +88,10 @@ export const LoginPage: React.FC = () => {
   const showLocalProfile = FEATURES.auth.localProfile;
   const showBoth = showOAuth && showLocalProfile;
 
+  // Multi-user state
+  const hasProfiles = profiles.length > 0;
+  const showAccountPicker = hasProfiles && !isAddingNew;
+
   return (
     <div className="login-page">
       <div className="login-card">
@@ -98,14 +99,44 @@ export const LoginPage: React.FC = () => {
         <h1 className="login-title">{APP_INFO.name}</h1>
         <p className="login-subtitle">{APP_INFO.tagLine}</p>
 
-        {/* ── Local Profile Form (web mode) ── */}
-        {showLocalProfile && (
+        {/* ── Account Picker (Multi-User) ── */}
+        {showAccountPicker ? (
+          <div className="login-welcome-back">
+            <h2 className="login-section-title">Welcome Back</h2>
+            <p className="login-section-desc">Select an account to continue</p>
+            
+            <div className="login-accounts-list">
+              {profiles.map(profile => (
+                <button 
+                  key={profile.id} 
+                  className="login-account-item"
+                  onClick={() => login(profile)}
+                >
+                  <div className="login-user-avatar">
+                    {profile.displayName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="login-account-info">
+                    <div className="login-user-name">{profile.displayName}</div>
+                    {profile.email && <div className="login-user-email">{profile.email}</div>}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button className="login-switch-link" onClick={() => setIsAddingNew(true)}>
+              + Add another account
+            </button>
+          </div>
+        ) : showLocalProfile && (
+          /* ── Local Profile Form (web mode) ── */
           <form className="login-profile-form" onSubmit={handleCreateProfile}>
-            <h2 className="login-section-title">Create Your Profile</h2>
+            <h2 className="login-section-title">
+              {isAddingNew ? 'Add New Account' : 'Create Your Profile'}
+            </h2>
             <p className="login-section-desc">
               {DEPLOYMENT_MODE === 'web'
-                ? 'Set up your local profile to get started. All data stays on this device.'
-                : 'Or create a local-only profile for testing.'}
+                ? 'All data stays secure on your local server. No cloud required.'
+                : 'Create a local-only profile for testing.'}
             </p>
 
             <div className="login-field">
@@ -116,7 +147,7 @@ export const LoginPage: React.FC = () => {
                 value={profileName}
                 onChange={(e) => setProfileName(e.target.value)}
                 placeholder="e.g. John Doe"
-                autoFocus={!showOAuth}
+                autoFocus
                 autoComplete="name"
               />
             </div>
@@ -139,8 +170,14 @@ export const LoginPage: React.FC = () => {
 
             <button type="submit" className="login-btn login-btn--profile">
               <UserIcon />
-              Get Started
+              {isAddingNew ? 'Add Account' : 'Get Started'}
             </button>
+            
+            {hasProfiles && (
+              <button type="button" className="login-switch-link" onClick={() => setIsAddingNew(false)}>
+                ← Back to accounts
+              </button>
+            )}
           </form>
         )}
 

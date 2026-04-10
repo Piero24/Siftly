@@ -2,7 +2,7 @@
  * AuthContext — Deployment-aware authentication manager.
  *
  * Three modes based on deployment target:
- *   • web  → Simple local profile (name only, stored in localStorage)
+ *   • web  → Simple local profile (name only, stored in localStorage + synced to backend)
  *   • extension → Supabase OAuth (Google, GitHub, Apple)
  *   • dev  → Debug bypass (auto-authenticated)
  */
@@ -10,8 +10,8 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
 import { DEBUG_CONFIG } from '../config/app';
-import { DEPLOYMENT_MODE, DEPLOYMENT } from '../config/deploymentMode';
-import { getStoredProfile, createProfile, clearProfile, LocalProfile } from '../lib/localAuth';
+import { DEPLOYMENT_MODE } from '../config/deploymentMode';
+import { getStoredProfile, createProfile, clearProfile, LocalProfile, persistProfile } from '../lib/localAuth';
 import { logger } from '../lib/logger';
 import { useToast } from './ToastContext';
 
@@ -24,6 +24,8 @@ interface AuthContextValue {
   user: User | null;
   /** Local profile for web (self-hosted) mode, null otherwise. */
   localProfile: LocalProfile | null;
+  /** All profiles found on the backend for the Account Picker. */
+  profiles: LocalProfile[];
   /** Display name (works for both OAuth and local profile). */
   displayName: string;
   /** True when the user has authenticated (OAuth, local profile, or debug). */
@@ -34,10 +36,12 @@ interface AuthContextValue {
   isLocalOnly: boolean;
   /** Initiate OAuth sign-in with a provider. */
   signIn: (provider: OAuthProvider) => Promise<void>;
+  /** Login with a specific known profile. */
+  login: (profile: LocalProfile) => void;
   /** Sign out the current user. */
   signOut: () => Promise<void>;
   /** Create a local profile (web mode). */
-  createLocalProfile: (name: string, email?: string) => void;
+  createLocalProfile: (name: string, email?: string) => Promise<void>;
   /** Delete the current user's account and all associated data. */
   deleteAccount: () => Promise<void>;
 }
@@ -48,8 +52,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [localProfile, setLocalProfile] = useState<LocalProfile | null>(null);
+  const [profiles, setProfiles] = useState<LocalProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
+
+  const fetchProfiles = async () => {
+    try {
+      const res = await fetch('/api/profiles');
+      if (res.ok) {
+        const data = await res.json();
+        setProfiles(data || []);
+        return data;
+      }
+    } catch (err) {
+      authLogger.warn('Backend profiles check failed.');
+    }
+    return [];
+  };
 
   // Restore session on mount
   useEffect(() => {
@@ -69,11 +88,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // Web mode: check for existing local profile
+    // Web mode: check for existing local profile OR global profile on backend
     if (DEPLOYMENT_MODE === 'web') {
-      const stored = getStoredProfile();
-      if (stored) setLocalProfile(stored);
-      setIsLoading(false);
+      const initWebAuth = async () => {
+        const allProfiles = await fetchProfiles();
+        const stored = getStoredProfile();
+        
+        // If we have a local session AND it matches one on the backend, auto-login
+        if (stored && allProfiles.some((p: LocalProfile) => p.id === stored.id)) {
+          setLocalProfile(stored);
+        } else if (stored && !allProfiles.some((p: LocalProfile) => p.id === stored.id)) {
+          // Local session found but not in backend? Sync it up
+          await fetch('/api/profiles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(stored)
+          });
+          setLocalProfile(stored);
+          setProfiles(prev => [...prev, stored]);
+        }
+
+        setIsLoading(false);
+      };
+      initWebAuth();
       return;
     }
 
@@ -149,9 +186,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authLogger.info(`Initiating ${provider} sign-in...`);
     
     // In Extension mode, the redirect URL MUST be the extension's dashboard page.
-    // If window.location.origin is 'chrome-extension://...', Supabase might not 
-    // allow it if not configured in the dashboard. 
-    // For now, we use the current URL.
     const redirectTo = window.location.href.split('?')[0];
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -167,6 +201,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       authLogger.error('signIn error:', error);
       showToast(error.message || 'Failed to sign in. Please try again.', 'error');
     }
+  };
+
+  const login = (profile: LocalProfile) => {
+    persistProfile(profile);
+    setLocalProfile(profile);
+    showToast(`Welcome back, ${profile.displayName}!`, 'success');
   };
 
   const signOut = async () => {
@@ -190,23 +230,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
   };
 
-  const handleCreateLocalProfile = (name: string, email?: string) => {
+  const handleCreateLocalProfile = async (name: string, email?: string) => {
     try {
       const profile = createProfile(name, email);
+      
+      // Sync to backend
+      const res = await fetch('/api/profiles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile)
+      });
+
+      if (res.status === 409) {
+        const data = await res.json();
+        throw new Error(data.error || 'Username or email already in use.');
+      }
+
+      if (!res.ok) throw new Error('Failed to save profile on server.');
+
       setLocalProfile(profile);
+      setProfiles(prev => [profile, ...prev]);
       showToast(`Welcome, ${name}! Profile created.`, 'success');
-    } catch (err) {
+    } catch (err: any) {
       authLogger.error('Failed to create local profile:', err);
-      showToast('Failed to create profile. Check local storage.', 'error');
+      // Re-throw so the UI can catch and show the error
+      throw err;
     }
   };
 
   const deleteAccount = async () => {
-    // Local profile deletion
     if (localProfile) {
-      clearProfile();
-      setLocalProfile(null);
-      showToast('Local profile and data deleted.', 'info');
+      try {
+        const id = localProfile.id;
+        // 1. Delete on backend (cleans apps, settings, and profile record)
+        const res = await fetch(`/api/profiles/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete profile from server.');
+
+        // 2. Clear local session
+        clearProfile();
+        setLocalProfile(null);
+        
+        // 3. Refresh profiles list for account picker
+        await fetchProfiles();
+        
+        showToast('Local profile and all data deleted.', 'info');
+      } catch (err) {
+        authLogger.error('Failed to delete local profile:', err);
+        showToast('Failed to delete profile. Check connection.', 'error');
+        throw err;
+      }
       return;
     }
     // OAuth account soft-deletion (starts 90-day retention period)
@@ -233,15 +305,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = useMemo<AuthContextValue>(() => ({
     user,
     localProfile,
+    profiles,
     displayName,
     isAuthenticated,
     isLoading,
     isLocalOnly,
     signIn,
+    login,
     signOut,
     createLocalProfile: handleCreateLocalProfile,
     deleteAccount,
-  }), [user, localProfile, isAuthenticated, isLoading, isLocalOnly, session, displayName]);
+  }), [user, localProfile, profiles, isAuthenticated, isLoading, isLocalOnly, session, displayName]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

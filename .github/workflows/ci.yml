@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -40,7 +40,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -84,9 +84,8 @@ jobs:
       - name: TypeScript type check
         run: npx tsc --noEmit
 
-  test:
+  security-audit:
     runs-on: ubuntu-latest
-    needs: lint-and-format
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -94,7 +93,36 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Audit root dependencies (fail on high+critical)
+        run: npm audit --audit-level=high
+
+      - name: Install docs dependencies
+        run: npm ci --legacy-peer-deps
+        working-directory: documentation
+
+      - name: Audit docs dependencies (fail on high+critical)
+        run: npm audit --audit-level=high
+        working-directory: documentation
+
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - lint-and-format
+      - security-audit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -120,7 +148,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -146,7 +174,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -167,7 +195,9 @@ jobs:
 
   build-docs:
     runs-on: ubuntu-latest
-    needs: lint-and-format
+    needs:
+      - lint-and-format
+      - security-audit
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -175,7 +205,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: documentation/package-lock.json
 

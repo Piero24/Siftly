@@ -41,5 +41,6 @@ export const APP_INFO = {
     support: LINKS.support,
     github: LINKS.github,
     community: LINKS.community,
+    issues: LINKS.issues,
   },
 };

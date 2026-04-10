@@ -12,7 +12,8 @@ The easiest way to run Siftly is using the official image from GitHub Container 
 
 ```bash
 docker run -d \
-  -p 8080:80 \
+  -p 8080:8080 \
+  -v $(pwd)/data:/app/data \
   --name siftly \
   ghcr.io/piero24/siftly:latest
 ```
@@ -30,7 +31,9 @@ services:
     container_name: siftly
     restart: unless-stopped
     ports:
-      - '8080:80'
+      - '8080:8080'
+    volumes:
+      - ./data:/app/data
     environment:
       - VITE_BASE_PATH=/
       - VITE_ALLOW_LOCAL_ONLY=true
@@ -49,10 +52,10 @@ Siftly is fully compatible with **CasaOS**. To install:
 
 ## Data & Backups
 
-In Docker (web) mode, Siftly stores data in the browser's **IndexedDB**.
+In Docker (web) mode, Siftly stores data in server-side SQLite at `/app/data/siftly.db`.
 
 - **Backup**: Use the "Export CSV" feature in Settings → Data & Storage frequently.
-- **Persistence**: Data is persistent within the same browser and domain, even if the container is restarted. However, clearing browser data will wipe your applications.
+- **Persistence**: Data remains available across container restart/recreate as long as the `./data` volume is preserved.
 
 ## Reverse Proxy (Nginx)
 
@@ -67,6 +70,8 @@ server {
         proxy_pass http://localhost:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```

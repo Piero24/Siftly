@@ -22,7 +22,7 @@ export const DEPLOYMENT_MODE: DeploymentMode = isDebug
 
 ### `web` — Self-Hosted Docker
 
-- **Storage**: Local only (IndexedDB)
+- **Storage**: Local Server (Native Node SQLite via `SelfHostedAdapter`)
 - **Auth**: Simple profile creation (name only)
 - **Storage editable**: No (locked to local)
 - **Debug toolbar**: Hidden

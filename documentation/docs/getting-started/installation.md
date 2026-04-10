@@ -53,7 +53,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key-here
 SUPABASE_DB_PASSWORD=your-db-password-here
 
 # ─── Local-only mode ─────────────────────────────────────
-# Set to "true" to allow users to skip login and use local IndexedDB storage.
+# Set to "true" to allow users to skip login and use local Server SQLite storage.
 # Typically only enabled for self-hosted Docker deployments.
 VITE_ALLOW_LOCAL_ONLY=false
 VITE_DEBUG_MODE=true

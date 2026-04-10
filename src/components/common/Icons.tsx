@@ -57,6 +57,9 @@ export {
   Github as GithubIcon,
   ArrowLeft as ArrowLeftIcon,
   Loader2 as SpinnerIcon,
+  LogOut as LogOutIcon,
+  AlertTriangle as AlertIcon,
+  MessageSquare as MessageIcon,
 } from 'lucide-react';
 
 export type { LucideIcon } from 'lucide-react';

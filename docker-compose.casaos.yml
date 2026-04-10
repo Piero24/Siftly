@@ -10,6 +10,10 @@ services:
       - target: 8080
         published: '8080'
         protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/siftly/data
+        target: /app/data
     x-casaos:
       ports:
         - container: '8080'
@@ -39,9 +43,9 @@ x-casaos:
   scheme: http
   store_app_id: siftly-casaos
   tagline:
-    en_us: Job application tracker in web-only local mode (IndexedDB, no cloud required).
+    en_us: Job application tracker with self-hosted SQLite backend, no cloud required.
   description:
-    en_us: Siftly web deployment for CasaOS using the GHCR image published by GitHub Actions. Runs in local-only mode with browser IndexedDB storage.
+    en_us: Siftly web deployment for CasaOS using the GHCR image published by GitHub Actions. Runs completely offline with a built-in lightweight SQLite database.
   title:
     custom: ''
     en_us: Siftly
