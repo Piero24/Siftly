@@ -16,7 +16,7 @@ Siftly helps you:
 - **Track applications** — Log every job you apply to with company, position, salary, status, and more.
 - **Manage interviews** — Track interview rounds, interviewer details, and meeting links.
 - **Analyze your search** — Interactive dashboard with charts, world map, KPIs, and funnel analysis.
-- **Import from LinkedIn** — One-click scraping from LinkedIn job pages (coming soon).
+- **Import from job portals** — One-click scraping from job pages (LinkedIn, Indeed, and more) (coming soon).
 - **Stay organized** — CSV import/export, multiple CV profiles, and automatic "no response" detection.
 
 ## How It Works
