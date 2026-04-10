@@ -14,7 +14,7 @@ sidebar_position: 2
    - **Employment Type** — permanent, intern, or fixed-term
    - **Salary** — amount and currency
    - **Status** — pending, applied, interviewing, offer, rejected, no-response
-   - **Links** — job posting URL, LinkedIn, company website
+   - **Links** — job posting URL, profile or portal link (LinkedIn, Indeed, etc.), company website
    - **CV Profile** — which CV version you used
    - **Rating** — your personal rating of the opportunity
 3. Click **Save**.

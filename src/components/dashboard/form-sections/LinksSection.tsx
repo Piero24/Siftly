@@ -1,5 +1,5 @@
 /**
- * LinksSection — Job URL, LinkedIn, and company website fields.
+ * LinksSection — Job URL, profile link, and company website fields.
  */
 import React from 'react';
 import { LinkIcon, LinkedinIcon, GlobeIcon } from '../../common/Icons';
@@ -20,8 +20,8 @@ export const LinksSection: React.FC<LinksSectionProps> = ({ form, onChange }) =>
     </div>
     <div className="form-grid-2">
       <div className="form-field">
-        <label><LinkedinIcon size={12} /> LinkedIn</label>
-        <input type="url" className="form-input" placeholder="https://linkedin.com/jobs/…" value={form.linkedinUrl} onChange={onChange('linkedinUrl')} />
+        <label><LinkedinIcon size={12} /> Profile / Portal Link</label>
+        <input type="url" className="form-input" placeholder="https://www.linkedin.com/company/... or https://www.indeed.com/viewjob?..." value={form.linkedinUrl} onChange={onChange('linkedinUrl')} />
       </div>
       <div className="form-field">
         <label><GlobeIcon size={12} /> Company Website</label>

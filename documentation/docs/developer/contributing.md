@@ -68,7 +68,7 @@ src/
 ├── hooks/           # Custom React hooks
 ├── lib/             # Utility libraries (storage, analytics, CSV)
 ├── popup/           # Extension popup entrypoint
-├── scraper/         # LinkedIn scraper modules (planned)
+├── scraper/         # Job portal scraper modules (planned)
 ├── styles/          # CSS files (tokens, components)
 ├── test/            # Test setup
 ├── types/           # TypeScript type definitions

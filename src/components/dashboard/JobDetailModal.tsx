@@ -176,7 +176,7 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
                   )}
                   {job.links?.linkedin && (
                     <a href={job.links.linkedin} className="sidebar-link-btn" target="_blank" rel="noreferrer">
-                      <div className="sidebar-link-left"><LinkedinIcon size={16} /> LinkedIn</div>
+                      <div className="sidebar-link-left"><LinkedinIcon size={16} /> Profile Link</div>
                       <span style={{ color: 'var(--text-secondary)' }}>↗</span>
                     </a>
                   )}

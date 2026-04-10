@@ -228,7 +228,7 @@ const Main: React.FC = () => {
             />
 
             <PopupActionCard
-              title="Scrape LinkedIn"
+              title="Scrape Job Portal"
               icon={<SearchIcon size={24} />}
               onClick={handleScrapePlaceholder}
               isPlaceholder

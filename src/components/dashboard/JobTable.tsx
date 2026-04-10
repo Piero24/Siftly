@@ -159,7 +159,7 @@ const JobRow: React.FC<{
       <td className="table-cell col-links" data-label="Links" onClick={(e) => e.stopPropagation()}>
         <div className="table-links-cell">
           {app.links.job && <a href={app.links.job} className="link-icon" title="Job Link" target="_blank" rel="noreferrer"><LinkIcon size={14} /></a>}
-          {app.links.linkedin && <a href={app.links.linkedin} className="link-icon" title="LinkedIn" target="_blank" rel="noreferrer"><LinkedinIcon size={14} /></a>}
+          {app.links.linkedin && <a href={app.links.linkedin} className="link-icon" title="Profile Link" target="_blank" rel="noreferrer"><LinkedinIcon size={14} /></a>}
           {app.links.website && <a href={app.links.website} className="link-icon" title="Website" target="_blank" rel="noreferrer"><GlobeIcon size={14} /></a>}
         </div>
       </td>

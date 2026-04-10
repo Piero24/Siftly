@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# LinkedIn Scraper (Planned)
+# Job Portal Scraper (Planned)
 
 :::info
 This feature is currently in the planning stage. The skeleton code is in `src/scraper/linkedin/`.
@@ -10,11 +10,11 @@ This feature is currently in the planning stage. The skeleton code is in `src/sc
 
 ## Overview
 
-The LinkedIn scraper will allow you to import job applications directly from LinkedIn job pages with a single click.
+The job portal scraper will allow you to import job applications directly from supported job pages with a single click.
 
 ## How It Will Work
 
-1. Navigate to a LinkedIn job posting (`linkedin.com/jobs/view/*`)
+1. Navigate to a supported job posting page (LinkedIn first, then Indeed and others)
 2. A floating **Sift** button appears on the page
 3. Click the button to extract job details
 4. Review the extracted data in a confirmation modal

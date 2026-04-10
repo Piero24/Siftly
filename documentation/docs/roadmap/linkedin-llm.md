@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# LinkedIn Scraper with LLM (Planned)
+# Job Portal Scraper with LLM (Planned)
 
 :::info
 This feature is currently in the planning stage. The skeleton code is in `src/scraper/linkedin-llm/`.
@@ -10,11 +10,11 @@ This feature is currently in the planning stage. The skeleton code is in `src/sc
 
 ## Overview
 
-An AI-enhanced version of the LinkedIn scraper that uses a Large Language Model to intelligently parse unstructured job posting text into structured data.
+An AI-enhanced version of the job portal scraper that uses a Large Language Model to intelligently parse unstructured job posting text into structured data.
 
 ## Why LLM?
 
-CSS selectors break frequently when LinkedIn updates their UI. The LLM approach:
+CSS selectors break frequently when job portals update their UI. The LLM approach:
 
 - Is **robust to DOM changes** — it reads text, not HTML structure
 - Handles **edge cases** better — unusual salary formats, multilingual postings
