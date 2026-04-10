@@ -9,10 +9,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { JobApplication, JobStatus } from '../types/job';
 import {
   createAdapter,
-  StorageAdapter,
   StorageMode,
   SupabaseUnconfiguredError,
 } from '../lib/storage';
+import { StorageAdapter } from '../lib/storageInterface';
 import { DEBUG_CONFIG } from '../config/app';
 import { MOCK_APPLICATIONS } from '../lib/mockData';
 import { logger } from '../lib/logger';
@@ -117,7 +117,7 @@ export function useJobApplications(
             const updated = { ...app, status: 'no-response' as JobStatus };
             adapterRef.current
               .upsert(updated)
-              .catch((err) => hookLogger.error('Auto-update failed:', err));
+              .catch((err: unknown) => hookLogger.error('Auto-update failed:', err));
             return updated;
           }
         }

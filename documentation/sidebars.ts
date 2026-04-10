@@ -32,6 +32,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'developer/architecture',
         'developer/storage',
+        'developer/local-api',
         'developer/database',
         'developer/auth',
         'developer/security-checklist',
