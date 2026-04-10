@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // Read centralized metadata
 const metadata = JSON.parse(fs.readFileSync(path.join(__dirname, '../metadata.json'), 'utf8'));
-const { port: SERVER_PORT, apiBase: API_BASE } = metadata.server;
+const { port: SERVER_PORT, apiBase: API_BASE, host: SERVER_HOST, protocol: SERVER_PROTOCOL } = metadata.server;
 
 const DIST_DIR = path.join(__dirname, '../dist');
 const DEFAULT_DB = fs.existsSync('/app') ? '/app/data/siftly.db' : path.join(__dirname, '../data/siftly.db');
@@ -118,12 +118,26 @@ const server = http.createServer(async (req, res) => {
 
   // Intercept API routes
   if (req.url.startsWith(API_BASE)) {
-    const userId = req.headers['x-user-id'];
-    if (!userId) {
-      return sendJSON(res, 401, { error: 'Missing X-User-Id header' });
-    }
-
     try {
+      // Single-User Profile API (No X-User-Id required for GET)
+      if (req.url === `${API_BASE}/profile`) {
+        if (req.method === 'GET') {
+          const row = stmtGetSettings.get('GLOBAL_PROFILE');
+          if (!row) return sendJSON(res, 200, null);
+          return sendJSON(res, 200, JSON.parse(row.data));
+        }
+        if (req.method === 'POST') {
+          const body = await parseJSON(req);
+          stmtInsertSettings.run('GLOBAL_PROFILE', JSON.stringify(body));
+          return sendJSON(res, 200, { success: true });
+        }
+      }
+
+      const userId = req.headers['x-user-id'];
+      if (!userId) {
+        return sendJSON(res, 401, { error: 'Missing X-User-Id header' });
+      }
+
       // Applications API
       if (req.url === `${API_BASE}/applications`) {
         if (req.method === 'GET') {
@@ -190,6 +204,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 const PORT = process.env.PORT || SERVER_PORT;
-server.listen(PORT, () => {
-  console.log(`Siftly lightweight backend running on port ${PORT}`);
+// Explicitly listen on the host from metadata (often 0.0.0.0 or 127.0.0.1)
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Siftly lightweight backend running on ${SERVER_PROTOCOL}://${SERVER_HOST}:${PORT}`);
 });

@@ -44,6 +44,19 @@ export function createProfile(displayName: string, email?: string): LocalProfile
 }
 
 /**
+ * Persist an existing profile object to localStorage.
+ */
+export function persistProfile(profile: LocalProfile): void {
+  try {
+    window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    authLogger.info(`Profile persisted: ${profile.displayName}`);
+  } catch (err) {
+    authLogger.error('Failed to persist profile:', err);
+  }
+}
+
+
+/**
  * Retrieve the existing local profile, or null if none exists.
  */
 export function getStoredProfile(): LocalProfile | null {

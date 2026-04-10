@@ -2,7 +2,7 @@
  * AuthContext — Deployment-aware authentication manager.
  *
  * Three modes based on deployment target:
- *   • web  → Simple local profile (name only, stored in localStorage)
+ *   • web  → Simple local profile (name only, stored in localStorage + synced to backend)
  *   • extension → Supabase OAuth (Google, GitHub, Apple)
  *   • dev  → Debug bypass (auto-authenticated)
  */
@@ -10,8 +10,8 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
 import { DEBUG_CONFIG } from '../config/app';
-import { DEPLOYMENT_MODE, DEPLOYMENT } from '../config/deploymentMode';
-import { getStoredProfile, createProfile, clearProfile, LocalProfile } from '../lib/localAuth';
+import { DEPLOYMENT_MODE } from '../config/deploymentMode';
+import { getStoredProfile, createProfile, clearProfile, LocalProfile, persistProfile } from '../lib/localAuth';
 import { logger } from '../lib/logger';
 import { useToast } from './ToastContext';
 
@@ -37,7 +37,7 @@ interface AuthContextValue {
   /** Sign out the current user. */
   signOut: () => Promise<void>;
   /** Create a local profile (web mode). */
-  createLocalProfile: (name: string, email?: string) => void;
+  createLocalProfile: (name: string, email?: string) => Promise<void>;
   /** Delete the current user's account and all associated data. */
   deleteAccount: () => Promise<void>;
 }
@@ -69,11 +69,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // Web mode: check for existing local profile
+    // Web mode: check for existing local profile OR global profile on backend
     if (DEPLOYMENT_MODE === 'web') {
-      const stored = getStoredProfile();
-      if (stored) setLocalProfile(stored);
-      setIsLoading(false);
+      const initWebAuth = async () => {
+        // 1. Check localStorage first (fastest)
+        const stored = getStoredProfile();
+        if (stored) {
+          setLocalProfile(stored);
+          setIsLoading(false);
+          return;
+        }
+
+        // 2. Check backend for "Single User Mode" (allows other browsers to auto-login)
+        try {
+          const res = await fetch('/api/profile');
+          if (res.ok) {
+            const globalProfile = await res.json();
+            if (globalProfile && globalProfile.id) {
+              authLogger.info('Found global profile on backend. Auto-logging in.');
+              persistProfile(globalProfile);
+              setLocalProfile(globalProfile);
+            }
+          }
+        } catch (err) {
+          authLogger.warn('Backend profile check failed. Connection might be down.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      initWebAuth();
       return;
     }
 
@@ -149,9 +173,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authLogger.info(`Initiating ${provider} sign-in...`);
     
     // In Extension mode, the redirect URL MUST be the extension's dashboard page.
-    // If window.location.origin is 'chrome-extension://...', Supabase might not 
-    // allow it if not configured in the dashboard. 
-    // For now, we use the current URL.
     const redirectTo = window.location.href.split('?')[0];
 
     const { error } = await supabase.auth.signInWithOAuth({
@@ -190,14 +211,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setSession(null);
   };
 
-  const handleCreateLocalProfile = (name: string, email?: string) => {
+  const handleCreateLocalProfile = async (name: string, email?: string) => {
     try {
       const profile = createProfile(name, email);
+      
+      // Sync to backend for Single User Mode (auto-login on other browsers)
+      await fetch('/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile)
+      });
+
       setLocalProfile(profile);
-      showToast(`Welcome, ${name}! Profile created.`, 'success');
+      showToast(`Welcome, ${name}! Profile created and synced.`, 'success');
     } catch (err) {
       authLogger.error('Failed to create local profile:', err);
-      showToast('Failed to create profile. Check local storage.', 'error');
+      showToast('Failed to create profile. Check backend connection.', 'error');
     }
   };
 
@@ -207,6 +236,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await fetch('/api/applications', {
           method: 'DELETE',
           headers: { 'X-User-Id': localProfile.id }
+        });
+        // Also clear global profile
+        await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(null)
         });
       } catch (err) {
         authLogger.warn('Failed to delete data on backend:', err);

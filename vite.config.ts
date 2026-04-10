@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const buildTarget = env.VITE_BUILD_TARGET ?? 'extension';
   const isWebBuild = buildTarget === 'web';
 
-  const { port: SERVER_PORT, apiBase: API_BASE } = metadata.server;
+  const { port: SERVER_PORT, apiBase: API_BASE, host: SERVER_HOST, protocol: SERVER_PROTOCOL } = metadata.server;
 
   return {
     root: isWebBuild ? 'src/web' : '.',
@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: isWebBuild ? {
         [API_BASE]: {
-          target: `http://localhost:${SERVER_PORT}`,
+          target: `${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}`,
           changeOrigin: true,
         },
       } : undefined,
