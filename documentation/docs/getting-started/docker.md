@@ -63,16 +63,16 @@ Data is automatically persisted to a local SQLite file mapped in your Docker vol
 
 ### What Is Persistent vs. Not
 
-- **Container restart/recreate**: your data remains, because it lives in the browser storage for the same URL (origin).
-- **Docker volume changes**: do not affect job application data (volumes are for server-side files, while Siftly web data is client-side).
-- **Browser data cleanup** (clear site data, private/incognito profile reset, or switching browser profile/device): your data is lost.
-- **Origin changes** (`http` vs `https`, different host, different port): the browser treats it as a different app storage bucket.
+- **Container restart/recreate**: your data remains as long as the `./data` volume is preserved.
+- **Docker volume deletion**: your data is lost, because SQLite lives inside that volume.
+- **Browser data cleanup** (clear site data, private/incognito profile reset): session/profile cache can reset, but persisted applications/settings remain in SQLite.
+- **Origin changes** (`http` vs `https`, different host, different port): does not remove SQLite data, but users may need to reselect/login profile in the new origin.
 
 ### How To Avoid Losing Data
 
 1. Keep a stable URL for your deployment (same host/protocol/port).
-2. Use a persistent browser profile (avoid private/incognito mode).
-3. Export backups from **Settings -> Data & Storage -> Export CSV** before upgrades or browser cleanup.
+2. Keep the `./data` Docker volume mounted and backed up.
+3. Export backups from **Settings -> Data & Storage -> Export CSV** before upgrades.
 
 ## Reverse Proxy
 

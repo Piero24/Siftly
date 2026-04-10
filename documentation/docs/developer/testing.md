@@ -4,7 +4,10 @@ sidebar_position: 6
 
 # Testing
 
-Siftly uses **Vitest** with **React Testing Library** for unit and integration testing.
+Siftly uses **Vitest** for unit/integration testing across frontend and backend.
+
+- Frontend/UI: React Testing Library
+- Backend API: Supertest against the Node HTTP server
 
 ## Running Tests
 
@@ -69,6 +72,7 @@ describe('computeKPIs', () => {
 | `lib/` utilities  | Pure functions (analytics, CSV parsing, salary formatting) |
 | Hooks             | State transitions, filtering logic, data loading           |
 | Context providers | Auth flow, settings persistence, selection state           |
+| Local API         | Profiles/applications/settings routes, headers, validation |
 | Integration       | Full component interaction flows (table, modal, filters)   |
 
 ## Mock Data

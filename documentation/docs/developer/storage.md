@@ -13,7 +13,10 @@ Siftly uses an adapter pattern for data storage, allowing the same codebase to w
 - Uses standard `fetch()` API to call the local, built-in Node.js server.
 - The server writes directly to a native **SQLite** database (`siftly.db`).
 - Fully self-contained local backend.
+- Uses profile-scoped requests through the `X-User-Id` header to isolate users on the same self-hosted instance.
 - Used in `web` (self-hosted) deployment mode.
+
+See [Local API](./local-api) for full endpoint contracts and payload behavior.
 
 ### SupabaseAdapter
 
@@ -26,7 +29,7 @@ Siftly uses an adapter pattern for data storage, allowing the same codebase to w
 ### Concept of Dual Sync
 
 - Older versions supported `DualSyncAdapter` which wrote to both remote Postgres and IndexedDB.
-- With the transition to server-side SQLite for the web build, dual sync has been simplified out. The architecture now strictly segments environments: Extension = Supabase, Web = SQLite.
+- With the transition to server-side SQLite for the web build, dual sync has been simplified out. The architecture now strictly segments environments: Extension = Supabase, Web = SQLite-backed local API.
 
 ## Storage Mode Selection
 
@@ -98,7 +101,7 @@ This behavior is implemented in:
 
 1. Read localStorage defaults immediately.
 2. If an authenticated Supabase session exists, fetch `user_settings` and apply remote values.
-3. Persist setting changes to localStorage and (debounced) to Supabase.
+3. Persist setting changes to localStorage and (debounced) to the active backend.
 
 ### Persisted Settings Scope
 
@@ -111,4 +114,4 @@ The remote snapshot includes dashboard and popup preferences, including:
 - notifications/privacy/table display JSON fields
 - popup behavior (`is_draggable`, `auto_close_enabled`, `auto_close_timer`)
 
-In pure web/local deployment mode, the local Node.js API (`/api/settings`) acts as the remote sync target, automatically storing user settings in the SQLite database to perfectly separate environments.
+In pure web/local deployment mode, the local Node.js API (`/api/settings`) acts as the persistence target, storing settings snapshots in SQLite per profile.

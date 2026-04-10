@@ -27,13 +27,14 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
 
 * **Multi-Currency Support**: Real-time salary tracking with automatic conversion based on your local settings.
 
-- **Privacy-Centric**: Secure data management powered by Supabase, ensuring your career data stays yours.
+- **Privacy-Centric**: Local-first self-hosted mode with SQLite, plus optional Supabase cloud sync in extension mode.
 
 ### 🛠 Tech Stack
 
 - **Frontend**: [React 19](https://react.dev/), [Vite](https://vitejs.dev/), [Lucide Icons](https://lucide.dev/)
 - **Styling**: Vanilla CSS with a custom Apple-inspired design system.
-- **Backend**: [Supabase](https://supabase.com/) (Auth & Postgres)
+- **Backend (Web Self-Hosted)**: Node.js + native SQLite (`node:sqlite`)
+- **Backend (Extension)**: [Supabase](https://supabase.com/) (Auth & Postgres)
 - **Validation**: [Vitest](https://vitest.dev/) & [React Testing Library](https://testing-library.com/)
 
 ### 🚀 Getting Started
@@ -46,7 +47,7 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
    npm install
    ```
 
-2. **Environment Setup**
+2. **Environment Setup (Optional for extension/cloud mode)**
    Create a `.env` file with your Supabase credentials:
 
    ```env
@@ -54,8 +55,9 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
    VITE_SUPABASE_ANON_KEY=your_key
    ```
 
-3. **Launch the Dashboard (No Docker)**
+3. **Launch the Dashboard (No Docker, local SQLite backend)**
    To run Siftly locally on your Mac using the lightweight SQLite backend:
+
    ```bash
    # Starts both backend and frontend together
    npm run dev:full

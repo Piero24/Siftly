@@ -22,11 +22,11 @@ Siftly is configured via Vite environment variables in the `.env` file.
 
 The combination of `VITE_BUILD_TARGET` and `VITE_DEBUG_MODE` determines the **deployment mode**:
 
-| Build Target | Debug Mode | Deployment Mode | Storage           | Auth          |
-| ------------ | ---------- | --------------- | ----------------- | ------------- |
-| `extension`  | `false`    | `extension`     | Remote (Supabase) | OAuth         |
+| Build Target | Debug Mode | Deployment Mode | Storage               | Auth          |
+| ------------ | ---------- | --------------- | --------------------- | ------------- |
+| `extension`  | `false`    | `extension`     | Remote (Supabase)     | OAuth         |
 | `web`        | `false`    | `web`           | Local (Server SQLite) | Local profile |
-| any          | `true`     | `dev`           | Switchable        | All methods   |
+| any          | `true`     | `dev`           | Switchable            | All methods   |
 
 See [Deployment Modes](../developer/deployment-modes) for details.
 

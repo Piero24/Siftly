@@ -41,13 +41,12 @@ A central `DeploymentMode` module (`src/config/deploymentMode.ts`) derives the r
 
 ### Storage Adapter Pattern
 
-The storage layer uses an adapter pattern with three implementations:
+The storage layer uses an adapter pattern with two active implementations:
 
 - **SelfHostedAdapter** — Server-local Native Node SQLite backend
 - **SupabaseAdapter** — Supabase PostgreSQL with Row Level Security
-- **DualSyncAdapter** — Writes to both; reads from remote, falls back to local
 
-The active adapter is determined by the deployment mode. All write operations go through the same `StorageAdapter` interface, so the rest of the codebase is storage-agnostic.
+The active adapter is determined by deployment mode. All write operations go through the same `StorageAdapter` interface, so the rest of the codebase is storage-agnostic.
 
 ### Data Integrity
 

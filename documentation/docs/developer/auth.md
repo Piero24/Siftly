@@ -8,19 +8,21 @@ Siftly uses deployment-aware authentication — different auth flows depending o
 
 ## Auth Modes
 
-| Deployment     | Auth Mode     | Flow                                      |
-| -------------- | ------------- | ----------------------------------------- |
-| `web` (Docker) | Local profile | Name-only sign-up, stored in localStorage |
-| `extension`    | OAuth         | Google or GitHub via Supabase Auth        |
-| `dev`          | Debug bypass  | Auto-authenticated as "Debug User"        |
+| Deployment     | Auth Mode     | Flow                                         |
+| -------------- | ------------- | -------------------------------------------- |
+| `web` (Docker) | Local profile | Name-only profile, synced with local backend |
+| `extension`    | OAuth         | Google or GitHub via Supabase Auth           |
+| `dev`          | Debug bypass  | Auto-authenticated as "Debug User"           |
 
 ## Local Profile (Web Mode)
 
 For self-hosted Docker deployments:
 
 - User creates a profile by entering their name
-- No password required (single-user, self-hosted)
-- Profile is stored in `localStorage` under `siftly-local-profile`
+- No password required
+- Multiple profiles can exist on the same instance (account picker flow)
+- Active profile is cached in `localStorage` under `siftly-local-profile`
+- Profile records are synchronized with the local backend (`/api/profiles`)
 - Implemented in `src/lib/localAuth.ts`
 
 ```typescript
@@ -37,7 +39,7 @@ interface LocalProfile {
 For the Chrome extension:
 
 - Uses Supabase Auth with OAuth providers
-- Supported providers: Google and GitHub
+- Supported providers: Google, GitHub, and Apple
 - Session is persisted and refreshed automatically
 - Implemented via `@supabase/supabase-js`
 
@@ -49,13 +51,15 @@ The `AuthContext` provides a unified API regardless of auth mode:
 interface AuthContextValue {
   user: User | null; // Supabase user (null in web mode)
   localProfile: LocalProfile | null; // Local profile (null in extension mode)
+  profiles: LocalProfile[]; // Account picker profile list (web mode)
   displayName: string; // Works for both modes
   isAuthenticated: boolean; // True when signed in (either mode)
   isLoading: boolean;
   isLocalOnly: boolean; // True when using local profile
   signIn: (provider: OAuthProvider) => Promise<void>;
+  login: (profile: LocalProfile) => void;
   signOut: () => Promise<void>;
-  createLocalProfile: (name: string, email?: string) => void;
+  createLocalProfile: (name: string, email?: string) => Promise<void>;
   deleteAccount: () => Promise<void>;
 }
 ```
