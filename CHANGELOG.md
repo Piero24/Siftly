@@ -7,10 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.17](https://github.com/Piero24/Siftly/compare/siftly-v1.0.16...siftly-v1.0.17) (2026-04-10)
 
-
 ### Features
 
-* update profile insertion logic to handle conflicts and add scrollTo mock for tests ([ef4240a](https://github.com/Piero24/Siftly/commit/ef4240ad8678bb1b5778158616777905b66c2ae9))
+- update profile insertion logic to handle conflicts and add scrollTo mock for tests ([ef4240a](https://github.com/Piero24/Siftly/commit/ef4240ad8678bb1b5778158616777905b66c2ae9))
 
 ## [1.0.16](https://github.com/Piero24/Siftly/compare/siftly-v1.0.15...siftly-v1.0.16) (2026-04-10)
 
