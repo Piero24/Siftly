@@ -31,7 +31,7 @@ interface BulkActionsBarProps {
 const LINK_KIND_OPTIONS = [
   { value: 'job', label: 'Job Links' },
   { value: 'website', label: 'Websites' },
-  { value: 'linkedin', label: 'LinkedIn' },
+  { value: 'linkedin', label: 'Profile Links' },
 ] as const;
 
 export const BulkActionsBar: React.FC<BulkActionsBarProps> = ({

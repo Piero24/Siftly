@@ -47,5 +47,5 @@ export const EMPLOYMENT_SELECT_OPTIONS: SelectOption[] = [
 export const LINK_KIND_OPTIONS = [
   { value: 'job', label: 'Job Links' },
   { value: 'website', label: 'Websites' },
-  { value: 'linkedin', label: 'LinkedIn' },
+  { value: 'linkedin', label: 'Profile Links' },
 ] as const;

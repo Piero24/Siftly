@@ -4,7 +4,6 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
-
 import styles from './index.module.css';
 
 function HomepageHeader() {
@@ -42,8 +41,8 @@ const features = [
   },
   {
     emoji: '🔍',
-    title: 'LinkedIn Scraper',
-    description: 'One-click import from LinkedIn job pages with optional AI-powered extraction.',
+    title: 'Job Portal Scraper',
+    description: 'One-click import from major job portals with optional AI-powered extraction.',
   },
   {
     emoji: '🧩',
