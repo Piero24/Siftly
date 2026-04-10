@@ -43,7 +43,7 @@ A central `DeploymentMode` module (`src/config/deploymentMode.ts`) derives the r
 
 The storage layer uses an adapter pattern with three implementations:
 
-- **IndexedDBAdapter** — Browser-local IndexedDB (raw API, no ORM)
+- **SelfHostedAdapter** — Server-local Native Node SQLite backend
 - **SupabaseAdapter** — Supabase PostgreSQL with Row Level Security
 - **DualSyncAdapter** — Writes to both; reads from remote, falls back to local
 
@@ -127,7 +127,7 @@ This prevents race/failure states where post-injection messaging reports “Rece
 | Build Tool    | Vite                                   |
 | Language      | TypeScript (strict)                    |
 | Styling       | Vanilla CSS with design tokens         |
-| Local DB      | IndexedDB (raw API)                    |
+| Local DB      | Native Node.js SQLite API              |
 | Remote DB     | Supabase (PostgreSQL + RLS)            |
 | Auth          | Supabase Auth (OAuth) / Local profiles |
 | Testing       | Vitest + React Testing Library         |

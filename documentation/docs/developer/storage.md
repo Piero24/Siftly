@@ -8,12 +8,12 @@ Siftly uses an adapter pattern for data storage, allowing the same codebase to w
 
 ## Adapters
 
-### IndexedDBAdapter
+### SelfHostedAdapter
 
-- Uses the browser's native **IndexedDB** API (no ORM or wrapper library)
-- No network requests — fully offline capable
-- Data persists in the browser across sessions
-- Used in `web` (self-hosted) deployment mode
+- Uses standard `fetch()` API to call the local, built-in Node.js server.
+- The server writes directly to a native **SQLite** database (`siftly.db`).
+- Fully self-contained local backend.
+- Used in `web` (self-hosted) deployment mode.
 
 ### SupabaseAdapter
 
@@ -23,12 +23,10 @@ Siftly uses an adapter pattern for data storage, allowing the same codebase to w
 - All deletions are **soft deletes** — records are archived, not removed (see [Database](./database))
 - Used in `extension` deployment mode
 
-### DualSyncAdapter
+### Concept of Dual Sync
 
-- Writes to **both** local and remote
-- Reads from **remote first**, falls back to local if unavailable
-- Keeps local IndexedDB in sync with the remote database
-- Available in `dev` mode for testing
+- Older versions supported `DualSyncAdapter` which wrote to both remote Postgres and IndexedDB.
+- With the transition to server-side SQLite for the web build, dual sync has been simplified out. The architecture now strictly segments environments: Extension = Supabase, Web = SQLite.
 
 ## Storage Mode Selection
 
@@ -57,11 +55,11 @@ In dev mode, the debug toolbar provides a 3-way toggle to switch between local, 
 export function createAdapter(mode: StorageMode): StorageAdapter {
   switch (mode) {
     case 'local':
-      return new IndexedDBAdapter();
+      return new SelfHostedAdapter();
     case 'remote':
       return new SupabaseAdapter();
     case 'both':
-      return new DualSyncAdapter();
+      return new SupabaseAdapter(); // Fallback conceptually
   }
 }
 ```
@@ -113,4 +111,4 @@ The remote snapshot includes dashboard and popup preferences, including:
 - notifications/privacy/table display JSON fields
 - popup behavior (`is_draggable`, `auto_close_enabled`, `auto_close_timer`)
 
-In pure web/local deployment mode, remote sync is disabled and local persistence remains the active source.
+In pure web/local deployment mode, the local Node.js API (`/api/settings`) acts as the remote sync target, automatically storing user settings in the SQLite database to perfectly separate environments.

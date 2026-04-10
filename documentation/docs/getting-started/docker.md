@@ -52,15 +52,14 @@ Siftly includes CasaOS metadata in `docker-compose.yml`. To install on CasaOS:
 
 ## Authentication
 
-In self-hosted mode, Siftly uses **simple profile creation** — just enter your name to get started. No passwords, no external accounts. All data is stored locally in the browser's IndexedDB.
+In self-hosted mode, Siftly uses **simple profile creation** — just enter your name to get started. No passwords, no external accounts. All data is securely stored in a local SQLite database file on your server (persisted via Docker volumes).
 
 ![Self-hosted login screen](/img/screenshots/login-web.png)
 
 ## Data Persistence
 
 :::warning
-Data is stored in the browser's IndexedDB, **not** in a Docker volume. If you clear your browser data, your applications will be lost. Use **CSV Export** in Settings to back up your data regularly.
-:::
+Data is automatically persisted to a local SQLite file mapped in your Docker volume (\`./data\`). It remains safe even if you clear your browser cache! However, it's always good practice to use **CSV Export** in Settings to back up your data occasionally.:::
 
 ### What Is Persistent vs. Not
 
