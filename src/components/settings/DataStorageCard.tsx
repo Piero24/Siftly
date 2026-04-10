@@ -29,7 +29,7 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
   const storageModeLabel = storageMode === 'remote'
     ? 'Cloud (Supabase)'
     : storageMode === 'local'
-      ? 'Local (IndexedDB)'
+      ? 'Local (Server SQLite)'
       : 'Synced (Cloud + Local)';
 
   const handleExportCSV = () => {

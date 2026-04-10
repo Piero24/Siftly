@@ -226,7 +226,25 @@ async function getCurrentUserId(): Promise<string | null> {
   return session?.user?.id ?? null;
 }
 
+import { DEPLOYMENT } from '../config/deploymentMode';
+import { getStoredProfile } from './localAuth';
+
 export async function loadRemoteSettingsSnapshot(): Promise<SettingsSnapshot | null> {
+  if (DEPLOYMENT.storageMode === 'local') {
+    const profile = getStoredProfile();
+    if (!profile) return null;
+    try {
+      const res = await fetch('/api/settings', {
+        headers: { 'X-User-Id': profile.id }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data ? rowToSnapshot(data) : null;
+    } catch {
+      return null;
+    }
+  }
+
   if (!supabase) {
     return null;
   }
@@ -258,6 +276,24 @@ export async function loadRemoteSettingsSnapshot(): Promise<SettingsSnapshot | n
 }
 
 export async function saveRemoteSettingsSnapshot(snapshot: SettingsSnapshot): Promise<void> {
+  if (DEPLOYMENT.storageMode === 'local') {
+    const profile = getStoredProfile();
+    if (!profile) return;
+    try {
+      await fetch('/api/settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': profile.id
+        },
+        body: JSON.stringify(snapshotToRow(profile.id, snapshot))
+      });
+    } catch (err) {
+      settingsLogger.warn('Failed to save local settings snapshot', err);
+    }
+    return;
+  }
+
   if (!supabase) {
     return;
   }

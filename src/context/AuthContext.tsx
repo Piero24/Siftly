@@ -202,8 +202,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteAccount = async () => {
-    // Local profile deletion
     if (localProfile) {
+      try {
+        await fetch('/api/applications', {
+          method: 'DELETE',
+          headers: { 'X-User-Id': localProfile.id }
+        });
+      } catch (err) {
+        authLogger.warn('Failed to delete data on backend:', err);
+      }
       clearProfile();
       setLocalProfile(null);
       showToast('Local profile and data deleted.', 'info');

@@ -1,24 +1,15 @@
 /**
  * StorageAdapter — Unified data-access abstraction.
  *
- * Three implementations:
+ * Implementations:
  *   • SupabaseAdapter  — remote Postgres via Supabase JS
- *   • IndexedDBAdapter — browser-local IndexedDB
- *   • DualSyncAdapter  — writes to both, reads from remote (falls back to local)
+ *   • SelfHostedAdapter — local SQLite via custom lightweight API
  */
 import { JobApplication } from '../types/job';
 import { supabase } from './supabaseClient';
-import { idbGetAll, idbPut, idbPutBatch, idbDelete, idbClear } from './indexedDB';
 import { logger } from './logger';
-
-// ── Interface ───────────────────────────────────────────
-export interface StorageAdapter {
-  getAll(): Promise<JobApplication[]>;
-  upsert(app: JobApplication): Promise<void>;
-  remove(id: string): Promise<void>;
-  removeAll(): Promise<void>;
-  importBatch(apps: JobApplication[]): Promise<void>;
-}
+import { getStoredProfile } from './localAuth';
+import { StorageAdapter } from './storageInterface';
 
 // ── Supabase ────────────────────────────────────────────
 export class SupabaseUnconfiguredError extends Error {
@@ -166,112 +157,85 @@ export class SupabaseAdapter implements StorageAdapter {
   }
 }
 
-// ── IndexedDB ───────────────────────────────────────────
-export class IndexedDBAdapter implements StorageAdapter {
-  async getAll(): Promise<JobApplication[]> {
-    return idbGetAll();
-  }
-  async upsert(app: JobApplication): Promise<void> {
-    return idbPut(app);
-  }
-  async remove(id: string): Promise<void> {
-    return idbDelete(id);
-  }
-  async removeAll(): Promise<void> {
-    return idbClear();
-  }
-  async importBatch(apps: JobApplication[]): Promise<void> {
-    return idbPutBatch(apps);
-  }
-}
-
-// ── Dual Sync (writes to both, reads from remote first) ─
-export class DualSyncAdapter implements StorageAdapter {
-  private remote = new SupabaseAdapter();
-  private local = new IndexedDBAdapter();
-
-  async getAll(): Promise<JobApplication[]> {
-    try {
-      const remoteApps = await this.remote.getAll();
-      // Keep local in sync
-      await this.local.importBatch(remoteApps);
-      return remoteApps;
-    } catch (err) {
-      // Fallback to local if remote is unavailable or unconfigured
-      const isUnconfigured = err instanceof SupabaseUnconfiguredError;
-      logger.warn(`[DualSync] ${isUnconfigured ? 'Remote unconfigured' : 'Remote unavailable'}, reading from local`);
-      
-      if (isUnconfigured) {
-        // We re-throw this specifically if we want the hook to notice it's unconfigured,
-        // BUT the goal here is to NOT crash and just return local data.
-        // If we want the hook to show a Toast but STILL get data, we should let it through.
-        // Actually, to fix your crash, we catch it here and let the local data flow.
-        return this.local.getAll();
-      }
-      return this.local.getAll();
+// ── Local SQLite Server  ────────────────────────────────
+export class SelfHostedAdapter implements StorageAdapter {
+  private getHeaders(): Record<string, string> {
+    const profile = getStoredProfile();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (profile) {
+      headers['X-User-Id'] = profile.id;
     }
+    return headers;
+  }
+
+  async getAll(): Promise<JobApplication[]> {
+    const res = await fetch('/api/applications', {
+      method: 'GET',
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to fetch applications');
+    }
+    return res.json();
   }
 
   async upsert(app: JobApplication): Promise<void> {
-    try {
-      await this.remote.upsert(app);
-    } catch (err) {
-      if (err instanceof SupabaseUnconfiguredError) {
-        logger.warn('[DualSync] Remote unconfigured, skipping remote upsert');
-      } else {
-        throw err;
-      }
+    const res = await fetch('/api/applications', {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(app),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to upsert application');
     }
-    await this.local.upsert(app);
   }
 
   async remove(id: string): Promise<void> {
-    try {
-      await this.remote.remove(id);
-    } catch (err) {
-      if (err instanceof SupabaseUnconfiguredError) {
-        logger.warn('[DualSync] Remote unconfigured, skipping remote remove');
-      } else {
-        throw err;
-      }
+    const res = await fetch(`/api/applications/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to remove application');
     }
-    await this.local.remove(id);
   }
 
   async removeAll(): Promise<void> {
-    try {
-      await this.remote.removeAll();
-    } catch (err) {
-      if (err instanceof SupabaseUnconfiguredError) {
-        logger.warn('[DualSync] Remote unconfigured, skipping remote removeAll');
-      } else {
-        throw err;
-      }
+    const res = await fetch('/api/applications', {
+      method: 'DELETE',
+      headers: this.getHeaders(),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to remove all applications');
     }
-    await this.local.removeAll();
   }
 
   async importBatch(apps: JobApplication[]): Promise<void> {
-    try {
-      await this.remote.importBatch(apps);
-    } catch (err) {
-      if (err instanceof SupabaseUnconfiguredError) {
-        logger.warn('[DualSync] Remote unconfigured, skipping remote importBatch');
-      } else {
-        throw err;
-      }
+    const res = await fetch('/api/applications/batch', {
+      method: 'POST',
+      headers: this.getHeaders(),
+      body: JSON.stringify(apps),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to import batch');
     }
-    await this.local.importBatch(apps);
   }
 }
 
-// ── Factory ─────────────────────────────────────────────
 export type StorageMode = 'remote' | 'local' | 'both';
 
 export function createAdapter(mode: StorageMode): StorageAdapter {
   switch (mode) {
     case 'remote': return new SupabaseAdapter();
-    case 'local': return new IndexedDBAdapter();
-    case 'both': return new DualSyncAdapter();
+    case 'local': return new SelfHostedAdapter();
+    case 'both': return new SupabaseAdapter(); // Fallback conceptually
+    default: return new SupabaseAdapter();
   }
 }

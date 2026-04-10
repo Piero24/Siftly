@@ -6,7 +6,7 @@
  * gracefully fall back to local-only mode.
  *
  * In web (self-hosted) deployments, Supabase is not used —
- * the client will be null and all data stays in IndexedDB.
+ * the client will be null and all data stays in the local SQLite server.
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 

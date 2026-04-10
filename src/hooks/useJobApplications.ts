@@ -3,7 +3,7 @@
  * state management, keeping App.tsx as a clean orchestrator.
  *
  * Now backed by a pluggable StorageAdapter (remote Supabase, local
- * IndexedDB, or both) selected via SettingsContext.storageMode.
+ * local SQLite API, or both) selected via SettingsContext.storageMode.
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { JobApplication, JobStatus } from '../types/job';
