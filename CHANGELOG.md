@@ -5,6 +5,24 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.16](https://github.com/Piero24/Siftly/compare/siftly-v1.0.15...siftly-v1.0.16) (2026-04-10)
+
+
+### Features
+
+* centralize server configuration and add local development support with Vite proxying ([8e95ce3](https://github.com/Piero24/Siftly/commit/8e95ce399d8cbeb62fe72423af7cd93dd7ae7107))
+* enhance documentation for local SQLite support and API integration ([2011dfd](https://github.com/Piero24/Siftly/commit/2011dfd4a839cd44e17989f6dc66f5f0580dee0c))
+* implement backend-synced single-user profile mode for web deployments ([10ca352](https://github.com/Piero24/Siftly/commit/10ca352c993339ae8dd7ff7f073d044a93dc72cc))
+* implement local SQLite storage backend ([a6c9fc0](https://github.com/Piero24/Siftly/commit/a6c9fc0b888cc2222578c6802b94d2a67f14f3dd))
+* implement local SQLite support with API integration tests ([c496d45](https://github.com/Piero24/Siftly/commit/c496d45178f1fafdfd0e048bad97900752f57c73))
+* implement multi-user account picker and profile management ([8e36d96](https://github.com/Piero24/Siftly/commit/8e36d96e85e0e52ea6af064f37d80c684d8efef9))
+* redesign DataStorageCard layout ([200d41a](https://github.com/Piero24/Siftly/commit/200d41a5f22ea512be498534e4e87e203a86ab40))
+* replace contact support link with issue tracker in SupportCard ([625e126](https://github.com/Piero24/Siftly/commit/625e126099442b79356dcc0d9f34d8e478c4c01e))
+* restrict PopupBehaviorCard visibility to extension mode ([5ea0b7c](https://github.com/Piero24/Siftly/commit/5ea0b7cc7ec5e9bbe6569ac12e23e2659e984e52))
+* update Dockerfile and compose for SQLite backend support ([52f6e0b](https://github.com/Piero24/Siftly/commit/52f6e0b36648381b74f14b7c03c2c9b0db5ff52b))
+* update documentation for Native Node SQLite backend integration ([1856b9d](https://github.com/Piero24/Siftly/commit/1856b9dea744fa023149db5e2028bb82fa42b9b0))
+* upgrade Node.js version to 22 and enhance security audit steps in CI workflow ([477d98a](https://github.com/Piero24/Siftly/commit/477d98a0c66b011a74941bb365b9bc993ae1e979))
+
 ## [1.0.15](https://github.com/Piero24/Siftly/compare/siftly-v1.0.14...siftly-v1.0.15) (2026-04-09)
 
 ### Features
