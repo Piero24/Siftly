@@ -6,8 +6,14 @@ import { DatabaseSync } from 'node:sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Read centralized metadata
+const metadata = JSON.parse(fs.readFileSync(path.join(__dirname, '../metadata.json'), 'utf8'));
+const { port: SERVER_PORT, apiBase: API_BASE } = metadata.server;
+
 const DIST_DIR = path.join(__dirname, '../dist');
-const DB_PATH = process.env.DB_PATH || '/app/data/siftly.db';
+const DEFAULT_DB = fs.existsSync('/app') ? '/app/data/siftly.db' : path.join(__dirname, '../data/siftly.db');
+const DB_PATH = process.env.DB_PATH || DEFAULT_DB;
 
 // Ensure db directory exists
 try {
@@ -111,7 +117,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Intercept API routes
-  if (req.url.startsWith('/api/')) {
+  if (req.url.startsWith(API_BASE)) {
     const userId = req.headers['x-user-id'];
     if (!userId) {
       return sendJSON(res, 401, { error: 'Missing X-User-Id header' });
@@ -119,7 +125,7 @@ const server = http.createServer(async (req, res) => {
 
     try {
       // Applications API
-      if (req.url === '/api/applications') {
+      if (req.url === `${API_BASE}/applications`) {
         if (req.method === 'GET') {
           const rows = stmtGetApps.all(userId);
           const apps = rows.map(r => JSON.parse(r.data));
@@ -138,7 +144,7 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
-      if (req.method === 'POST' && req.url === '/api/applications/batch') {
+      if (req.method === 'POST' && req.url === `${API_BASE}/applications/batch`) {
         const apps = await parseJSON(req);
         if (Array.isArray(apps)) {
           for (const app of apps) {
@@ -148,14 +154,15 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(res, 200, { success: true });
       }
 
-      if (req.method === 'DELETE' && req.url.startsWith('/api/applications/')) {
-        const id = req.url.split('/').pop();
+      const appDetailPrefix = `${API_BASE}/applications/`;
+      if (req.method === 'DELETE' && req.url.startsWith(appDetailPrefix)) {
+        const id = req.url.slice(appDetailPrefix.length);
         stmtDeleteApp.run(id, userId);
         return sendJSON(res, 200, { success: true });
       }
 
       // Settings API
-      if (req.url === '/api/settings') {
+      if (req.url === `${API_BASE}/settings`) {
         if (req.method === 'GET') {
           const row = stmtGetSettings.get(userId);
           if (!row) return sendJSON(res, 200, null);
@@ -182,7 +189,7 @@ const server = http.createServer(async (req, res) => {
   serveStatic(req, res);
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || SERVER_PORT;
 server.listen(PORT, () => {
   console.log(`Siftly lightweight backend running on port ${PORT}`);
 });

@@ -10,6 +10,8 @@
     "build": "VITE_BUILD_TARGET=extension vite build",
     "build:extension": "VITE_BUILD_TARGET=extension vite build",
     "build:web": "VITE_BUILD_TARGET=web vite build",
+    "server": "node server/index.mjs",
+    "dev:full": "npm run server & npm run dev:web",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",

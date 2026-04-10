@@ -38,6 +38,10 @@
     "projectName": "Siftly",
     "editPath": "tree/main/documentation/"
   },
+  "server": {
+    "port": 8080,
+    "apiBase": "/api"
+  },
   "extension": {
     "defaultTitle": "Siftly"
   }

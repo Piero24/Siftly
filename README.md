@@ -54,10 +54,19 @@ Siftly is a high-fidelity job application tracker designed to turn the chaotic s
    VITE_SUPABASE_ANON_KEY=your_key
    ```
 
-3. **Launch the Dashboard**
+3. **Launch the Dashboard (No Docker)**
+   To run Siftly locally on your Mac using the lightweight SQLite backend:
+   ```bash
+   # Starts both backend and frontend together
+   npm run dev:full
+   ```
+
+4. **Launch the Dashboard (Development Mode)**
    ```bash
    npm run dev:web
    ```
+
+For detailed setup instructions, see the [Local Development Guide](documentation/docs/getting-started/local-development.md).
 
 ### 📦 Extension Build
 

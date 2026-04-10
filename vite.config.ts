@@ -2,16 +2,27 @@
 
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import metadata from './metadata.json';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, new URL('.', import.meta.url).pathname, '');
   const buildTarget = env.VITE_BUILD_TARGET ?? 'extension';
   const isWebBuild = buildTarget === 'web';
 
+  const { port: SERVER_PORT, apiBase: API_BASE } = metadata.server;
+
   return {
     root: isWebBuild ? 'src/web' : '.',
     plugins: [react()],
     base: isWebBuild ? (env.VITE_BASE_PATH || '/') : './',
+    server: {
+      proxy: isWebBuild ? {
+        [API_BASE]: {
+          target: `http://localhost:${SERVER_PORT}`,
+          changeOrigin: true,
+        },
+      } : undefined,
+    },
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
