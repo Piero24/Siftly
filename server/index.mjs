@@ -88,7 +88,15 @@ export async function createServer(options = {}) {
   // Prepared Statements
   const stmtGetAllProfiles = db.prepare('SELECT * FROM profiles ORDER BY updated_at DESC');
   const stmtGetProfile = db.prepare('SELECT * FROM profiles WHERE id = ?');
-  const stmtInsertProfile = db.prepare('INSERT OR REPLACE INTO profiles (id, displayName, email, avatarUrl) VALUES (?, ?, ?, ?)');
+  const stmtInsertProfile = db.prepare(
+    `INSERT INTO profiles (id, displayName, email, avatarUrl)
+     VALUES (?, ?, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET
+       displayName = excluded.displayName,
+       email = excluded.email,
+       avatarUrl = excluded.avatarUrl,
+       updated_at = CURRENT_TIMESTAMP`
+  );
   const stmtDeleteProfile = db.prepare('DELETE FROM profiles WHERE id = ?');
   
   const stmtInsertApp = db.prepare('INSERT OR REPLACE INTO applications (id, user_id, data) VALUES (?, ?, ?)');

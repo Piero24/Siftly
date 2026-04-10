@@ -31,4 +31,9 @@ if (typeof window !== 'undefined') {
       dispatchEvent: () => false,
     }),
   });
+
+  Object.defineProperty(window, 'scrollTo', {
+    writable: true,
+    value: vi.fn(),
+  });
 }
