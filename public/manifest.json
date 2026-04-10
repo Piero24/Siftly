@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Siftly",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Professional job application tracker for LinkedIn.",
   "permissions": [
     "activeTab",
