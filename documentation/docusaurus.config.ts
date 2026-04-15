@@ -62,11 +62,16 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'docsSidebar',
+          sidebarId: 'userSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'User Guide',
         },
-
+        {
+          type: 'docSidebar',
+          sidebarId: 'devSidebar',
+          position: 'left',
+          label: 'Developer Guide',
+        },
         {
           href: metadata.links.github,
           label: 'GitHub',
@@ -78,11 +83,20 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Documentation',
+          title: 'User Guide',
           items: [
             { label: 'Getting Started', to: '/docs/intro' },
-            { label: 'User Guide', to: '/docs/user-guide/dashboard' },
-            { label: 'Developer Guide', to: '/docs/developer/architecture' },
+            { label: 'Dashboard', to: '/docs/user-guide/dashboard' },
+            { label: 'Applications', to: '/docs/user-guide/applications' },
+            { label: 'Settings', to: '/docs/user-guide/settings' },
+          ],
+        },
+        {
+          title: 'Developer Guide',
+          items: [
+            { label: 'Architecture', to: '/docs/developer/architecture' },
+            { label: 'Contributing', to: '/docs/developer/contributing' },
+            { label: 'CI/CD Pipeline', to: '/docs/deployment/ci-cd' },
           ],
         },
         {

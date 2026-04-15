@@ -1,7 +1,7 @@
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
-  docsSidebar: [
+  userSidebar: [
     'intro',
     {
       type: 'category',
@@ -12,6 +12,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/chrome-extension',
         'getting-started/docker',
         'getting-started/configuration',
+        'getting-started/local-development',
       ],
     },
     {
@@ -26,9 +27,12 @@ const sidebars: SidebarsConfig = {
         'user-guide/settings',
       ],
     },
+  ],
+  devSidebar: [
     {
       type: 'category',
       label: 'Developer Guide',
+      collapsed: false,
       items: [
         'developer/architecture',
         'developer/storage',
@@ -45,11 +49,6 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Roadmap',
-      items: ['roadmap/linkedin-scraper', 'roadmap/linkedin-llm'],
-    },
-    {
-      type: 'category',
       label: 'Deployment',
       items: [
         'deployment/docker',
@@ -57,6 +56,11 @@ const sidebars: SidebarsConfig = {
         'deployment/ci-cd',
         'deployment/versioning-and-releases',
       ],
+    },
+    {
+      type: 'category',
+      label: 'Roadmap',
+      items: ['roadmap/linkedin-scraper', 'roadmap/linkedin-llm'],
     },
   ],
 };

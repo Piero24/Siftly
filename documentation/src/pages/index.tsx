@@ -63,7 +63,8 @@ const features = [
   {
     emoji: '📦',
     title: 'Import & Export',
-    description: 'CSV import/export, dual-sync storage (local + cloud), and full data portability.',
+    description:
+      'CSV import/export, flexible storage (local SQLite or cloud Supabase), and full data portability.',
   },
 ];
 
