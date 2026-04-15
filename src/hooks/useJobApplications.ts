@@ -58,11 +58,11 @@ export function useJobApplications(
         }
         setApplications([]); // Clear apps to avoid showing stale/local data
       } else {
-        // Local mode fallback
+        // Local mode expects the Node API server (/api/*) to be running.
         if (err instanceof SupabaseUnconfiguredError) {
-          showToast('Supabase not configured. Using local fallback.', 'warning');
+          showToast('Supabase is not required in local mode. Start the local API server.', 'warning');
         } else {
-          showToast('Connection to database failed. Showing local fallback.', 'error');
+          showToast('Local API unavailable. Start it with "npm run server" or "npm run dev:full".', 'error');
         }
         setApplications([]);
       }
