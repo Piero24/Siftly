@@ -39,5 +39,5 @@ build/
 coverage
 
 TODO.md
-
+.DS_Store
 data/
