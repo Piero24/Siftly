@@ -5,7 +5,7 @@ sidebar_position: 2
 # Job Portal Scraper with LLM (Planned)
 
 :::info
-This feature is currently in the planning stage. The skeleton code is in `src/scraper/linkedin-llm/`.
+This feature is planned for a future release. No implementation has been started yet.
 :::
 
 ## Overview
@@ -54,4 +54,4 @@ When using cloud LLM providers, job description text is sent to an external API.
 
 ## Technical Details
 
-See [PLAN.md](https://github.com/Piero24/Siftly/blob/main/src/scraper/linkedin-llm/PLAN.md) for the full implementation plan.
+The implementation will live in a new `src/scraper/linkedin-llm/` directory once development begins.
