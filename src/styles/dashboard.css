@@ -198,6 +198,12 @@ body:has(.debug-toolbar) .db-root {
   max-width: 100%;
 }
 
+.db-time-select-mobile {
+  display: none;
+  width: 100%;
+  margin-left: 0;
+}
+
 .db-time-scope-btn,
 .db-time-btn {
   min-height: 28px;
@@ -609,13 +615,11 @@ body:has(.debug-toolbar) .db-root {
   }
 
   .db-time-nav {
-    width: 100%;
-    flex-wrap: wrap;
+    display: none;
   }
 
-  .db-time-btn {
-    flex: 1 1 calc(50% - 4px);
-    min-height: 28px;
+  .db-time-select-mobile {
+    display: block;
   }
 
   .db-map-interactive-area {

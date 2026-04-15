@@ -184,6 +184,10 @@
   box-shadow: none;
 }
 
+.bulk-select-all-mobile {
+  display: none;
+}
+
 .filter-actions-bar {
   display: flex;
   flex-wrap: nowrap;
@@ -338,6 +342,33 @@
   .bulk-actions-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .bulk-select-all-mobile {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-elevated);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .bulk-select-all-mobile-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .bulk-select-all-mobile-label input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--apple-blue);
   }
 }
 

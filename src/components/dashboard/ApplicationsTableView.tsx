@@ -104,6 +104,31 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
     });
   };
 
+  const visibleApplicationIds = filteredApplications.map((app) => app.id);
+  const allVisibleSelected =
+    visibleApplicationIds.length > 0 && visibleApplicationIds.every((id) => selectedIds.has(id));
+  const someVisibleSelected =
+    !allVisibleSelected && visibleApplicationIds.some((id) => selectedIds.has(id));
+
+  const toggleAllVisibleRowsSelection = (checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (checked) {
+        visibleApplicationIds.forEach((id) => next.add(id));
+      } else {
+        visibleApplicationIds.forEach((id) => next.delete(id));
+      }
+      return next;
+    });
+  };
+
+  const mobileSelectAllRef = React.useRef<HTMLInputElement | null>(null);
+  React.useEffect(() => {
+    if (mobileSelectAllRef.current) {
+      mobileSelectAllRef.current.indeterminate = someVisibleSelected;
+    }
+  }, [someVisibleSelected]);
+
   return (
     <div
       className="glass-container applications-card"
@@ -147,19 +172,33 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
       )}
 
       {selectorMode && (
-        <BulkActionsBar
-          selectedCount={selectedIds.size}
-          bulkStatus={bulkStatus}
-          onBulkStatusChange={setBulkStatus}
-          onApplyBulkStatus={onBulkStatus}
-          onBulkDelete={onBulkDelete}
-          statusOptions={STATUS_SELECT_OPTIONS}
-          linkActions={{
-            bulkLinkKind,
-            onBulkLinkKindChange: setBulkLinkKind,
-            onOpenLinks: () => onBulkOpenLinks(bulkLinkKind),
-          }}
-        />
+        <>
+          <div className="bulk-select-all-mobile">
+            <label className="bulk-select-all-mobile-label">
+              <input
+                ref={mobileSelectAllRef}
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={(e) => toggleAllVisibleRowsSelection(e.target.checked)}
+                aria-label="Select or unselect all visible rows"
+              />
+              <span>Select all visible rows</span>
+            </label>
+          </div>
+          <BulkActionsBar
+            selectedCount={selectedIds.size}
+            bulkStatus={bulkStatus}
+            onBulkStatusChange={setBulkStatus}
+            onApplyBulkStatus={onBulkStatus}
+            onBulkDelete={onBulkDelete}
+            statusOptions={STATUS_SELECT_OPTIONS}
+            linkActions={{
+              bulkLinkKind,
+              onBulkLinkKindChange: setBulkLinkKind,
+              onOpenLinks: () => onBulkOpenLinks(bulkLinkKind),
+            }}
+          />
+        </>
       )}
 
       <JobTable
@@ -170,9 +209,10 @@ export const ApplicationsTableView: React.FC<ApplicationsTableViewProps> = ({
         selectorMode={selectorMode}
         selectedIds={selectedIds}
         onToggleRowSelection={toggleRowSelection}
+        allRowsSelected={allVisibleSelected}
+        someRowsSelected={someVisibleSelected}
+        onToggleAllRowsSelection={toggleAllVisibleRowsSelection}
         onStatusChange={onStatusChange}
-        onDelete={onDelete}
-        onEdit={onEdit}
         onRowClick={onRowClick}
       />
     </div>
