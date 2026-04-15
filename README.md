@@ -4,7 +4,7 @@
   <p><b>Your Job Search Control Panel.</b></p>
   
   <p>
-    <img src="https://img.shields.io/badge/version-1.0.17-blue?style=flat-square" alt="Version">
+    <img src="https://img.shields.io/badge/version-1.0.18-blue?style=flat-square" alt="Version">
     <img src="https://img.shields.io/badge/license-Prosperity--3.0.0-green?style=flat-square" alt="License">
     <img src="https://img.shields.io/badge/tech-React%2019-61DAFB?style=flat-square&logo=react" alt="React">
     <img src="https://img.shields.io/badge/build-Vite-646CFF?style=flat-square&logo=vite" alt="Vite">
