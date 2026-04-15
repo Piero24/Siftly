@@ -120,7 +120,9 @@ describe('App integration (table flow)', () => {
     if (!bulkBar) throw new Error('Bulk actions bar not found');
     const bulkSelect = within(bulkBar as HTMLElement).getByDisplayValue('Applied');
     await user.selectOptions(bulkSelect, 'rejected');
-    const changeStatusBtn = within(bulkBar as HTMLElement).getByRole('button', { name: /change status/i });
+    const changeStatusBtn = within(bulkBar as HTMLElement).getByRole('button', {
+      name: /change status/i,
+    });
     await user.click(changeStatusBtn);
 
     expect(await screen.findByText(/0 selected/i)).toBeInTheDocument();

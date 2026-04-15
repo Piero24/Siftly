@@ -7,11 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.18](https://github.com/Piero24/Siftly/compare/siftly-v1.0.17...siftly-v1.0.18) (2026-04-15)
 
-
 ### Features
 
-* **interview:** modularize interviewing view components and add bulk selection ([29186b9](https://github.com/Piero24/Siftly/commit/29186b9c70842b466ae9796928195397d872742a))
-* **ui:** improve mobile layout for tables and filters ([e346b79](https://github.com/Piero24/Siftly/commit/e346b79d3f596d191f2c04638ae2101f79e67fd4))
+- **interview:** modularize interviewing view components and add bulk selection ([29186b9](https://github.com/Piero24/Siftly/commit/29186b9c70842b466ae9796928195397d872742a))
+- **ui:** improve mobile layout for tables and filters ([e346b79](https://github.com/Piero24/Siftly/commit/e346b79d3f596d191f2c04638ae2101f79e67fd4))
 
 ## [1.0.17](https://github.com/Piero24/Siftly/compare/siftly-v1.0.16...siftly-v1.0.17) (2026-04-10)
 
