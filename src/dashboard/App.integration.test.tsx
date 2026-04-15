@@ -44,7 +44,7 @@ const renderTableApp = () => {
     <ToastProvider>
       <AuthProvider>
         <SettingsProvider>
-          <UIProvider>
+          <UIProvider routingMode="hash">
             <SelectionProvider>
               <TableFilterProvider>
                 <App />
@@ -103,20 +103,27 @@ describe('App integration (table flow)', () => {
 
     await waitForGoogleRow();
 
-    await user.click(await screen.findByRole('button', { name: /select rows/i }));
+    const selectRowsBtn = await screen.findByRole('button', { name: /select rows/i });
+    await user.click(selectRowsBtn);
 
     const checkboxes = await screen.findAllByRole('checkbox');
-    await user.click(checkboxes[0]);
+    // The first checkbox in JobTable is the "Select All" header checkbox in selectorMode
+    // The following checkboxes are the row checkboxes.
+    // Index 0 in mobile is the "Select All Visible Rows" input in ApplicationsTableView.
+    // Index 1 in JobTable is the "Select All" header.
+    // Index 2 is the first row (Google).
+    await user.click(checkboxes[2]);
 
-    expect(await screen.findByText('1 selected')).toBeInTheDocument();
+    expect(await screen.findByText(/1 selected/i)).toBeInTheDocument();
 
-    const bulkBar = screen.getByText('1 selected').closest('.bulk-actions-bar');
+    const bulkBar = (await screen.findByText(/1 selected/i)).closest('.bulk-actions-bar');
     if (!bulkBar) throw new Error('Bulk actions bar not found');
     const bulkSelect = within(bulkBar as HTMLElement).getByDisplayValue('Applied');
     await user.selectOptions(bulkSelect, 'rejected');
-    await user.click(screen.getByRole('button', { name: /change status/i }));
+    const changeStatusBtn = within(bulkBar as HTMLElement).getByRole('button', { name: /change status/i });
+    await user.click(changeStatusBtn);
 
-    expect(await screen.findByText('0 selected')).toBeInTheDocument();
+    expect(await screen.findByText(/0 selected/i)).toBeInTheDocument();
   });
 
   it('opens details modal and transitions to edit modal', async () => {
