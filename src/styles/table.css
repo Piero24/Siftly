@@ -325,13 +325,21 @@
   /* CHECKBOX */
   .table-cell.col-select {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 34px;
+    left: 6px;
     width: auto !important;
     border: none !important;
     padding: 0;
-    z-index: 10;
+    z-index: 12;
     order: 0;
+  }
+
+  .table-cell.col-select input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--apple-blue);
   }
 
   /* LOGO */

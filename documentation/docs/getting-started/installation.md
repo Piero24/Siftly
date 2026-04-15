@@ -97,9 +97,13 @@ npm run docs:build      # Documentation site
 ## Run Checks
 
 ```bash
-npm run test:run        # Unit tests
-npm run test:coverage   # Tests with coverage
-npm run format:check    # Prettier formatting
+npm run test:run        # Unit tests (all)
+npm run test:coverage   # Tests with coverage report
+npm run test:api        # API server tests only
+npm run test:storage    # Storage adapter tests only
+npm run format:check    # Verify Prettier formatting
+npm run format          # Auto-fix Prettier formatting
+npm run lint            # Alias for format:check
 npx tsc --noEmit        # TypeScript type check
 ```
 

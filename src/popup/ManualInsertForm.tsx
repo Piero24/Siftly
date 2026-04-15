@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useJobApplications } from '../hooks/useJobApplications';
 import { EXTENSION_IFRAME_DRAG_START, EXTENSION_PANEL_SOURCE } from '../lib/extensionPanelMessages';
 import { DEFAULT_FORM_STATE, FormState } from '../constants/form';
-import { toJobApplication } from '../components/dashboard/NewApplicationModal';
+import { toJobApplication } from '../lib/formSerializer';
 
 import { CompanySection } from '../components/dashboard/form-sections/CompanySection';
 import { RoleSection } from '../components/dashboard/form-sections/RoleSection';

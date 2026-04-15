@@ -50,6 +50,19 @@ export const TimeRangeFilter: React.FC<TimeRangeFilterProps> = ({
           </button>
         ))}
       </div>
+
+      <select
+        className="db-time-select-mobile apple-select"
+        aria-label="Dashboard time range selector"
+        value={value}
+        onChange={(e) => onChange(e.target.value as TimeRange)}
+      >
+        {TIME_RANGE_OPTIONS.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
     </div>
   </div>
 );

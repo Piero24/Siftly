@@ -5,7 +5,7 @@ sidebar_position: 1
 # Job Portal Scraper (Planned)
 
 :::info
-This feature is currently in the planning stage. The skeleton code is in `src/scraper/linkedin/`.
+This feature is planned for a future release. No implementation has been started yet.
 :::
 
 ## Overview
@@ -41,4 +41,4 @@ The job portal scraper will allow you to import job applications directly from s
 
 ## Technical Details
 
-See [PLAN.md](https://github.com/Piero24/Siftly/blob/main/src/scraper/linkedin/PLAN.md) for the full implementation plan.
+The implementation will live in a new `src/scraper/linkedin/` directory once development begins.

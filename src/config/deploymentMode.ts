@@ -4,7 +4,7 @@
  * Derives the deployment mode from Vite environment variables:
  *   • `web`       — Self-hosted Docker/container build (local DB, profile-based auth)
  *   • `extension` — Chrome extension build (remote Supabase, OAuth auth)
- *   • `dev`       — Debug/development mode (everything switchable)
+ *   • `dev`       — Extension debug mode (everything switchable)
  *
  * All storage and auth behavior throughout the app should reference
  * DEPLOYMENT instead of checking raw env vars.
@@ -19,14 +19,15 @@ const isDebug = import.meta.env.VITE_DEBUG_MODE === 'true';
 
 /**
  * Resolved deployment mode.
- * Debug mode overrides everything — even if BUILD_TARGET is set,
- * dev mode enables full flexibility.
+ * Web target must remain web even in debug sessions so local API/profile
+ * behavior is preserved. Debug switches extension runs into dev mode.
  */
-export const DEPLOYMENT_MODE: DeploymentMode = isDebug
-  ? 'dev'
-  : buildTarget === 'web'
+export const DEPLOYMENT_MODE: DeploymentMode =
+  buildTarget === 'web'
     ? 'web'
-    : 'extension';
+    : isDebug
+      ? 'dev'
+      : 'extension';
 
 // ── Auth Mode ────────────────────────────────────────────
 export type AuthMode = 'local-profile' | 'oauth' | 'all';
