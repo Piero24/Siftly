@@ -23,12 +23,14 @@ Run the full CI check suite locally:
 
 ```bash
 npm run metadata:verify    # Metadata/source-of-truth consistency
-npm run format:check      # Prettier formatting
+npm run format:check      # Prettier formatting (verify)
+npm run format            # Prettier formatting (auto-fix)
 npx tsc --noEmit          # TypeScript type check
 npm run test:coverage     # Unit tests with coverage
 npm run build:web         # Web build
 npm run build:extension   # Extension build
 npm run docs:build        # Documentation build
+npm run release:prepare   # Sync metadata + fix formatting (pre-release)
 ```
 
 All checks must pass — these are the exact checks that run in CI.
@@ -58,6 +60,9 @@ src/
 │   ├── auth/        # Login page
 │   ├── common/      # Shared UI components
 │   ├── dashboard/   # Dashboard views & modals
+│   │   ├── form-sections/    # Reusable form section components
+│   │   ├── interviewing/     # Interview view sub-components
+│   │   └── job-detail/       # Job detail modal sub-components
 │   ├── debug/       # Debug toolbar
 │   └── layout/      # Layout wrappers
 ├── config/          # App config, features, links, deployment mode
@@ -66,9 +71,8 @@ src/
 ├── context/         # React context providers
 ├── dashboard/       # Dashboard entrypoint
 ├── hooks/           # Custom React hooks
-├── lib/             # Utility libraries (storage, analytics, CSV)
+├── lib/             # Utility libraries (storage, analytics, CSV, serialization)
 ├── popup/           # Extension popup entrypoint
-├── scraper/         # Job portal scraper modules (planned)
 ├── styles/          # CSS files (tokens, components)
 ├── test/            # Test setup
 ├── types/           # TypeScript type definitions

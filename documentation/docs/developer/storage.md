@@ -26,10 +26,9 @@ See [Local API](./local-api) for full endpoint contracts and payload behavior.
 - All deletions are **soft deletes** — records are archived, not removed (see [Database](./database))
 - Used in `extension` deployment mode
 
-### Concept of Dual Sync
+### Storage Segmentation
 
-- Older versions supported `DualSyncAdapter` which wrote to both remote Postgres and IndexedDB.
-- With the transition to server-side SQLite for the web build, dual sync has been simplified out. The architecture now strictly segments environments: Extension = Supabase, Web = SQLite-backed local API.
+The architecture strictly segments environments: Extension = Supabase, Web = SQLite-backed local API. There is no dual-write or offline cache layer.
 
 ## Storage Mode Selection
 
@@ -92,10 +91,12 @@ Application settings are persisted through a hybrid strategy:
 - **Local-first**: `SettingsContext` hydrates immediately from localStorage for instant UI boot.
 - **Remote sync (when available)**: in extension/remote-capable modes, settings are loaded and saved to Supabase `user_settings`.
 
-This behavior is implemented in:
+This behavior is implemented across four files:
 
-- `src/context/SettingsContext.tsx` (state + hydration + debounced save)
-- `src/lib/settingsStorage.ts` (Supabase row mapping and upsert logic)
+- `src/context/SettingsContext.tsx` — state orchestrator, exposes all settings via React context
+- `src/hooks/useLocalStorageState.ts` — generic localStorage-backed `useState` with built-in serializers
+- `src/hooks/useRemoteSettingsSync.ts` — auth-reactive remote hydration + debounced save logic
+- `src/lib/settingsStorage.ts` — Supabase row mapping and upsert logic
 
 ### Sync Behavior
 

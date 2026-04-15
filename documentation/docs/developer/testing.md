@@ -15,6 +15,8 @@ Siftly uses **Vitest** for unit/integration testing across frontend and backend.
 npm run test:run        # Run all tests once
 npm run test            # Watch mode (re-runs on file changes)
 npm run test:coverage   # With coverage report
+npm run test:api        # API server tests only
+npm run test:storage    # Storage adapter tests only
 ```
 
 ## Test Structure
@@ -30,20 +32,32 @@ src/
 │   ├── countries.test.ts
 │   ├── csv.ts
 │   ├── csv.test.ts
-│   └── iconColor.test.ts
+│   ├── formSerializer.ts
+│   ├── iconColor.test.ts
+│   ├── settingsStorage.local.test.ts
+│   └── storage.test.ts
 ├── hooks/
 │   ├── useApplicationFilters.ts
 │   ├── useApplicationFilters.test.ts
+│   ├── useApplicationForm.ts
 │   ├── useInterviewingFilters.ts
-│   └── useInterviewingFilters.test.ts
+│   ├── useInterviewingFilters.test.ts
+│   ├── useLocalStorageState.ts
+│   └── useRemoteSettingsSync.ts
 ├── context/
 │   ├── SettingsContext.tsx
 │   ├── SettingsContext.test.tsx
 │   ├── SelectionContext.test.tsx
 │   ├── UIContext.test.tsx
 │   └── TableFilterContext.test.tsx
+├── components/
+│   ├── common/AutoCloseTimer.test.tsx
+│   ├── dashboard/charts/KpiStrip.test.tsx
+│   └── layout/Navbar.test.tsx
 ├── dashboard/
 │   └── App.integration.test.tsx
+├── server/
+│   └── index.test.mjs
 └── test/
     └── setup.ts          # Global test setup
 ```

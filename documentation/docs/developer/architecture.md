@@ -109,14 +109,31 @@ Siftly implements a mouse-aware auto-close mechanism for terminal screens:
 
 Auto-close timing and enablement are settings-driven (`autoCloseEnabled`, `autoCloseTimer`) and are persisted with user settings.
 
-## Content Script Reliability Notes
+## Extracted Components & Hooks
 
-For extension action injection reliability, the content script entry (`src/content/index.ts`) must remain self-contained.
+Complex monolithic components have been decomposed into focused, reusable sub-components following a **thin orchestrator** pattern:
 
-- Avoid importing shared modules into the content entry when this causes chunked output for content runtime loading.
-- Keep message constants/type guards local in the content entry where needed.
+### Component Sub-Directories
 
-This prevents race/failure states where post-injection messaging reports “Receiving end does not exist” because the receiver failed to initialize in time.
+| Directory                             | Parent Component      | Sub-Components                                                                                                                                          |
+| ------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/dashboard/interviewing/`  | `InterviewingView`    | `NextRoundDisplay`, `InterviewRow`, `InterviewTableHeader`                                                                                              |
+| `components/dashboard/job-detail/`    | `JobDetailModal`      | `ModalHighlightRow`, `ModalSideLinks`, `ModalTrackingCard`, `ModalRecruiterCard`, `ModalReferralCard`, `ModalRoundsSection`                             |
+| `components/dashboard/form-sections/` | `NewApplicationModal` | `CompanySection`, `RoleSection`, `LocationSection`, `ApplicationSection`, `LinksSection`, `DetailsSection`, `ContactsSection`, `InterviewRoundsSection` |
+
+### Shared Hooks
+
+| Hook                    | Purpose                                                               |
+| ----------------------- | --------------------------------------------------------------------- |
+| `useLocalStorageState`  | Generic `useState` backed by `localStorage` with built-in serializers |
+| `useRemoteSettingsSync` | Auth-reactive remote settings hydration + debounced save              |
+| `useApplicationForm`    | Shared form state, change handlers, and validation                    |
+
+### Shared Libraries
+
+| Module                  | Purpose                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------- |
+| `lib/formSerializer.ts` | Bidirectional conversion between `FormState` (UI) and `JobApplication` (domain) |
 
 ## Technology Stack
 
