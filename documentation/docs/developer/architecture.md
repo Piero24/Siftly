@@ -135,6 +135,18 @@ Complex monolithic components have been decomposed into focused, reusable sub-co
 | ----------------------- | ------------------------------------------------------------------------------- |
 | `lib/formSerializer.ts` | Bidirectional conversion between `FormState` (UI) and `JobApplication` (domain) |
 
+## Content Script Isolation
+
+The content script entry (`src/content/index.ts`) **must remain self-contained** — it must not import from shared modules like `lib/extensionPanelMessages.ts`.
+
+Chrome content scripts are loaded as a single file via `chrome.scripting.executeScript`. If Vite detects a shared import with other entries (background, popup, dashboard), it extracts the shared code into a separate chunk. The content script runtime has no mechanism to load that chunk, so the `chrome.runtime.onMessage` listener never registers, causing:
+
+```
+Could not establish connection. Receiving end does not exist.
+```
+
+All message constants and type guards used by the content script are duplicated locally in `src/content/index.ts` and must be kept in sync manually with `src/lib/extensionPanelMessages.ts`.
+
 ## Technology Stack
 
 | Layer         | Technology                             |

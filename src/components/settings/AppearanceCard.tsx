@@ -8,13 +8,8 @@ import { SegmentedToggle } from '../common/SegmentedToggle';
 import { useSettings } from '../../context/SettingsContext';
 
 export const AppearanceCard: React.FC = () => {
-  const {
-    theme,
-    setTheme,
-    resolvedTheme,
-    useSoftIconBackground,
-    setUseSoftIconBackground,
-  } = useSettings();
+  const { theme, setTheme, resolvedTheme, useSoftIconBackground, setUseSoftIconBackground } =
+    useSettings();
 
   const themeOptions: Array<{
     value: 'light' | 'dark' | 'system';

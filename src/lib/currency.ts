@@ -30,13 +30,13 @@ async function fetchRates(base: string): Promise<Record<string, number>> {
 export async function convertCurrency(
   amount: number,
   from: string,
-  to: string,
+  to: string
 ): Promise<number | null> {
   if (from.toUpperCase() === to.toUpperCase()) return amount;
 
   try {
     const rates = await fetchRates(from.toUpperCase());
-    const rate  = rates[to.toUpperCase()];
+    const rate = rates[to.toUpperCase()];
     if (!rate) return null;
     return Math.round(amount * rate);
   } catch {
@@ -52,11 +52,13 @@ export async function convertCurrency(
 export function formatCurrency(amount: number, currency: string, compact: boolean = false): string {
   try {
     return new Intl.NumberFormat('en', {
-      style:    'currency',
+      style: 'currency',
       currency: currency.toUpperCase(),
       maximumFractionDigits: 0,
       ...(compact ? { notation: 'compact', compactDisplay: 'short' } : {}),
-    }).format(amount).toLowerCase(); // toLowerCase for "k" instead of "K"
+    })
+      .format(amount)
+      .toLowerCase(); // toLowerCase for "k" instead of "K"
   } catch {
     let formatted = amount.toLocaleString();
     if (compact && amount >= 1000) {

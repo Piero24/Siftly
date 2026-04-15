@@ -13,13 +13,13 @@ export interface ComboBoxItem {
 }
 
 interface ComboBoxProps {
-  items:        ComboBoxItem[];
-  value:        string;           // current selected value (the `value` field)
-  onChange:     (value: string) => void;
+  items: ComboBoxItem[];
+  value: string; // current selected value (the `value` field)
+  onChange: (value: string) => void;
   placeholder?: string;
-  className?:   string;
-  hasError?:    boolean;
-  disabled?:    boolean;
+  className?: string;
+  hasError?: boolean;
+  disabled?: boolean;
 }
 
 function normalizeText(value: string): string {
@@ -31,15 +31,21 @@ function normalizeText(value: string): string {
 }
 
 export const ComboBox: React.FC<ComboBoxProps> = ({
-  items, value, onChange, placeholder = 'Type to search…', className = '', hasError, disabled,
+  items,
+  value,
+  onChange,
+  placeholder = 'Type to search…',
+  className = '',
+  hasError,
+  disabled,
 }) => {
-  const selectedItem  = items.find((i) => i.value === value);
-  const [query,   setQuery]   = useState(selectedItem?.label ?? '');
-  const [open,    setOpen]    = useState(false);
-  const [cursor,  setCursor]  = useState(-1);
-  const inputRef  = useRef<HTMLInputElement>(null);
-  const listRef   = useRef<HTMLUListElement>(null);
-  const wrapRef   = useRef<HTMLDivElement>(null);
+  const selectedItem = items.find((i) => i.value === value);
+  const [query, setQuery] = useState(selectedItem?.label ?? '');
+  const [open, setOpen] = useState(false);
+  const [cursor, setCursor] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   // Keep query in sync when value changes externally
   useEffect(() => {
@@ -63,12 +69,15 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
         .slice(0, 50)
     : items.slice(0, 50);
 
-  const select = useCallback((item: ComboBoxItem) => {
-    setQuery(item.label);
-    onChange(item.value);
-    setOpen(false);
-    setCursor(-1);
-  }, [onChange]);
+  const select = useCallback(
+    (item: ComboBoxItem) => {
+      setQuery(item.label);
+      onChange(item.value);
+      setOpen(false);
+      setCursor(-1);
+    },
+    [onChange]
+  );
 
   // Validate on blur: revert to last valid value if invalid
   const handleBlur = () => {
@@ -123,7 +132,11 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
         value={query}
         placeholder={placeholder}
         disabled={disabled}
-        onChange={(e) => { setQuery(e.target.value); setOpen(true); setCursor(-1); }}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setOpen(true);
+          setCursor(-1);
+        }}
         onFocus={() => setOpen(true)}
         onBlur={handleBlur}
         onKeyDown={handleKey}
@@ -137,7 +150,10 @@ export const ComboBox: React.FC<ComboBoxProps> = ({
               className={`combobox-option ${idx === cursor ? 'combobox-option--active' : ''}`}
               role="option"
               aria-selected={item.value === value}
-              onMouseDown={(e) => { e.preventDefault(); select(item); }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                select(item);
+              }}
             >
               {item.label}
             </li>

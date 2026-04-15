@@ -113,7 +113,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
         aria-expanded={mobileMenuOpen}
         aria-controls="mobile-nav-drawer"
       >
-        <span /><span /><span />
+        <span />
+        <span />
+        <span />
       </button>
 
       <nav className="nav-center">
@@ -171,15 +173,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
                   <div className="profile-dropdown-name">{displayName}</div>
                   {email ? (
                     <div className="profile-dropdown-email">{email}</div>
-                  ) : isLocalOnly && (
-                    <div className="profile-dropdown-email">Local mode</div>
+                  ) : (
+                    isLocalOnly && <div className="profile-dropdown-email">Local mode</div>
                   )}
                 </div>
               </div>
               <div className="profile-dropdown-divider" />
               <button
                 className="profile-dropdown-item"
-                onClick={() => { handleNavClick('account'); setShowProfile(false); }}
+                onClick={() => {
+                  handleNavClick('account');
+                  setShowProfile(false);
+                }}
               >
                 <UserIcon size={14} style={{ marginRight: 8, opacity: 0.8 }} /> Account Settings
               </button>
@@ -219,12 +224,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
               <div className="profile-dropdown-name">{displayName}</div>
               {email ? (
                 <div className="profile-dropdown-email">{email}</div>
-              ) : isLocalOnly && (
-                <div className="profile-dropdown-email">Local mode</div>
+              ) : (
+                isLocalOnly && <div className="profile-dropdown-email">Local mode</div>
               )}
             </div>
           </div>
-          <button type="button" className="nav-mobile-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
+          <button
+            type="button"
+            className="nav-mobile-close"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Close menu"
+          >
             ×
           </button>
         </div>
@@ -259,7 +269,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => 
           </button>
         </div>
 
-        <button type="button" className="nav-mobile-link nav-mobile-link--danger" onClick={handleSignOut}>
+        <button
+          type="button"
+          className="nav-mobile-link nav-mobile-link--danger"
+          onClick={handleSignOut}
+        >
           Sign Out
         </button>
       </aside>

@@ -16,9 +16,12 @@ interface UIContextValue {
 
 type RoutingMode = 'hash' | 'path';
 
-const isValidView = (value: string): value is ViewType => (
-  value === 'settings' || value === 'table' || value === 'interviewing' || value === 'dashboard' || value === 'account'
-);
+const isValidView = (value: string): value is ViewType =>
+  value === 'settings' ||
+  value === 'table' ||
+  value === 'interviewing' ||
+  value === 'dashboard' ||
+  value === 'account';
 
 const getViewFromHash = (): ViewType => {
   if (typeof window === 'undefined') return 'dashboard';
@@ -50,9 +53,9 @@ interface UIProviderProps {
 }
 
 export const UIProvider: React.FC<UIProviderProps> = ({ children, routingMode = 'hash' }) => {
-  const [currentView, setCurrentViewState] = useState<ViewType>(() => (
+  const [currentView, setCurrentViewState] = useState<ViewType>(() =>
     routingMode === 'path' ? getViewFromPath() : getViewFromHash()
-  ));
+  );
   const [selectedJob, setSelectedJob] = useState<JobApplication | null>(null);
   const [editingJob, setEditingJob] = useState<JobApplication | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
@@ -94,21 +97,19 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children, routingMode = 
     return () => window.removeEventListener('hashchange', onHashChange);
   }, [routingMode]);
 
-  const value = useMemo<UIContextValue>(() => ({
-    currentView,
-    setCurrentView,
-    selectedJob,
-    setSelectedJob,
-    editingJob,
-    setEditingJob,
-    showNewModal,
-    setShowNewModal,
-  }), [
-    currentView,
-    selectedJob,
-    editingJob,
-    showNewModal,
-  ]);
+  const value = useMemo<UIContextValue>(
+    () => ({
+      currentView,
+      setCurrentView,
+      selectedJob,
+      setSelectedJob,
+      editingJob,
+      setEditingJob,
+      showNewModal,
+      setShowNewModal,
+    }),
+    [currentView, selectedJob, editingJob, showNewModal]
+  );
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 };

@@ -33,8 +33,8 @@ export const AutoCloseTimer: React.FC<AutoCloseTimerProps> = ({
       setTimeLeft(durationMs);
     };
 
-    // By default, if the cursor is already fully outside the popup when it opens, 
-    // it won't fire mouseleave unless it crosses the boundary. 
+    // By default, if the cursor is already fully outside the popup when it opens,
+    // it won't fire mouseleave unless it crosses the boundary.
     // To gracefully handle this, we assume it's NOT active until they leave.
     document.body.addEventListener('mouseleave', handleMouseLeave);
     document.body.addEventListener('mouseenter', handleMouseEnter);
@@ -75,13 +75,13 @@ export const AutoCloseTimer: React.FC<AutoCloseTimerProps> = ({
   const strokeDashoffset = circumference - progress * circumference;
 
   return (
-    <div 
-      className="popup-auto-close-timer" 
-      style={{ 
-        width: size, 
-        height: size, 
-        display: 'flex', 
-        alignItems: 'center', 
+    <div
+      className="popup-auto-close-timer"
+      style={{
+        width: size,
+        height: size,
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         opacity: isVisible ? 1 : 0,
@@ -112,13 +112,13 @@ export const AutoCloseTimer: React.FC<AutoCloseTimerProps> = ({
           strokeLinecap="round"
         />
       </svg>
-      <span 
-        style={{ 
-          position: 'absolute', 
-          fontSize: '10px', 
-          color, 
+      <span
+        style={{
+          position: 'absolute',
+          fontSize: '10px',
+          color,
           fontWeight: 600,
-          fontFamily: 'Inter, sans-serif'
+          fontFamily: 'Inter, sans-serif',
         }}
       >
         {Math.ceil(timeLeft / 1000)}

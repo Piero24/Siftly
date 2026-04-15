@@ -17,12 +17,12 @@ interface BadgeProps {
 }
 
 const VARIANT_CLASS_MAP: Record<BadgeVariant, string> = {
-  default:  'badge',
-  success:  'badge badge-remote',    // green
-  warning:  'badge badge-hybrid',    // orange
-  info:     'badge badge-onsite',    // blue
-  danger:   'badge badge-rejected',
-  purple:   'badge badge-offer',
+  default: 'badge',
+  success: 'badge badge-remote', // green
+  warning: 'badge badge-hybrid', // orange
+  info: 'badge badge-onsite', // blue
+  danger: 'badge badge-rejected',
+  purple: 'badge badge-offer',
 };
 
 export const Badge: React.FC<BadgeProps> = ({ label, variant = 'default', icon, className }) => (

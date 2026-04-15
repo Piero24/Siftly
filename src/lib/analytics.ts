@@ -305,7 +305,8 @@ export function getStatusFunnel(apps: JobApplication[]): FunnelStage[] {
     { stage: 'Applied', count: direct.total, color: '#007AFF' },
     {
       stage: 'Interviewing',
-      count: direct.interviewing + direct.offer + direct.accepted + direct.declined + direct.rejected,
+      count:
+        direct.interviewing + direct.offer + direct.accepted + direct.declined + direct.rejected,
       color: '#34C759',
     },
     {

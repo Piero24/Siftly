@@ -8,7 +8,15 @@ import { useUI } from '../context/UIContext';
 import { useToast } from '../context/ToastContext';
 
 export function useKeyboardShortcuts() {
-  const { showNewModal, setShowNewModal, editingJob, setEditingJob, selectedJob, setSelectedJob, setCurrentView } = useUI();
+  const {
+    showNewModal,
+    setShowNewModal,
+    editingJob,
+    setEditingJob,
+    selectedJob,
+    setSelectedJob,
+    setCurrentView,
+  } = useUI();
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -57,5 +65,14 @@ export function useKeyboardShortcuts() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setCurrentView, setShowNewModal, showToast, showNewModal, editingJob, selectedJob, setEditingJob, setSelectedJob]);
+  }, [
+    setCurrentView,
+    setShowNewModal,
+    showToast,
+    showNewModal,
+    editingJob,
+    selectedJob,
+    setEditingJob,
+    setSelectedJob,
+  ]);
 }

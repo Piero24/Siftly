@@ -1,6 +1,6 @@
 /**
  * Siftly Professional Logger — Google SWE Style
- * 
+ *
  * Provides structured, hierarchical logging with context tags,
  * timestamps, and color-coded output for development.
  * Silences verbose logs in production builds.
@@ -17,10 +17,10 @@ export enum LogLevel {
 
 const COLORS = {
   [LogLevel.DEBUG]: '\x1b[38;5;245m', // Gray
-  [LogLevel.INFO]: '\x1b[34m',        // Blue
-  [LogLevel.WARN]: '\x1b[33m',        // Yellow
-  [LogLevel.ERROR]: '\x1b[31m',       // Red
-  [LogLevel.SILENT]: '',              // Empty
+  [LogLevel.INFO]: '\x1b[34m', // Blue
+  [LogLevel.WARN]: '\x1b[33m', // Yellow
+  [LogLevel.ERROR]: '\x1b[31m', // Red
+  [LogLevel.SILENT]: '', // Empty
   RESET: '\x1b[0m',
 };
 
@@ -70,35 +70,35 @@ class Logger {
     const timestamp = new Date().toISOString().split('T')[1].split('Z')[0];
     const label = LABELS[level];
     const color = COLORS[level];
-    
+
     // In the browser, we use %c for styling. In node/extension, we use ANSI colors.
     const isBrowser = typeof window !== 'undefined' && (window as any).chrome === undefined;
-    
+
     if (isBrowser) {
-        const style = this.getBrowserStyle(level);
-        console.log(
-            `%c[${timestamp}] [${label}] [${this.context}] %s`,
-            style,
-            message,
-            ...args
-        );
+      const style = this.getBrowserStyle(level);
+      console.log(`%c[${timestamp}] [${label}] [${this.context}] %s`, style, message, ...args);
     } else {
-        // ANSI colors for extension consoles or terminal
-        console.log(
-            `${color}[${timestamp}] [${label}] [${this.context}]${COLORS.RESET} ${message}`,
-            ...args
-        );
+      // ANSI colors for extension consoles or terminal
+      console.log(
+        `${color}[${timestamp}] [${label}] [${this.context}]${COLORS.RESET} ${message}`,
+        ...args
+      );
     }
   }
 
   private getBrowserStyle(level: LogLevel): string {
     const base = 'font-weight: bold; border-radius: 2px; padding: 2px 4px;';
     switch (level) {
-      case LogLevel.DEBUG: return `${base} color: #888;`;
-      case LogLevel.INFO:  return `${base} color: #007AFF;`;
-      case LogLevel.WARN:  return `${base} background: #FFF9C4; color: #F57F17;`;
-      case LogLevel.ERROR: return `${base} background: #FFEBEE; color: #D32F2F;`;
-      default:             return base;
+      case LogLevel.DEBUG:
+        return `${base} color: #888;`;
+      case LogLevel.INFO:
+        return `${base} color: #007AFF;`;
+      case LogLevel.WARN:
+        return `${base} background: #FFF9C4; color: #F57F17;`;
+      case LogLevel.ERROR:
+        return `${base} background: #FFEBEE; color: #D32F2F;`;
+      default:
+        return base;
     }
   }
 }

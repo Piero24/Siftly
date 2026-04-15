@@ -104,11 +104,11 @@ export const LoginPage: React.FC = () => {
           <div className="login-welcome-back">
             <h2 className="login-section-title">Welcome Back</h2>
             <p className="login-section-desc">Select an account to continue</p>
-            
+
             <div className="login-accounts-list">
-              {profiles.map(profile => (
-                <button 
-                  key={profile.id} 
+              {profiles.map((profile) => (
+                <button
+                  key={profile.id}
                   className="login-account-item"
                   onClick={() => login(profile)}
                 >
@@ -127,58 +127,64 @@ export const LoginPage: React.FC = () => {
               + Add another account
             </button>
           </div>
-        ) : showLocalProfile && (
-          /* ── Local Profile Form (web mode) ── */
-          <form className="login-profile-form" onSubmit={handleCreateProfile}>
-            <h2 className="login-section-title">
-              {isAddingNew ? 'Add New Account' : 'Create Your Profile'}
-            </h2>
-            <p className="login-section-desc">
-              {DEPLOYMENT_MODE === 'web'
-                ? 'All data stays secure on your local server. No cloud required.'
-                : 'Create a local-only profile for testing.'}
-            </p>
+        ) : (
+          showLocalProfile && (
+            /* ── Local Profile Form (web mode) ── */
+            <form className="login-profile-form" onSubmit={handleCreateProfile}>
+              <h2 className="login-section-title">
+                {isAddingNew ? 'Add New Account' : 'Create Your Profile'}
+              </h2>
+              <p className="login-section-desc">
+                {DEPLOYMENT_MODE === 'web'
+                  ? 'All data stays secure on your local server. No cloud required.'
+                  : 'Create a local-only profile for testing.'}
+              </p>
 
-            <div className="login-field">
-              <label htmlFor="profile-name">Display Name</label>
-              <input
-                id="profile-name"
-                type="text"
-                value={profileName}
-                onChange={(e) => setProfileName(e.target.value)}
-                placeholder="e.g. John Doe"
-                autoFocus
-                autoComplete="name"
-              />
-            </div>
+              <div className="login-field">
+                <label htmlFor="profile-name">Display Name</label>
+                <input
+                  id="profile-name"
+                  type="text"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  placeholder="e.g. John Doe"
+                  autoFocus
+                  autoComplete="name"
+                />
+              </div>
 
-            <div className="login-field">
-              <label htmlFor="profile-email">
-                Email <span className="login-optional">(optional)</span>
-              </label>
-              <input
-                id="profile-email"
-                type="email"
-                value={profileEmail}
-                onChange={(e) => setProfileEmail(e.target.value)}
-                placeholder="e.g. john@example.com"
-                autoComplete="email"
-              />
-            </div>
+              <div className="login-field">
+                <label htmlFor="profile-email">
+                  Email <span className="login-optional">(optional)</span>
+                </label>
+                <input
+                  id="profile-email"
+                  type="email"
+                  value={profileEmail}
+                  onChange={(e) => setProfileEmail(e.target.value)}
+                  placeholder="e.g. john@example.com"
+                  autoComplete="email"
+                />
+              </div>
 
-            {formError && <p className="login-form-error">{formError}</p>}
+              {formError && <p className="login-form-error">{formError}</p>}
 
-            <button type="submit" className="login-btn login-btn--profile">
-              <UserIcon />
-              {isAddingNew ? 'Add Account' : 'Get Started'}
-            </button>
-            
-            {hasProfiles && (
-              <button type="button" className="login-switch-link" onClick={() => setIsAddingNew(false)}>
-                ← Back to accounts
+              <button type="submit" className="login-btn login-btn--profile">
+                <UserIcon />
+                {isAddingNew ? 'Add Account' : 'Get Started'}
               </button>
-            )}
-          </form>
+
+              {hasProfiles && (
+                <button
+                  type="button"
+                  className="login-switch-link"
+                  onClick={() => setIsAddingNew(false)}
+                >
+                  ← Back to accounts
+                </button>
+              )}
+            </form>
+          )
         )}
 
         {/* ── Divider ── */}

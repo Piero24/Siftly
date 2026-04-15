@@ -7,7 +7,16 @@ import { SettingsCard } from '../common/SettingsCard';
 import { useSettings } from '../../context/SettingsContext';
 import { useToast } from '../../context/ToastContext';
 
-const CV_COLORS = ['#007AFF', '#34C759', '#FF9500', '#FF3B30', '#AF52DE', '#5AC8FA', '#FF2D55', '#8E8E93'];
+const CV_COLORS = [
+  '#007AFF',
+  '#34C759',
+  '#FF9500',
+  '#FF3B30',
+  '#AF52DE',
+  '#5AC8FA',
+  '#FF2D55',
+  '#8E8E93',
+];
 
 export const CvProfilesCard: React.FC = () => {
   const { cvProfiles, setCvProfiles } = useSettings();
@@ -64,22 +73,33 @@ export const CvProfilesCard: React.FC = () => {
         </div>
 
         <div className="cv-form-actions">
-          <button className="btn-apple btn-primary" onClick={addCvProfile}>Add</button>
+          <button className="btn-apple btn-primary" onClick={addCvProfile}>
+            Add
+          </button>
         </div>
       </div>
 
       <div className="cv-profile-list">
         {cvProfiles.length === 0 ? (
-          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No CV profiles yet.</span>
-        ) : cvProfiles.map((profile) => (
-          <div key={profile.id} className="cv-profile-item">
-            <div className="cv-profile-meta">
-              <span className="cv-profile-dot" style={{ backgroundColor: profile.color }} />
-              <span className="cv-profile-name">{profile.name}</span>
+          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+            No CV profiles yet.
+          </span>
+        ) : (
+          cvProfiles.map((profile) => (
+            <div key={profile.id} className="cv-profile-item">
+              <div className="cv-profile-meta">
+                <span className="cv-profile-dot" style={{ backgroundColor: profile.color }} />
+                <span className="cv-profile-name">{profile.name}</span>
+              </div>
+              <button
+                className="btn-apple btn-outline"
+                onClick={() => removeCvProfile(profile.id, profile.name)}
+              >
+                Remove
+              </button>
             </div>
-            <button className="btn-apple btn-outline" onClick={() => removeCvProfile(profile.id, profile.name)}>Remove</button>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </SettingsCard>
   );

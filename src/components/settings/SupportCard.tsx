@@ -12,19 +12,45 @@ export const SupportCard: React.FC = () => (
       Need help or have a suggestion? We're here for you.
     </p>
     <div className="support-actions">
-      <a href={APP_INFO.links.github} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-        <button className="btn-apple btn-outline"><GithubIcon size={14} /> GitHub</button>
+      <a
+        href={APP_INFO.links.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'none' }}
+      >
+        <button className="btn-apple btn-outline">
+          <GithubIcon size={14} /> GitHub
+        </button>
       </a>
-      <a href={APP_INFO.links.docs} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-        <button className="btn-apple btn-outline"><BookOpenIcon size={14} /> Documentation</button>
+      <a
+        href={APP_INFO.links.docs}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'none' }}
+      >
+        <button className="btn-apple btn-outline">
+          <BookOpenIcon size={14} /> Documentation
+        </button>
       </a>
-      <a href={APP_INFO.links.issues} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+      <a
+        href={APP_INFO.links.issues}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'none' }}
+      >
         <button className="btn-apple btn-outline">
           <MessageIcon size={14} /> Report an Issue
         </button>
       </a>
     </div>
-    <div style={{ marginTop: '16px', fontSize: '12px', color: 'var(--text-secondary)', textAlign: 'center' }}>
+    <div
+      style={{
+        marginTop: '16px',
+        fontSize: '12px',
+        color: 'var(--text-secondary)',
+        textAlign: 'center',
+      }}
+    >
       Version {APP_INFO.version}
     </div>
   </SettingsCard>

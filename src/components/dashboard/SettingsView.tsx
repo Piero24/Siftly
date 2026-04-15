@@ -40,7 +40,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {FEATURES.settings.appearance && <AppearanceCard />}
         {FEATURES.settings.dashboard && <DashboardCard />}
         {FEATURES.settings.automation && <AutomationCard />}
-        {DEPLOYMENT_MODE === 'extension' && FEATURES.settings.popupBehavior && <PopupBehaviorCard />}
+        {DEPLOYMENT_MODE === 'extension' && FEATURES.settings.popupBehavior && (
+          <PopupBehaviorCard />
+        )}
         {FEATURES.settings.localization && <LocalizationCard />}
         {FEATURES.settings.notifications && <NotificationsCard />}
         {FEATURES.settings.cvProfiles && <CvProfilesCard />}

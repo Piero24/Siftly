@@ -19,9 +19,9 @@ interface WorkTypeConfig {
 }
 
 const WORK_TYPE_CONFIG: Record<WorkType, WorkTypeConfig> = {
-  remote:  { label: 'Remote',  className: 'badge badge-remote',  Icon: HomeIcon },
-  onsite:  { label: 'On-Site', className: 'badge badge-onsite',  Icon: BuildingIcon },
-  hybrid:  { label: 'Hybrid',  className: 'badge badge-hybrid',  Icon: LaptopIcon },
+  remote: { label: 'Remote', className: 'badge badge-remote', Icon: HomeIcon },
+  onsite: { label: 'On-Site', className: 'badge badge-onsite', Icon: BuildingIcon },
+  hybrid: { label: 'Hybrid', className: 'badge badge-hybrid', Icon: LaptopIcon },
 };
 
 export const WorkTypeBadge: React.FC<WorkTypeBadgeProps> = ({ type }) => {

@@ -43,7 +43,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         >
           <option value="">Filter by...</option>
           {fieldOptions.map((field) => (
-            <option key={field.value} value={field.value}>{field.label}</option>
+            <option key={field.value} value={field.value}>
+              {field.label}
+            </option>
           ))}
         </select>
 
@@ -55,7 +57,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         >
           <option value="">Value...</option>
           {valueOptions.map((option) => (
-            <option key={option.value} value={option.value}>{option.label}</option>
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
       </div>

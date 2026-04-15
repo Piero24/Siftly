@@ -23,7 +23,10 @@ const CLASS_NAME: Record<EmploymentType, string> = {
   'fixed-term': 'badge badge-fixed-term',
 };
 
-export const EmploymentTypeBadge: React.FC<EmploymentTypeBadgeProps> = ({ type = 'permanent', compact = false }) => {
+export const EmploymentTypeBadge: React.FC<EmploymentTypeBadgeProps> = ({
+  type = 'permanent',
+  compact = false,
+}) => {
   if (type === 'permanent') return null;
 
   if (compact) {

@@ -35,7 +35,13 @@ interface JobDetailModalProps {
 }
 
 export const JobDetailModal: React.FC<JobDetailModalProps> = ({
-  job, onClose, onStatusChange, onDelete, onEdit, displayCurrency, cvProfiles,
+  job,
+  onClose,
+  onStatusChange,
+  onDelete,
+  onEdit,
+  displayCurrency,
+  cvProfiles,
 }) => {
   const formattedSalary = useSalary(job.salary, displayCurrency);
   const cvProfile = cvProfiles.find((profile) => profile.id === job.cvProfileId);
@@ -49,7 +55,6 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content glass-container" onClick={(e) => e.stopPropagation()}>
-
         {/* ── Close ── */}
         <button className="modal-close-btn" onClick={onClose} title="Close">
           <XIcon size={14} />
@@ -60,7 +65,13 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
           {/* ── Company Header ── */}
           <div className="modal-header">
             <div className="modal-header-left">
-              <CompanyIcon name={job.company} logo={job.logo} size={52} website={job.links?.website} linkedin={job.links?.linkedin} />
+              <CompanyIcon
+                name={job.company}
+                logo={job.logo}
+                size={52}
+                website={job.links?.website}
+                linkedin={job.links?.linkedin}
+              />
               <div className="modal-company-info">
                 <span className="modal-company-name">{job.company}</span>
                 {job.rating !== undefined && <StarRating value={job.rating} />}
@@ -75,7 +86,7 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
                 <EmploymentTypeBadge type={job.employmentType} />
               </div>
               <h1 className="modal-job-title">{job.position}</h1>
-              
+
               <div className="modal-meta-row">
                 <span className="modal-sector-tag">{job.sector}</span>
                 <span className="modal-separator">•</span>
@@ -85,10 +96,7 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
             </div>
 
             <div className="modal-status-box">
-              <StatusDropdown
-                status={job.status}
-                onChange={(s) => onStatusChange(job.id, s)}
-              />
+              <StatusDropdown status={job.status} onChange={(s) => onStatusChange(job.id, s)} />
             </div>
           </div>
 
@@ -102,7 +110,11 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
               <section className="modal-section">
                 <h3 className="section-title">Job Description</h3>
                 <div className="modal-description-box markdown-body">
-                  {job.description ? <ReactMarkdown>{job.description}</ReactMarkdown> : 'No description provided.'}
+                  {job.description ? (
+                    <ReactMarkdown>{job.description}</ReactMarkdown>
+                  ) : (
+                    'No description provided.'
+                  )}
                 </div>
               </section>
 
@@ -110,7 +122,9 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
               {job.notes && (
                 <section className="modal-section">
                   <h3 className="section-title">My Notes</h3>
-                  <div className="modal-notes-box markdown-body"><ReactMarkdown>{job.notes}</ReactMarkdown></div>
+                  <div className="modal-notes-box markdown-body">
+                    <ReactMarkdown>{job.notes}</ReactMarkdown>
+                  </div>
                 </section>
               )}
 

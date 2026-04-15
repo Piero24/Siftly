@@ -33,7 +33,9 @@ export const TableToolbar: React.FC<TableToolbarProps> = ({
   return (
     <div className="applications-toolbar">
       <div className="applications-toolbar-left">
-        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>{title}</h2>
+        <h2 style={{ fontSize: '20px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>
+          {title}
+        </h2>
         <SearchBar value={searchTerm} onChange={onSearchChange} />
       </div>
       <div className="applications-toolbar-right">

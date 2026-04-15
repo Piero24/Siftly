@@ -1,5 +1,13 @@
 import React, { useRef } from 'react';
-import { BoldIcon, ItalicIcon, UnderlineIcon, LinkIcon, CodeIcon, ListIcon, QuoteIcon } from './Icons';
+import {
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  LinkIcon,
+  CodeIcon,
+  ListIcon,
+  QuoteIcon,
+} from './Icons';
 
 interface MarkdownEditorProps {
   value: string;
@@ -10,7 +18,11 @@ interface MarkdownEditorProps {
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
-  value, onChange, placeholder, rows = 4, className = ''
+  value,
+  onChange,
+  placeholder,
+  rows = 4,
+  className = '',
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,15 +33,16 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = value.substring(start, end);
-    
+
     // Create new string with markdown syntax
-    const newValue = value.substring(0, start) + before + selectedText + after + value.substring(end);
-    
+    const newValue =
+      value.substring(0, start) + before + selectedText + after + value.substring(end);
+
     // Create a synthetic event
     const event = {
-      target: { value: newValue }
+      target: { value: newValue },
     } as React.ChangeEvent<HTMLTextAreaElement>;
-    
+
     onChange(event);
 
     // Reset focus and selection
@@ -42,27 +55,62 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   return (
     <div className="markdown-editor-container">
       <div className="markdown-toolbar">
-        <button type="button" onClick={() => insertText('**', '**')} className="markdown-toolbar-btn" title="Bold">
+        <button
+          type="button"
+          onClick={() => insertText('**', '**')}
+          className="markdown-toolbar-btn"
+          title="Bold"
+        >
           <BoldIcon size={14} />
         </button>
-        <button type="button" onClick={() => insertText('*', '*')} className="markdown-toolbar-btn" title="Italic">
+        <button
+          type="button"
+          onClick={() => insertText('*', '*')}
+          className="markdown-toolbar-btn"
+          title="Italic"
+        >
           <ItalicIcon size={14} />
         </button>
-        <button type="button" onClick={() => insertText('<u>', '</u>')} className="markdown-toolbar-btn" title="Underline">
+        <button
+          type="button"
+          onClick={() => insertText('<u>', '</u>')}
+          className="markdown-toolbar-btn"
+          title="Underline"
+        >
           <UnderlineIcon size={14} />
         </button>
         <div className="markdown-toolbar-divider" />
-        <button type="button" onClick={() => insertText('[', '](url)')} className="markdown-toolbar-btn" title="Link">
+        <button
+          type="button"
+          onClick={() => insertText('[', '](url)')}
+          className="markdown-toolbar-btn"
+          title="Link"
+        >
           <LinkIcon size={14} />
         </button>
-        <button type="button" onClick={() => insertText('`', '`')} className="markdown-toolbar-btn" title="Inline Code">
+        <button
+          type="button"
+          onClick={() => insertText('`', '`')}
+          className="markdown-toolbar-btn"
+          title="Inline Code"
+        >
           <CodeIcon size={14} />
         </button>
         <div className="markdown-toolbar-divider" />
-        <button type="button" onClick={() => insertText('- ')} className="markdown-toolbar-btn" title="List">
+        <button
+          type="button"
+          onClick={() => insertText('- ')}
+          className="markdown-toolbar-btn"
+          title="List"
+        >
           <ListIcon size={14} />
         </button>
-        <button type="button" onClick={() => insertText('> ')} className="markdown-toolbar-btn" title="Quote">
+        <button
+          type="button"
+          onClick={() => insertText('> ')}
+          className="markdown-toolbar-btn"
+          title="Quote"
+        >
           <QuoteIcon size={14} />
         </button>
       </div>

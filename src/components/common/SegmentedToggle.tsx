@@ -12,7 +12,11 @@ interface SegmentedToggleProps<T extends string> {
   onChange: (value: T) => void;
 }
 
-export const SegmentedToggle = <T extends string>({ value, options, onChange }: SegmentedToggleProps<T>) => (
+export const SegmentedToggle = <T extends string>({
+  value,
+  options,
+  onChange,
+}: SegmentedToggleProps<T>) => (
   <div className="theme-toggle-group">
     {options.map((option) => (
       <button

@@ -20,8 +20,25 @@ const AuthGate: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: 'var(--bg-app)' }}>
-        <div style={{ width: 32, height: 32, border: '3px solid var(--glass-border, #e0e0e0)', borderTopColor: 'var(--accent, #007AFF)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          background: 'var(--bg-app)',
+        }}
+      >
+        <div
+          style={{
+            width: 32,
+            height: 32,
+            border: '3px solid var(--glass-border, #e0e0e0)',
+            borderTopColor: 'var(--accent, #007AFF)',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+          }}
+        />
       </div>
     );
   }
@@ -33,19 +50,21 @@ const AuthGate: React.FC = () => {
   return (
     <>
       {FEATURES.debug.showToolbar && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          background: '#FF3B30',
-          color: 'white',
-          fontSize: '10px',
-          fontWeight: 'bold',
-          padding: '2px 6px',
-          zIndex: 10001,
-          borderBottomRightRadius: '4px',
-          pointerEvents: 'none'
-        }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            background: '#FF3B30',
+            color: 'white',
+            fontSize: '10px',
+            fontWeight: 'bold',
+            padding: '2px 6px',
+            zIndex: 10001,
+            borderBottomRightRadius: '4px',
+            pointerEvents: 'none',
+          }}
+        >
           DEV MODE ({DEPLOYMENT_MODE})
         </div>
       )}

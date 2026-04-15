@@ -10,7 +10,9 @@ import type { FormState } from '../../../constants/form';
 
 interface DetailsSectionProps {
   form: FormState;
-  onChange: (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
+  onChange: (
+    field: keyof FormState
+  ) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
 }
 
@@ -19,7 +21,12 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({ form, onChange, 
     <FormSectionHeader icon={<BookOpenIcon size={16} />} title="Details" />
     <div className="form-field">
       <label>Job Description</label>
-      <MarkdownEditor rows={4} placeholder="Paste the job description or your key observations…" value={form.description} onChange={onChange('description')} />
+      <MarkdownEditor
+        rows={4}
+        placeholder="Paste the job description or your key observations…"
+        value={form.description}
+        onChange={onChange('description')}
+      />
     </div>
     <div className="form-field">
       <label>Company Rating</label>
@@ -27,7 +34,12 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({ form, onChange, 
     </div>
     <div className="form-field">
       <label>Personal Notes</label>
-      <MarkdownEditor rows={3} placeholder="Interview tips, contacts, gut feelings…" value={form.notes} onChange={onChange('notes')} />
+      <MarkdownEditor
+        rows={3}
+        placeholder="Interview tips, contacts, gut feelings…"
+        value={form.notes}
+        onChange={onChange('notes')}
+      />
     </div>
   </section>
 );

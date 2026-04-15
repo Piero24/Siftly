@@ -19,11 +19,17 @@ const uniqueSortedValues = (values: Array<string | undefined>) => {
 
 const getNextRoundDate = (rounds?: InterviewRound[]) => {
   if (!rounds) return '';
-  const sorted = [...rounds].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const sorted = [...rounds].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
   const now = new Date().getTime();
   const nextRound = sorted.find((round) => round.date && new Date(round.date).getTime() > now);
   return nextRound
-    ? new Date(nextRound.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    ? new Date(nextRound.date).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     : '';
 };
 
@@ -36,22 +42,36 @@ export const useInterviewingFilters = (applications: JobApplication[]) => {
   const searchedApplications = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return applications;
-    return applications.filter((app) => app.company.toLowerCase().includes(term) || app.position.toLowerCase().includes(term));
+    return applications.filter(
+      (app) => app.company.toLowerCase().includes(term) || app.position.toLowerCase().includes(term)
+    );
   }, [applications, searchTerm]);
 
   const filterValueOptions = useMemo<SelectOption[]>(() => {
     switch (filterField) {
       case 'company':
-        return uniqueSortedValues(applications.map((app) => app.company)).map((value) => ({ value, label: value }));
+        return uniqueSortedValues(applications.map((app) => app.company)).map((value) => ({
+          value,
+          label: value,
+        }));
       case 'position':
-        return uniqueSortedValues(applications.map((app) => app.position)).map((value) => ({ value, label: value }));
+        return uniqueSortedValues(applications.map((app) => app.position)).map((value) => ({
+          value,
+          label: value,
+        }));
       case 'date':
         return uniqueSortedValues(applications.map((app) => app.date)).map((value) => ({
           value,
-          label: new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }),
+          label: new Date(value).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          }),
         }));
       case 'nextRound':
-        return uniqueSortedValues(applications.map((app) => getNextRoundDate(app.rounds))).map((value) => ({ value, label: value }));
+        return uniqueSortedValues(applications.map((app) => getNextRoundDate(app.rounds))).map(
+          (value) => ({ value, label: value })
+        );
       default:
         return [];
     }

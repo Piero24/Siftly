@@ -7,11 +7,7 @@
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { JobApplication, JobStatus } from '../types/job';
-import {
-  createAdapter,
-  StorageMode,
-  SupabaseUnconfiguredError,
-} from '../lib/storage';
+import { createAdapter, StorageMode, SupabaseUnconfiguredError } from '../lib/storage';
 import { StorageAdapter } from '../lib/storageInterface';
 import { DEBUG_CONFIG } from '../config/app';
 import { MOCK_APPLICATIONS } from '../lib/mockData';
@@ -60,9 +56,15 @@ export function useJobApplications(
       } else {
         // Local mode expects the Node API server (/api/*) to be running.
         if (err instanceof SupabaseUnconfiguredError) {
-          showToast('Supabase is not required in local mode. Start the local API server.', 'warning');
+          showToast(
+            'Supabase is not required in local mode. Start the local API server.',
+            'warning'
+          );
         } else {
-          showToast('Local API unavailable. Start it with "npm run server" or "npm run dev:full".', 'error');
+          showToast(
+            'Local API unavailable. Start it with "npm run server" or "npm run dev:full".',
+            'error'
+          );
         }
         setApplications([]);
       }

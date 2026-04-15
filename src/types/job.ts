@@ -1,4 +1,12 @@
-export type JobStatus = 'pending' | 'applied' | 'interviewing' | 'offer' | 'declined' | 'rejected' | 'accepted' | 'no-response';
+export type JobStatus =
+  | 'pending'
+  | 'applied'
+  | 'interviewing'
+  | 'offer'
+  | 'declined'
+  | 'rejected'
+  | 'accepted'
+  | 'no-response';
 export type WorkType = 'onsite' | 'hybrid' | 'remote';
 export type EmploymentType = 'permanent' | 'intern' | 'fixed-term';
 

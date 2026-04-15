@@ -17,7 +17,9 @@ interface DataStorageCardProps {
 }
 
 export const DataStorageCard: React.FC<DataStorageCardProps> = ({
-  applications, onImportCSV, onResetAll,
+  applications,
+  onImportCSV,
+  onResetAll,
 }) => {
   const { storageMode } = useSettings();
   const { showToast } = useToast();
@@ -26,11 +28,12 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
   const [resetInput, setResetInput] = useState('');
   const [isResetting, setIsResetting] = useState(false);
 
-  const storageModeLabel = storageMode === 'remote'
-    ? 'Cloud (Supabase)'
-    : storageMode === 'local'
-      ? 'Local (Server SQLite)'
-      : 'Synced (Cloud + Local)';
+  const storageModeLabel =
+    storageMode === 'remote'
+      ? 'Cloud (Supabase)'
+      : storageMode === 'local'
+        ? 'Local (Server SQLite)'
+        : 'Synced (Cloud + Local)';
 
   const handleExportCSV = () => {
     const csv = exportToCSV(applications);
@@ -67,21 +70,47 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
       <SettingsCard icon={<LayoutIcon size={22} />} title="Data & Storage">
         <div className="setting-item">
           <label>Storage Mode</label>
-          <span style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>{storageModeLabel}</span>
+          <span style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>
+            {storageModeLabel}
+          </span>
         </div>
 
         <div style={{ borderTop: '1px solid var(--divider)', paddingTop: 18, marginTop: 16 }}>
-          <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+          <label
+            style={{
+              display: 'block',
+              marginBottom: 6,
+              fontSize: 14,
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+            }}
+          >
             Import & Export
           </label>
-          <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.4 }}>
-            Manage your data locally. Export your applications as a CSV or import them from a backup file.
+          <p
+            style={{
+              fontSize: 12,
+              color: 'var(--text-secondary)',
+              marginBottom: 16,
+              lineHeight: 1.4,
+            }}
+          >
+            Manage your data locally. Export your applications as a CSV or import them from a backup
+            file.
           </p>
           <div style={{ display: 'flex', gap: 12 }}>
-            <button className="btn-apple btn-outline" style={{ flex: 1, padding: '10px' }} onClick={handleExportCSV}>
+            <button
+              className="btn-apple btn-outline"
+              style={{ flex: 1, padding: '10px' }}
+              onClick={handleExportCSV}
+            >
               <DownloadIcon size={14} /> Export CSV
             </button>
-            <button className="btn-apple btn-outline" style={{ flex: 1, padding: '10px' }} onClick={() => setShowCSVImport(true)}>
+            <button
+              className="btn-apple btn-outline"
+              style={{ flex: 1, padding: '10px' }}
+              onClick={() => setShowCSVImport(true)}
+            >
               <UploadIcon size={14} /> Import CSV
             </button>
           </div>
@@ -89,22 +118,48 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
 
         {/* Reset Section */}
         <div style={{ borderTop: '1px solid var(--divider)', paddingTop: 18, marginTop: 16 }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, fontSize: 14, fontWeight: 700, color: '#ff453a' }}>
+          <label
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              marginBottom: 8,
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#ff453a',
+            }}
+          >
             <TrashIcon size={14} /> Critical Actions
           </label>
-          <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.4 }}>
+          <p
+            style={{
+              fontSize: 12,
+              color: 'var(--text-secondary)',
+              marginBottom: 16,
+              lineHeight: 1.4,
+            }}
+          >
             Permanently delete all applications from this profile. This process cannot be reversed.
           </p>
           {!showResetConfirm ? (
-            <button className="btn-apple btn-destructive" style={{ width: '100%', height: 40, borderRadius: 10 }} onClick={() => setShowResetConfirm(true)}>
+            <button
+              className="btn-apple btn-destructive"
+              style={{ width: '100%', height: 40, borderRadius: 10 }}
+              onClick={() => setShowResetConfirm(true)}
+            >
               Clear All Data
             </button>
           ) : (
-            <div className="delete-confirm-box" style={{ background: 'rgba(255, 59, 48, 0.08)', backdropFilter: 'blur(10px)' }}>
+            <div
+              className="delete-confirm-box"
+              style={{ background: 'rgba(255, 59, 48, 0.08)', backdropFilter: 'blur(10px)' }}
+            >
               <div className="auth-confirm-label" style={{ marginBottom: 4 }}>
                 <TrashIcon size={14} /> Reset Data
               </div>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+              <p
+                style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}
+              >
                 To confirm full deletion, please type <strong>RESET</strong> below:
               </p>
               <input
@@ -115,28 +170,27 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
                 autoFocus
               />
               <div style={{ display: 'flex', gap: 12 }}>
-                <button 
-                  className="btn-apple btn-confirm-cancel" 
-                  style={{ flex: 1, height: 40, borderRadius: 10, fontWeight: 600 }} 
-                  onClick={() => { setShowResetConfirm(false); setResetInput(''); }}
+                <button
+                  className="btn-apple btn-confirm-cancel"
+                  style={{ flex: 1, height: 40, borderRadius: 10, fontWeight: 600 }}
+                  onClick={() => {
+                    setShowResetConfirm(false);
+                    setResetInput('');
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   className="btn-apple btn-confirm-delete"
-                  style={{ 
-                    flex: 1, 
-                    height: 40, 
+                  style={{
+                    flex: 1,
+                    height: 40,
                     borderRadius: 10,
                     fontWeight: 700,
                     opacity: resetInput === 'RESET' ? 1 : 0.45,
                     pointerEvents: resetInput === 'RESET' ? 'auto' : 'none',
-                    background: resetInput === 'RESET' 
-                      ? undefined 
-                      : 'var(--surface-muted)',
-                    boxShadow: resetInput === 'RESET' 
-                      ? undefined 
-                      : 'none',
+                    background: resetInput === 'RESET' ? undefined : 'var(--surface-muted)',
+                    boxShadow: resetInput === 'RESET' ? undefined : 'none',
                     color: resetInput === 'RESET' ? '#fff' : 'var(--text-secondary)',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
@@ -152,10 +206,7 @@ export const DataStorageCard: React.FC<DataStorageCardProps> = ({
       </SettingsCard>
 
       {showCSVImport && (
-        <CSVImportModal
-          onClose={() => setShowCSVImport(false)}
-          onImport={handleImportCSV}
-        />
+        <CSVImportModal onClose={() => setShowCSVImport(false)} onImport={handleImportCSV} />
       )}
     </>
   );

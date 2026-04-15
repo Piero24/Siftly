@@ -6,8 +6,8 @@ import React, { useState } from 'react';
 import { StarIcon } from './Icons';
 
 interface StarPickerProps {
-  value:    number;          // 0 = unset
-  max?:     number;
+  value: number; // 0 = unset
+  max?: number;
   onChange: (rating: number) => void;
 }
 
@@ -30,7 +30,9 @@ export const StarPicker: React.FC<StarPickerProps> = ({ value, max = 5, onChange
         </button>
       ))}
       {value > 0 && (
-        <span className="star-picker-label">{value} / {max}</span>
+        <span className="star-picker-label">
+          {value} / {max}
+        </span>
       )}
     </div>
   );

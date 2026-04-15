@@ -5,7 +5,11 @@
  * constants module (src/constants/status.ts) to maintain a single source of truth.
  */
 import { FilterField } from '../types/ui';
-import { STATUS_SELECT_OPTIONS, WORK_TYPE_SELECT_OPTIONS, EMPLOYMENT_SELECT_OPTIONS } from '../constants/status';
+import {
+  STATUS_SELECT_OPTIONS,
+  WORK_TYPE_SELECT_OPTIONS,
+  EMPLOYMENT_SELECT_OPTIONS,
+} from '../constants/status';
 
 export const FILTER_FIELDS: Array<{ value: FilterField; label: string }> = [
   { value: 'company', label: 'Company' },
@@ -21,4 +25,8 @@ export const FILTER_FIELDS: Array<{ value: FilterField; label: string }> = [
   { value: 'referrerLink', label: 'Referrer Link' },
 ];
 
-export { STATUS_SELECT_OPTIONS as STATUS_OPTIONS, WORK_TYPE_SELECT_OPTIONS as WORK_TYPE_OPTIONS, EMPLOYMENT_SELECT_OPTIONS as EMPLOYMENT_OPTIONS };
+export {
+  STATUS_SELECT_OPTIONS as STATUS_OPTIONS,
+  WORK_TYPE_SELECT_OPTIONS as WORK_TYPE_OPTIONS,
+  EMPLOYMENT_SELECT_OPTIONS as EMPLOYMENT_OPTIONS,
+};

@@ -12,9 +12,7 @@ interface WindowSize {
 }
 
 export function useWindowSize(): WindowSize {
-  const [width, setWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 1200,
-  );
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);

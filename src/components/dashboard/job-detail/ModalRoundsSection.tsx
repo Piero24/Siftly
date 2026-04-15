@@ -13,15 +13,22 @@ interface ModalRoundsSectionProps {
 const RoundCard: React.FC<{ round: InterviewRound }> = ({ round: r }) => (
   <div className="modal-round-card">
     <div className="modal-round-header">
-      <h4 className="modal-round-title"><ClockIcon size={14} /> Round #{r.roundNumber}</h4>
+      <h4 className="modal-round-title">
+        <ClockIcon size={14} /> Round #{r.roundNumber}
+      </h4>
       <span className="modal-round-subtitle">
-        {r.date ? new Date(r.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : 'TBD'}
+        {r.date
+          ? new Date(r.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })
+          : 'TBD'}
       </span>
     </div>
     {(r.interviewerName || r.interviewerContact) && (
       <div className="modal-round-detail" style={{ marginTop: '4px' }}>
         <UserPlusIcon size={14} />
-        <span>{r.interviewerName || 'Unknown Contact'} {r.interviewerContact && `(${r.interviewerContact})`}</span>
+        <span>
+          {r.interviewerName || 'Unknown Contact'}{' '}
+          {r.interviewerContact && `(${r.interviewerContact})`}
+        </span>
       </div>
     )}
     {(r.meetingLink || r.location) && (

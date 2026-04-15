@@ -28,7 +28,7 @@ interface LocalStorageOptions<T> {
 export function useLocalStorageState<T>(
   key: string,
   defaultValue: T,
-  options?: LocalStorageOptions<T>,
+  options?: LocalStorageOptions<T>
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const { deserialize, serialize } = options ?? {};
 

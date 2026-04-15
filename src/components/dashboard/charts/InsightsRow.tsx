@@ -3,8 +3,16 @@
  */
 import React from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  ResponsiveContainer, Cell, LabelList, PieChart, Pie,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
+  PieChart,
+  Pie,
 } from 'recharts';
 import { FEATURES } from '../../../config/features';
 
@@ -35,7 +43,11 @@ interface InsightsRowProps {
 }
 
 export const InsightsRow: React.FC<InsightsRowProps> = ({
-  funnel, responseRate, salaryDist, isDark, isMobile,
+  funnel,
+  responseRate,
+  salaryDist,
+  isDark,
+  isMobile,
 }) => {
   const donutHeight = isMobile ? 180 : 200;
   const minSalaryChartHeight = Math.max(isMobile ? 220 : 280, 1);
@@ -46,7 +58,7 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
     { name: 'Responded', value: responseRate.responded, color: '#34C759' },
     { name: 'No Response', value: responseRate.noResponse, color: '#8E8E93' },
     { name: 'Pending', value: responseRate.pending, color: '#007AFF' },
-  ].filter(d => d.value > 0);
+  ].filter((d) => d.value > 0);
 
   return (
     <section className="db-section">
@@ -55,7 +67,7 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
         {FEATURES.dashboard.funnel && (
           <div className="db-chart-card db-chart-card-funnel glass-container">
             <h3 className="db-chart-title">Application Funnel</h3>
-            {funnel.every(s => s.count === 0) ? (
+            {funnel.every((s) => s.count === 0) ? (
               <div className="db-empty-chart">
                 <span className="db-empty-chart-text">No funnel data</span>
               </div>
@@ -113,7 +125,10 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
                       </PieChart>
                     </ResponsiveContainer>
                     <div className="db-donut-center" style={{ height: donutHeight }}>
-                      <span className="db-donut-value" style={{ fontSize: isMobile ? '22px' : '28px' }}>
+                      <span
+                        className="db-donut-value"
+                        style={{ fontSize: isMobile ? '22px' : '28px' }}
+                      >
                         {Math.round((responseRate.responded / totalForRate) * 100)}%
                       </span>
                       <span className="db-donut-label">Responded</span>
@@ -124,7 +139,9 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
                   {responseData.map((entry, i) => (
                     <div key={i} className="db-donut-legend-item">
                       <div className="db-continent-dot" style={{ backgroundColor: entry.color }} />
-                      <span>{entry.name}: <strong>{entry.value}</strong></span>
+                      <span>
+                        {entry.name}: <strong>{entry.value}</strong>
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -145,7 +162,11 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
               <div className="db-salary-chart-area" style={{ minHeight: minSalaryChartHeight }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={salaryDist} margin={{ top: 4, right: 24, bottom: 4, left: 4 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" horizontal={false} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--border-strong)"
+                      horizontal={false}
+                    />
                     <XAxis
                       dataKey="range"
                       tick={{ fontSize: 10, fill: 'var(--text-secondary)' }}
@@ -156,12 +177,28 @@ export const InsightsRow: React.FC<InsightsRowProps> = ({
                       textAnchor="end"
                       height={50}
                     />
-                    <YAxis tick={{ fontSize: 11, fill: 'var(--text-secondary)' }} tickLine={false} axisLine={false} allowDecimals={false} />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
+                      tickLine={false}
+                      axisLine={false}
+                      allowDecimals={false}
+                    />
                     <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={36}>
                       {salaryDist.map((_, i) => (
-                        <Cell key={i} fill={isDark ? `rgba(175,82,222,${0.9 - i * 0.1})` : `rgba(175,82,222,${0.85 - i * 0.1})`} />
+                        <Cell
+                          key={i}
+                          fill={
+                            isDark
+                              ? `rgba(175,82,222,${0.9 - i * 0.1})`
+                              : `rgba(175,82,222,${0.85 - i * 0.1})`
+                          }
+                        />
                       ))}
-                      <LabelList dataKey="count" position="top" style={{ fontSize: 12, fontWeight: 600, fill: 'var(--text-primary)' }} />
+                      <LabelList
+                        dataKey="count"
+                        position="top"
+                        style={{ fontSize: 12, fontWeight: 600, fill: 'var(--text-primary)' }}
+                      />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>

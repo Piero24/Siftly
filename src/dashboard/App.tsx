@@ -28,15 +28,31 @@ import { useSelection } from '../context/SelectionContext';
 import { FEATURES } from '../config/features';
 
 const App: React.FC = () => {
-  const { currency, autoNoResponse, autoNoResponseDays, cvProfiles, storageMode, tableDisplay } = useSettings();
+  const { currency, autoNoResponse, autoNoResponseDays, cvProfiles, storageMode, tableDisplay } =
+    useSettings();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
-  const { currentView, setCurrentView, selectedJob, setSelectedJob, editingJob, setEditingJob, showNewModal, setShowNewModal } = useUI();
+  const {
+    currentView,
+    setCurrentView,
+    selectedJob,
+    setSelectedJob,
+    editingJob,
+    setEditingJob,
+    showNewModal,
+    setShowNewModal,
+  } = useUI();
   const { selectedIds, bulkStatus, bulkLinkKind } = useSelection();
 
   const {
-    applications, isLoading: isAppsLoading,
-    updateStatus, updateApplication, deleteApplication, addApplication,
-    filterApplications, importApplications, resetAllApplications,
+    applications,
+    isLoading: isAppsLoading,
+    updateStatus,
+    updateApplication,
+    deleteApplication,
+    addApplication,
+    filterApplications,
+    importApplications,
+    resetAllApplications,
   } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
 
   // ── Hooks ──
@@ -64,8 +80,12 @@ const App: React.FC = () => {
   }, [currentView]);
 
   const {
-    handleDelete, handleStatusChange, handleNewSave, handleEditSave,
-    handleBulkDelete, handleBulkStatus,
+    handleDelete,
+    handleStatusChange,
+    handleNewSave,
+    handleEditSave,
+    handleBulkDelete,
+    handleBulkStatus,
   } = useApplicationActions({ updateStatus, updateApplication, deleteApplication, addApplication });
 
   // ── Bulk link opening ──
@@ -83,7 +103,15 @@ const App: React.FC = () => {
 
   if (isInitialLoading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-app)' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          background: 'var(--bg-app)',
+        }}
+      >
         <div className="login-spinner" />
       </div>
     );
@@ -140,7 +168,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div style={{ background: 'var(--bg-app)', minHeight: '100vh', width: '100%', boxSizing: 'border-box' }}>
+    <div
+      style={{
+        background: 'var(--bg-app)',
+        minHeight: '100vh',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}
+    >
       <Navbar currentView={currentView} onViewChange={setCurrentView} />
       <main className="app-main-shell">{renderContent()}</main>
 
@@ -150,7 +185,10 @@ const App: React.FC = () => {
           onClose={() => setSelectedJob(null)}
           onStatusChange={handleStatusChange}
           onDelete={handleDelete}
-          onEdit={() => { setEditingJob(selectedJob); setSelectedJob(null); }}
+          onEdit={() => {
+            setEditingJob(selectedJob);
+            setSelectedJob(null);
+          }}
           displayCurrency={currency}
           cvProfiles={cvProfiles}
         />

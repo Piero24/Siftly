@@ -6,7 +6,18 @@ import { LayoutIcon } from '../common/Icons';
 import { SettingsCard } from '../common/SettingsCard';
 import { useSettings } from '../../context/SettingsContext';
 
-const COLUMN_LABELS = ['Company', 'Sector', 'Position', 'Country', 'City', 'Work', 'Salary', 'CV', 'Date', 'Status'];
+const COLUMN_LABELS = [
+  'Company',
+  'Sector',
+  'Position',
+  'Country',
+  'City',
+  'Work',
+  'Salary',
+  'CV',
+  'Date',
+  'Status',
+];
 
 export const TableDisplayCard: React.FC = () => {
   const { tableDisplay, setTableDisplay } = useSettings();
@@ -17,7 +28,9 @@ export const TableDisplayCard: React.FC = () => {
         <label>Rows Per Page</label>
         <select
           value={tableDisplay.rowsPerPage}
-          onChange={(e) => setTableDisplay((prev) => ({ ...prev, rowsPerPage: parseInt(e.target.value) }))}
+          onChange={(e) =>
+            setTableDisplay((prev) => ({ ...prev, rowsPerPage: parseInt(e.target.value) }))
+          }
           className="apple-select"
         >
           <option value={10}>10 rows</option>
@@ -40,13 +53,25 @@ export const TableDisplayCard: React.FC = () => {
         </select>
       </div>
       <div style={{ marginTop: 16 }}>
-        <label style={{ display: 'block', marginBottom: 8, fontSize: 13, fontWeight: 600 }}>Visible Columns</label>
+        <label style={{ display: 'block', marginBottom: 8, fontSize: 13, fontWeight: 600 }}>
+          Visible Columns
+        </label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           {COLUMN_LABELS.map((col) => {
             const colKey = col.toLowerCase();
             const isVisible = tableDisplay.visibleColumns.includes(colKey);
             return (
-              <label key={col} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', color: 'var(--text-primary)' }}>
+              <label
+                key={col}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  color: 'var(--text-primary)',
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={isVisible}

@@ -55,7 +55,6 @@ export function persistProfile(profile: LocalProfile): void {
   }
 }
 
-
 /**
  * Retrieve the existing local profile, or null if none exists.
  */

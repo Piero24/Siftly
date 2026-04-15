@@ -235,7 +235,7 @@ export async function loadRemoteSettingsSnapshot(): Promise<SettingsSnapshot | n
     if (!profile) return null;
     try {
       const res = await fetch('/api/settings', {
-        headers: { 'X-User-Id': profile.id }
+        headers: { 'X-User-Id': profile.id },
       });
       if (!res.ok) return null;
       const data = await res.json();
@@ -284,9 +284,9 @@ export async function saveRemoteSettingsSnapshot(snapshot: SettingsSnapshot): Pr
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-User-Id': profile.id
+          'X-User-Id': profile.id,
         },
-        body: JSON.stringify(snapshotToRow(profile.id, snapshot))
+        body: JSON.stringify(snapshotToRow(profile.id, snapshot)),
       });
     } catch (err) {
       settingsLogger.warn('Failed to save local settings snapshot', err);

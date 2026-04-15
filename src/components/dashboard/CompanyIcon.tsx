@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  getIconBackgroundColor,
-  NEUTRAL_ICON_BACKGROUND,
-} from '../../lib/iconColor';
+import { getIconBackgroundColor, NEUTRAL_ICON_BACKGROUND } from '../../lib/iconColor';
 
 export interface CompanyIconProps {
   name: string;
@@ -43,7 +40,7 @@ export const CompanyIcon: React.FC<CompanyIconProps> = ({
   const initials = name
     .split(' ')
     .filter(Boolean)
-    .map(n => n[0])
+    .map((n) => n[0])
     .join('')
     .slice(0, 2)
     .toUpperCase();
@@ -86,7 +83,7 @@ export const CompanyIcon: React.FC<CompanyIconProps> = ({
       isMounted = false;
     };
   }, [cacheSource, imageError, imgSrc, useAverageBg]);
-  
+
   const iconBorderRadius = size && size <= 24 ? '6px' : '10px';
   const customStyle: React.CSSProperties = { margin: '0 auto', backgroundColor };
   if (size) {
@@ -100,13 +97,17 @@ export const CompanyIcon: React.FC<CompanyIconProps> = ({
     customStyle.borderRadius = iconBorderRadius;
   }
 
-  const rootClassName = `company-icon ${useAverageBg ? 'company-icon--soft' : ''} ${className || ''}`.trim();
+  const rootClassName =
+    `company-icon ${useAverageBg ? 'company-icon--soft' : ''} ${className || ''}`.trim();
 
   return (
     <div className={rootClassName} style={customStyle}>
       {imgSrc && !imageError ? (
         useAverageBg ? (
-          <div className="company-logo-frame" style={{ borderRadius: size && size <= 24 ? '4px' : '7px' }}>
+          <div
+            className="company-logo-frame"
+            style={{ borderRadius: size && size <= 24 ? '4px' : '7px' }}
+          >
             <img
               src={imgSrc}
               alt={name}

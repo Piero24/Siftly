@@ -2,7 +2,11 @@
  * TimeRangeFilter — Tab-style time range selector for the dashboard.
  */
 import React from 'react';
-import { OVERVIEW_SCOPE_OPTIONS, OverviewScope, TIME_RANGE_OPTIONS } from '../../../constants/dashboard';
+import {
+  OVERVIEW_SCOPE_OPTIONS,
+  OverviewScope,
+  TIME_RANGE_OPTIONS,
+} from '../../../constants/dashboard';
 
 type TimeRange = 'today' | 'total' | '7d' | '30d' | '1y';
 
@@ -21,7 +25,11 @@ export const TimeRangeFilter: React.FC<TimeRangeFilterProps> = ({
 }) => (
   <div className="db-time-filter-row">
     <div className="db-time-filter-shell">
-      <div className="db-scope-nav" role="tablist" aria-label="Dashboard overview counter scope selector">
+      <div
+        className="db-scope-nav"
+        role="tablist"
+        aria-label="Dashboard overview counter scope selector"
+      >
         {OVERVIEW_SCOPE_OPTIONS.map((opt) => (
           <button
             key={opt.value}

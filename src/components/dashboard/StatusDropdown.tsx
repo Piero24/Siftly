@@ -6,32 +6,38 @@
 import React from 'react';
 import { ChevronDownIcon } from '../common/Icons';
 import {
-  CircleIcon, SendIcon, UsersIcon, GiftIcon, CheckCircleIcon, XCircleIcon, ClockIcon
+  CircleIcon,
+  SendIcon,
+  UsersIcon,
+  GiftIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
 } from '../common/Icons';
 import { JobStatus } from '../../types/job';
 import type { LucideIcon } from '../common/Icons';
 
 interface StatusConfig {
-  label:     string;
+  label: string;
   className: string;
-  Icon:      LucideIcon;
+  Icon: LucideIcon;
 }
 
 const STATUS_CONFIG: Record<JobStatus, StatusConfig> = {
-  pending:      { label: 'Pending',      className: 'badge badge-pending',      Icon: CircleIcon        },
-  applied:      { label: 'Applied',      className: 'badge badge-applied',      Icon: SendIcon          },
-  interviewing: { label: 'Interviewing', className: 'badge badge-interviewing', Icon: UsersIcon         },
-  offer:        { label: 'Offer',        className: 'badge badge-offer',        Icon: GiftIcon          },
-  declined:     { label: 'Declined',     className: 'badge badge-declined',     Icon: XCircleIcon       },
-  accepted:     { label: 'Accepted',     className: 'badge badge-accepted',     Icon: CheckCircleIcon   },
-  rejected:     { label: 'Rejected',     className: 'badge badge-rejected',     Icon: XCircleIcon       },
-  'no-response':{ label: 'No Response',  className: 'badge badge-no-response',  Icon: ClockIcon         },
+  pending: { label: 'Pending', className: 'badge badge-pending', Icon: CircleIcon },
+  applied: { label: 'Applied', className: 'badge badge-applied', Icon: SendIcon },
+  interviewing: { label: 'Interviewing', className: 'badge badge-interviewing', Icon: UsersIcon },
+  offer: { label: 'Offer', className: 'badge badge-offer', Icon: GiftIcon },
+  declined: { label: 'Declined', className: 'badge badge-declined', Icon: XCircleIcon },
+  accepted: { label: 'Accepted', className: 'badge badge-accepted', Icon: CheckCircleIcon },
+  rejected: { label: 'Rejected', className: 'badge badge-rejected', Icon: XCircleIcon },
+  'no-response': { label: 'No Response', className: 'badge badge-no-response', Icon: ClockIcon },
 };
 
 const ALL_STATUSES = Object.keys(STATUS_CONFIG) as JobStatus[];
 
 interface StatusDropdownProps {
-  status:   JobStatus;
+  status: JobStatus;
   onChange: (status: JobStatus) => void;
 }
 

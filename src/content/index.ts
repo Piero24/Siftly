@@ -10,17 +10,65 @@
  *   5. Clicking outside the panel or pressing Escape closes it.
  *   6. A global singleton (`__SIFTLY_PANEL_MANAGER__`) prevents double-initialization.
  */
-import {
-  EXTENSION_PANEL_SOURCE,
-  EXTENSION_PANEL_TOGGLE,
-  EXTENSION_PANEL_CLOSE,
-  EXTENSION_IFRAME_CLOSE,
-  EXTENSION_IFRAME_RESIZE,
-  EXTENSION_IFRAME_DRAG_START,
-  isExtensionPanelRuntimeMessage,
-  isExtensionPanelIframeMessage,
-  type ExtensionPanelRuntimeResponse,
-} from '../lib/extensionPanelMessages';
+/**
+ * ── Inline Message Constants & Type Guards ──────────────────
+ *
+ * IMPORTANT: These MUST remain local to this file — do NOT import from
+ * `../lib/extensionPanelMessages`. Chrome content scripts are loaded as a
+ * single file via `chrome.scripting.executeScript`. If Vite detects a shared
+ * import with other entries (background, popup), it extracts a separate chunk
+ * that the content script runtime cannot load, causing:
+ *   "Could not establish connection. Receiving end does not exist."
+ *
+ * Keep these values in sync with `src/lib/extensionPanelMessages.ts`.
+ */
+const EXTENSION_PANEL_SOURCE = 'siftly-extension-panel' as const;
+const EXTENSION_PANEL_TOGGLE = 'SIFTLY_PANEL_TOGGLE' as const;
+const EXTENSION_PANEL_CLOSE = 'SIFTLY_PANEL_CLOSE' as const;
+const EXTENSION_IFRAME_CLOSE = 'SIFTLY_IFRAME_CLOSE' as const;
+const EXTENSION_IFRAME_RESIZE = 'SIFTLY_IFRAME_RESIZE' as const;
+const EXTENSION_IFRAME_DRAG_START = 'SIFTLY_IFRAME_DRAG_START' as const;
+
+type ExtensionPanelRuntimeMessage = {
+  source: typeof EXTENSION_PANEL_SOURCE;
+  type: typeof EXTENSION_PANEL_TOGGLE | typeof EXTENSION_PANEL_CLOSE;
+};
+
+type ExtensionPanelRuntimeResponse = {
+  ok: boolean;
+  open: boolean;
+};
+
+type ExtensionPanelIframeMessage = {
+  source: typeof EXTENSION_PANEL_SOURCE;
+  type:
+    | typeof EXTENSION_IFRAME_CLOSE
+    | typeof EXTENSION_IFRAME_RESIZE
+    | typeof EXTENSION_IFRAME_DRAG_START;
+  height?: number;
+  clientX?: number;
+  clientY?: number;
+};
+
+function isExtensionPanelRuntimeMessage(message: unknown): message is ExtensionPanelRuntimeMessage {
+  if (!message || typeof message !== 'object') return false;
+  const m = message as Partial<ExtensionPanelRuntimeMessage>;
+  return (
+    m.source === EXTENSION_PANEL_SOURCE &&
+    (m.type === EXTENSION_PANEL_TOGGLE || m.type === EXTENSION_PANEL_CLOSE)
+  );
+}
+
+function isExtensionPanelIframeMessage(message: unknown): message is ExtensionPanelIframeMessage {
+  if (!message || typeof message !== 'object') return false;
+  const m = message as Partial<ExtensionPanelIframeMessage>;
+  return (
+    m.source === EXTENSION_PANEL_SOURCE &&
+    (m.type === EXTENSION_IFRAME_CLOSE ||
+      m.type === EXTENSION_IFRAME_RESIZE ||
+      m.type === EXTENSION_IFRAME_DRAG_START)
+  );
+}
 
 // ── Panel Layout Constants ──────────────────────────────────
 
@@ -94,8 +142,16 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
     const baseTop = PANEL_OFFSET;
 
     return {
-      x: clamp(nextX, PANEL_OFFSET - baseLeft, window.innerWidth - PANEL_OFFSET - rect.width - baseLeft),
-      y: clamp(nextY, PANEL_OFFSET - baseTop, Math.max(PANEL_OFFSET - baseTop, window.innerHeight - PANEL_OFFSET - rect.height - baseTop)),
+      x: clamp(
+        nextX,
+        PANEL_OFFSET - baseLeft,
+        window.innerWidth - PANEL_OFFSET - rect.width - baseLeft
+      ),
+      y: clamp(
+        nextY,
+        PANEL_OFFSET - baseTop,
+        Math.max(PANEL_OFFSET - baseTop, window.innerHeight - PANEL_OFFSET - rect.height - baseTop)
+      ),
     };
   }
 
@@ -231,19 +287,31 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
   // ── Event Listeners ─────────────────────────────────────
 
   // Close panel when clicking outside
-  document.addEventListener('pointerdown', (event) => {
-    if (hostElement && !isInsideHost(event.target)) closePanel();
-  }, true);
+  document.addEventListener(
+    'pointerdown',
+    (event) => {
+      if (hostElement && !isInsideHost(event.target)) closePanel();
+    },
+    true
+  );
 
   // Close panel on Escape
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && hostElement) closePanel();
-  }, true);
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key === 'Escape' && hostElement) closePanel();
+    },
+    true
+  );
 
   // Re-clamp height on viewport resize
-  window.addEventListener('resize', () => {
-    if (iframeElement) applyPanelHeight();
-  }, { passive: true });
+  window.addEventListener(
+    'resize',
+    () => {
+      if (iframeElement) applyPanelHeight();
+    },
+    { passive: true }
+  );
 
   // Handle iframe → content script messages (close, resize, drag)
   window.addEventListener('message', (event: MessageEvent) => {
@@ -299,14 +367,21 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
 
     const overlay = document.createElement('div');
     Object.assign(overlay.style, {
-      position: 'fixed', top: '0', left: '0',
-      width: '100vw', height: '100vh',
-      zIndex: '2147483001', cursor: 'grabbing',
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '100vw',
+      height: '100vh',
+      zIndex: '2147483001',
+      cursor: 'grabbing',
     });
     document.body.appendChild(overlay);
 
     const onPointerMove = (e: PointerEvent) => {
-      const clamped = clampTranslation(initialTx + e.clientX - parentStartX, initialTy + e.clientY - parentStartY);
+      const clamped = clampTranslation(
+        initialTx + e.clientX - parentStartX,
+        initialTy + e.clientY - parentStartY
+      );
       currentTranslateX = clamped.x;
       currentTranslateY = clamped.y;
       pendingTranslateX = clamped.x;

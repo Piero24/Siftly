@@ -21,21 +21,19 @@ export const TableFilterProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [filterField, setFilterField] = useState<FilterField | ''>('');
   const [filterValue, setFilterValue] = useState('');
 
-  const value = useMemo<TableFilterContextValue>(() => ({
-    searchTerm,
-    setSearchTerm,
-    showFilterRow,
-    setShowFilterRow,
-    filterField,
-    setFilterField,
-    filterValue,
-    setFilterValue,
-  }), [
-    searchTerm,
-    showFilterRow,
-    filterField,
-    filterValue,
-  ]);
+  const value = useMemo<TableFilterContextValue>(
+    () => ({
+      searchTerm,
+      setSearchTerm,
+      showFilterRow,
+      setShowFilterRow,
+      filterField,
+      setFilterField,
+      filterValue,
+      setFilterValue,
+    }),
+    [searchTerm, showFilterRow, filterField, filterValue]
+  );
 
   return <TableFilterContext.Provider value={value}>{children}</TableFilterContext.Provider>;
 };

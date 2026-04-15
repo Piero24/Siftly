@@ -16,7 +16,7 @@ interface UseApplicationFormReturn {
    * Clears the field's validation error when the user starts typing.
    */
   handleChange: (
-    field: keyof FormState,
+    field: keyof FormState
   ) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
   /** Validates required fields. Returns `true` if the form is valid. */
   validate: () => boolean;
@@ -37,7 +37,7 @@ export function useApplicationForm(initialState: FormState): UseApplicationFormR
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       },
-    [],
+    []
   );
 
   const validate = (): boolean => {

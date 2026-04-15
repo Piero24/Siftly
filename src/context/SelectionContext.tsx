@@ -21,21 +21,19 @@ export const SelectionProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [bulkStatus, setBulkStatus] = useState<JobStatus>('applied');
   const [bulkLinkKind, setBulkLinkKind] = useState<'job' | 'website' | 'linkedin'>('job');
 
-  const value = useMemo<SelectionContextValue>(() => ({
-    selectorMode,
-    setSelectorMode,
-    selectedIds,
-    setSelectedIds,
-    bulkStatus,
-    setBulkStatus,
-    bulkLinkKind,
-    setBulkLinkKind,
-  }), [
-    selectorMode,
-    selectedIds,
-    bulkStatus,
-    bulkLinkKind,
-  ]);
+  const value = useMemo<SelectionContextValue>(
+    () => ({
+      selectorMode,
+      setSelectorMode,
+      selectedIds,
+      setSelectedIds,
+      bulkStatus,
+      setBulkStatus,
+      bulkLinkKind,
+      setBulkLinkKind,
+    }),
+    [selectorMode, selectedIds, bulkStatus, bulkLinkKind]
+  );
 
   return <SelectionContext.Provider value={value}>{children}</SelectionContext.Provider>;
 };

@@ -11,7 +11,13 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
 import { DEBUG_CONFIG } from '../config/app';
 import { DEPLOYMENT_MODE } from '../config/deploymentMode';
-import { getStoredProfile, createProfile, clearProfile, LocalProfile, persistProfile } from '../lib/localAuth';
+import {
+  getStoredProfile,
+  createProfile,
+  clearProfile,
+  LocalProfile,
+  persistProfile,
+} from '../lib/localAuth';
 import { logger } from '../lib/logger';
 import { useToast } from './ToastContext';
 
@@ -93,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const initWebAuth = async () => {
         const allProfiles = await fetchProfiles();
         const stored = getStoredProfile();
-        
+
         // If we have a local session AND it matches one on the backend, auto-login
         if (stored && allProfiles.some((p: LocalProfile) => p.id === stored.id)) {
           setLocalProfile(stored);
@@ -102,10 +108,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await fetch('/api/profiles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(stored)
+            body: JSON.stringify(stored),
           });
           setLocalProfile(stored);
-          setProfiles(prev => [...prev, stored]);
+          setProfiles((prev) => [...prev, stored]);
         }
 
         setIsLoading(false);
@@ -122,7 +128,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const initSession = async () => {
       if (!supabase) return;
-      const { data: { session: s } } = await supabase.auth.getSession();
+      const {
+        data: { session: s },
+      } = await supabase.auth.getSession();
       if (s) {
         const { error } = await supabase.auth.getUser();
         if (error) {
@@ -142,7 +150,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     initSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, s) => {
       if (event === 'SIGNED_OUT') {
         authLogger.info(`Auth event overridden eviction: ${event}`);
         setSession(null);
@@ -156,14 +166,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Sub-minute Heartbeat mechanism: actively poll DB to detect remote deletions rapidly
     const heartbeat = setInterval(async () => {
       if (!supabase) return;
-      
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
+
+      const {
+        data: { session: currentSession },
+      } = await supabase.auth.getSession();
       if (!currentSession) return;
-      
+
       const { error } = await supabase.auth.getUser();
       if (error) {
         const err = error as any;
-        if (err.status === 401 || err.status === 403 || err.message.toLowerCase().includes('user not found')) {
+        if (
+          err.status === 401 ||
+          err.status === 403 ||
+          err.message.toLowerCase().includes('user not found')
+        ) {
           authLogger.warn('Heartbeat detected invalid user session. Evicting immediately.');
           await supabase.auth.signOut();
           setSession(null);
@@ -182,9 +198,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (provider: OAuthProvider) => {
     if (!supabase) return;
-    
+
     authLogger.info(`Initiating ${provider} sign-in...`);
-    
+
     // In Extension mode, the redirect URL MUST be the extension's dashboard page.
     const redirectTo = window.location.href.split('?')[0];
 
@@ -233,12 +249,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const handleCreateLocalProfile = async (name: string, email?: string) => {
     try {
       const profile = createProfile(name, email);
-      
+
       // Sync to backend
       const res = await fetch('/api/profiles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile)
+        body: JSON.stringify(profile),
       });
 
       if (res.status === 409) {
@@ -249,7 +265,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) throw new Error('Failed to save profile on server.');
 
       setLocalProfile(profile);
-      setProfiles(prev => [profile, ...prev]);
+      setProfiles((prev) => [profile, ...prev]);
       showToast(`Welcome, ${name}! Profile created.`, 'success');
     } catch (err: any) {
       authLogger.error('Failed to create local profile:', err);
@@ -269,10 +285,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // 2. Clear local session
         clearProfile();
         setLocalProfile(null);
-        
+
         // 3. Refresh profiles list for account picker
         await fetchProfiles();
-        
+
         showToast('Local profile and all data deleted.', 'info');
       } catch (err) {
         authLogger.error('Failed to delete local profile:', err);
@@ -297,25 +313,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isLocalOnly = !!localProfile;
   const isAuthenticated = isLocalOnly || !!user;
-  const displayName = localProfile?.displayName
-    ?? user?.user_metadata?.full_name
-    ?? user?.email
-    ?? '';
+  const displayName =
+    localProfile?.displayName ?? user?.user_metadata?.full_name ?? user?.email ?? '';
 
-  const value = useMemo<AuthContextValue>(() => ({
-    user,
-    localProfile,
-    profiles,
-    displayName,
-    isAuthenticated,
-    isLoading,
-    isLocalOnly,
-    signIn,
-    login,
-    signOut,
-    createLocalProfile: handleCreateLocalProfile,
-    deleteAccount,
-  }), [user, localProfile, profiles, isAuthenticated, isLoading, isLocalOnly, session, displayName]);
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      localProfile,
+      profiles,
+      displayName,
+      isAuthenticated,
+      isLoading,
+      isLocalOnly,
+      signIn,
+      login,
+      signOut,
+      createLocalProfile: handleCreateLocalProfile,
+      deleteAccount,
+    }),
+    [user, localProfile, profiles, isAuthenticated, isLoading, isLocalOnly, session, displayName]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

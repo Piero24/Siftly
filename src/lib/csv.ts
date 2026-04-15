@@ -8,15 +8,37 @@ import { JobApplication, InterviewRound } from '../types/job';
 
 // ── Column order ────────────────────────────────────────
 const FLAT_COLUMNS = [
-  'id', 'company', 'logo', 'sector', 'position', 'employmentType',
-  'country', 'city', 'workType', 'cvProfileId', 'status',
-  'salary.amount', 'salary.currency',
+  'id',
+  'company',
+  'logo',
+  'sector',
+  'position',
+  'employmentType',
+  'country',
+  'city',
+  'workType',
+  'cvProfileId',
+  'status',
+  'salary.amount',
+  'salary.currency',
   'date',
-  'links.job', 'links.linkedin', 'links.website',
-  'description', 'rating',
-  'referral.referrer', 'referral.date', 'referral.note', 'referral.link', 'referral.code',
-  'recruiter.name', 'recruiter.email', 'recruiter.phone',
-  'notes', 'phoneScreens', 'interviews', 'rounds',
+  'links.job',
+  'links.linkedin',
+  'links.website',
+  'description',
+  'rating',
+  'referral.referrer',
+  'referral.date',
+  'referral.note',
+  'referral.link',
+  'referral.code',
+  'recruiter.name',
+  'recruiter.email',
+  'recruiter.phone',
+  'notes',
+  'phoneScreens',
+  'interviews',
+  'rounds',
 ] as const;
 
 // ── Helpers ─────────────────────────────────────────────
@@ -148,7 +170,11 @@ export function parseCSV(csvString: string): JobApplication[] {
       if (!raw) return;
 
       if (header === 'rounds') {
-        try { obj.rounds = JSON.parse(raw) as InterviewRound[]; } catch { /* skip */ }
+        try {
+          obj.rounds = JSON.parse(raw) as InterviewRound[];
+        } catch {
+          /* skip */
+        }
         return;
       }
 

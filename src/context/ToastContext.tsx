@@ -45,7 +45,9 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
               {toast.type === 'info' && <ClockIcon size={18} />}
             </div>
             <div className="toast-message">
-              {toast.type === 'error' && <strong style={{ display: 'block', marginBottom: '4px' }}>Error</strong>}
+              {toast.type === 'error' && (
+                <strong style={{ display: 'block', marginBottom: '4px' }}>Error</strong>
+              )}
               {toast.message}
             </div>
             <button className="toast-close" onClick={() => removeToast(toast.id)}>

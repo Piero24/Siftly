@@ -38,10 +38,18 @@ export const DebugToolbar: React.FC = () => {
       <div className="debug-badge">Debug</div>
 
       <div className="debug-info">
-        <span>Deploy: <b>{DEPLOYMENT_MODE}</b></span>
-        <span>Target: <b>{import.meta.env.VITE_BUILD_TARGET}</b></span>
-        <span>Storage: <b>{storageMode}</b></span>
-        <span>Auth: <b>{isLocalOnly ? `Local (${displayName})` : (user?.email || 'Guest')}</b></span>
+        <span>
+          Deploy: <b>{DEPLOYMENT_MODE}</b>
+        </span>
+        <span>
+          Target: <b>{import.meta.env.VITE_BUILD_TARGET}</b>
+        </span>
+        <span>
+          Storage: <b>{storageMode}</b>
+        </span>
+        <span>
+          Auth: <b>{isLocalOnly ? `Local (${displayName})` : user?.email || 'Guest'}</b>
+        </span>
       </div>
 
       <div className="debug-actions">

@@ -7,7 +7,8 @@ import { SettingsCard } from '../common/SettingsCard';
 import { useSettings } from '../../context/SettingsContext';
 
 export const AutomationCard: React.FC = () => {
-  const { autoNoResponse, setAutoNoResponse, autoNoResponseDays, setAutoNoResponseDays } = useSettings();
+  const { autoNoResponse, setAutoNoResponse, autoNoResponseDays, setAutoNoResponseDays } =
+    useSettings();
 
   return (
     <SettingsCard icon={<ClockIcon size={22} />} title="Automation">

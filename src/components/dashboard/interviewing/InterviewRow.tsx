@@ -11,13 +11,7 @@ import { EmploymentTypeBadge } from '../EmploymentTypeBadge';
 import { StatusDropdown } from '../StatusDropdown';
 import { NextRoundDisplay } from './NextRoundDisplay';
 import { capitalizeCompanyName } from '../../../lib/format';
-import {
-  PhoneIcon,
-  CodeIcon,
-  SumIcon,
-  UserIcon,
-  MailIcon,
-} from '../../common/Icons';
+import { PhoneIcon, CodeIcon, SumIcon, UserIcon, MailIcon } from '../../common/Icons';
 
 interface InterviewRowProps {
   app: JobApplication;
@@ -64,11 +58,7 @@ const RecruiterCell: React.FC<{ recruiter?: JobApplication['recruiter'] }> = ({ 
           onClick={(e) => e.stopPropagation()}
         >
           <MailIcon size={10} />
-          <span
-            className="table-ellipsis"
-            style={{ maxWidth: '140px' }}
-            title={recruiter.email}
-          >
+          <span className="table-ellipsis" style={{ maxWidth: '140px' }} title={recruiter.email}>
             {recruiter.email}
           </span>
         </a>
@@ -88,11 +78,7 @@ const RecruiterCell: React.FC<{ recruiter?: JobApplication['recruiter'] }> = ({ 
           onClick={(e) => e.stopPropagation()}
         >
           <PhoneIcon size={10} />
-          <span
-            className="table-ellipsis"
-            style={{ maxWidth: '140px' }}
-            title={recruiter.phone}
-          >
+          <span className="table-ellipsis" style={{ maxWidth: '140px' }} title={recruiter.phone}>
             {recruiter.phone}
           </span>
         </a>

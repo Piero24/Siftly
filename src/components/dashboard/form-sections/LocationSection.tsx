@@ -17,8 +17,8 @@ interface LocationSectionProps {
 export const LocationSection: React.FC<LocationSectionProps> = ({ form, errors, setForm }) => {
   const countryOptions = useMemo(() => getAllCountryOptions(), []);
   const cityOptions = useMemo(
-    () => form.country ? getCitiesForCountry(form.country) : [],
-    [form.country],
+    () => (form.country ? getCitiesForCountry(form.country) : []),
+    [form.country]
   );
 
   const handleCountryChange = (countryCode: string) => {
@@ -30,7 +30,9 @@ export const LocationSection: React.FC<LocationSectionProps> = ({ form, errors, 
       <FormSectionHeader icon={<GlobeIcon size={16} />} title="Location" />
       <div className="form-grid-2">
         <div className="form-field">
-          <label>Country <span className="required">*</span></label>
+          <label>
+            Country <span className="required">*</span>
+          </label>
           <ComboBox
             items={countryOptions}
             value={form.country}
@@ -41,7 +43,12 @@ export const LocationSection: React.FC<LocationSectionProps> = ({ form, errors, 
           {errors.country && <span className="error-msg">{errors.country}</span>}
         </div>
         <div className="form-field">
-          <label>City {!form.country && <span style={{ opacity: 0.5, fontWeight: 400 }}>(select country first)</span>}</label>
+          <label>
+            City{' '}
+            {!form.country && (
+              <span style={{ opacity: 0.5, fontWeight: 400 }}>(select country first)</span>
+            )}
+          </label>
           <ComboBox
             items={cityOptions}
             value={form.city}

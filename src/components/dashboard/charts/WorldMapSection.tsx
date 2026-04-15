@@ -3,25 +3,46 @@
  * work-type / CV / employment-type stat pills.
  */
 import React, { useState } from 'react';
-import {
-  ComposableMap, Geographies, Geography, ZoomableGroup,
-} from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
 import { LINKS } from '../../../config/links';
-import { CONTINENT_COLOR, CONTINENT_ORDER, EMPLOYMENT_COLOR, EMPLOYMENT_LABEL, A3_TO_A2 } from '../../../constants/dashboard';
+import {
+  CONTINENT_COLOR,
+  CONTINENT_ORDER,
+  EMPLOYMENT_COLOR,
+  EMPLOYMENT_LABEL,
+  A3_TO_A2,
+} from '../../../constants/dashboard';
 import { WorkTypeBadge } from '../WorkTypeBadge';
 import { FEATURES } from '../../../config/features';
 import { getContinent } from '../../../lib/continents';
 
 const GEO_URL = LINKS.geoData;
 
-interface ContinentStat { name: string; count: number }
-interface WorkTypeStat { name: string; count: number }
-interface CvStat { id: string; name: string; count: number; color: string }
-interface EmploymentTypeStat { name: string; count: number }
-interface ReferralStat { name: 'with-referral' | 'without-referral'; count: number }
+interface ContinentStat {
+  name: string;
+  count: number;
+}
+interface WorkTypeStat {
+  name: string;
+  count: number;
+}
+interface CvStat {
+  id: string;
+  name: string;
+  count: number;
+  color: string;
+}
+interface EmploymentTypeStat {
+  name: string;
+  count: number;
+}
+interface ReferralStat {
+  name: 'with-referral' | 'without-referral';
+  count: number;
+}
 
 interface WorldMapSectionProps {
   countryMap: Map<string, number>;
@@ -35,7 +56,14 @@ interface WorldMapSectionProps {
 }
 
 export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
-  countryMap, continentStats, workTypes, cvStats, employmentTypes, referralStats, isDark, windowWidth,
+  countryMap,
+  continentStats,
+  workTypes,
+  cvStats,
+  employmentTypes,
+  referralStats,
+  isDark,
+  windowWidth,
 }) => {
   const [tooltipContent, setTooltipContent] = useState('');
   const [isMapInteractive, setIsMapInteractive] = useState(false);
@@ -45,10 +73,24 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
     count: continentStats.find((s) => s.name === name)?.count ?? 0,
   }));
 
-  const mapHeight = Math.max(windowWidth < 520 ? 240 : windowWidth < 680 ? 280 : windowWidth < 1100 ? 360 : 470, 1);
-  const mapScale = windowWidth < 400 ? 190 : windowWidth < 520 ? 178 : windowWidth < 680 ? 172 : windowWidth < 900 ? 178 : 186;
-  const mapZoom = windowWidth < 400 ? 1.24 : windowWidth < 520 ? 1.16 : windowWidth < 680 ? 1.08 : 1;
-  const mapCenter: [number, number] = windowWidth < 520 ? [-18, 37] : windowWidth < 680 ? [-8, 30] : [10, 24];
+  const mapHeight = Math.max(
+    windowWidth < 520 ? 240 : windowWidth < 680 ? 280 : windowWidth < 1100 ? 360 : 470,
+    1
+  );
+  const mapScale =
+    windowWidth < 400
+      ? 190
+      : windowWidth < 520
+        ? 178
+        : windowWidth < 680
+          ? 172
+          : windowWidth < 900
+            ? 178
+            : 186;
+  const mapZoom =
+    windowWidth < 400 ? 1.24 : windowWidth < 520 ? 1.16 : windowWidth < 680 ? 1.08 : 1;
+  const mapCenter: [number, number] =
+    windowWidth < 520 ? [-18, 37] : windowWidth < 680 ? [-8, 30] : [10, 24];
 
   const maxCount = Math.max(...[...countryMap.values()], 1);
   const isEmploymentEmpty = employmentTypes.every((stat) => stat.count === 0);
@@ -63,9 +105,15 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
 
   const hexToRgba = (hex: string, alpha: number) => {
     const safeHex = hex.replace('#', '');
-    const bigint = parseInt(safeHex.length === 3
-      ? safeHex.split('').map((c) => c + c).join('')
-      : safeHex, 16);
+    const bigint = parseInt(
+      safeHex.length === 3
+        ? safeHex
+            .split('')
+            .map((c) => c + c)
+            .join('')
+        : safeHex,
+      16
+    );
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
     const b = bigint & 255;
@@ -77,23 +125,37 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
       <div className="db-middle-row">
         {FEATURES.dashboard.worldMap && (
           <div className="db-map-column">
-            <div className="db-map-card glass-container" onMouseLeave={() => setIsMapInteractive(false)}>
+            <div
+              className="db-map-card glass-container"
+              onMouseLeave={() => setIsMapInteractive(false)}
+            >
               <div className="db-map-interactive-area">
                 {!isMapInteractive && (
-                  <div
-                    className="db-map-overlay"
-                    onClick={() => setIsMapInteractive(true)}
-                  />
+                  <div className="db-map-overlay" onClick={() => setIsMapInteractive(true)} />
                 )}
-                <div className="db-map-viewport" style={{ height: mapHeight, minHeight: mapHeight }}>
+                <div
+                  className="db-map-viewport"
+                  style={{ height: mapHeight, minHeight: mapHeight }}
+                >
                   <ComposableMap
                     projection="geoMercator"
                     projectionConfig={{ scale: mapScale, center: mapCenter }}
-                    style={{ width: '100%', height: '100%', pointerEvents: isMapInteractive ? 'auto' : 'none', outline: 'none' }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      pointerEvents: isMapInteractive ? 'auto' : 'none',
+                      outline: 'none',
+                    }}
                   >
                     <ZoomableGroup zoom={mapZoom}>
                       <Geographies geography={GEO_URL}>
-                        {(geoData: { geographies: Array<{ id: string; rsmKey: string; properties: { name: string } }> }) =>
+                        {(geoData: {
+                          geographies: Array<{
+                            id: string;
+                            rsmKey: string;
+                            properties: { name: string };
+                          }>;
+                        }) =>
                           geoData.geographies.map((geo) => {
                             const a2 = A3_TO_A2[geo.id] || '';
                             const count = countryMap.get(a2) || 0;
@@ -111,15 +173,34 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
                                 geography={geo}
                                 data-tooltip-id="my-tooltip"
                                 onMouseEnter={() => {
-                                  setTooltipContent(`${geo.properties.name}: ${count} application${count === 1 ? '' : 's'}`);
+                                  setTooltipContent(
+                                    `${geo.properties.name}: ${count} application${count === 1 ? '' : 's'}`
+                                  );
                                 }}
                                 onMouseLeave={() => {
                                   setTooltipContent('');
                                 }}
                                 style={{
-                                  default: { fill: opacity > 0 ? accentFill : neutralFill, stroke: 'var(--border-subtle)', strokeWidth: 0.8, outline: 'none', transition: 'all 250ms' },
-                                  hover: { fill: hoverFill, stroke: 'var(--border-strong)', strokeWidth: 0.8, outline: 'none', transition: 'all 250ms' },
-                                  pressed: { fill: pressFill, stroke: 'var(--border-strong)', strokeWidth: 0.8, outline: 'none' }
+                                  default: {
+                                    fill: opacity > 0 ? accentFill : neutralFill,
+                                    stroke: 'var(--border-subtle)',
+                                    strokeWidth: 0.8,
+                                    outline: 'none',
+                                    transition: 'all 250ms',
+                                  },
+                                  hover: {
+                                    fill: hoverFill,
+                                    stroke: 'var(--border-strong)',
+                                    strokeWidth: 0.8,
+                                    outline: 'none',
+                                    transition: 'all 250ms',
+                                  },
+                                  pressed: {
+                                    fill: pressFill,
+                                    stroke: 'var(--border-strong)',
+                                    strokeWidth: 0.8,
+                                    outline: 'none',
+                                  },
                                 }}
                               />
                             );
@@ -134,8 +215,15 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
               <div className="db-map-continent-section">
                 <div className="db-continent-row db-continent-row-spaced">
                   {allContinentStats.map((stat) => (
-                    <div key={stat.name} className="db-continent-pill" style={{ color: CONTINENT_COLOR[stat.name] || '#8E8E93' }}>
-                      <div className="db-continent-dot" style={{ backgroundColor: CONTINENT_COLOR[stat.name] || '#8E8E93' }} />
+                    <div
+                      key={stat.name}
+                      className="db-continent-pill"
+                      style={{ color: CONTINENT_COLOR[stat.name] || '#8E8E93' }}
+                    >
+                      <div
+                        className="db-continent-dot"
+                        style={{ backgroundColor: CONTINENT_COLOR[stat.name] || '#8E8E93' }}
+                      />
                       <span className="db-continent-name">{stat.name}</span>
                       <span className="db-continent-count">{stat.count}</span>
                     </div>
@@ -146,7 +234,9 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
           </div>
         )}
 
-        <div className={`db-breakdown-stack${isBreakdownFullyEmpty ? ' db-breakdown-stack-empty' : ''}`}>
+        <div
+          className={`db-breakdown-stack${isBreakdownFullyEmpty ? ' db-breakdown-stack-empty' : ''}`}
+        >
           {FEATURES.dashboard.workTypes && (
             <div className="db-chart-card glass-container">
               {workTypes.length === 0 ? (
@@ -155,10 +245,16 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
                 </div>
               ) : (
                 <div className="db-continent-row db-worktype-row db-pill-row-spaced">
-                  {workTypes.map(stat => (
-                    <div key={stat.name} className="db-continent-pill" style={{ color: 'var(--border-strong)' }}>
+                  {workTypes.map((stat) => (
+                    <div
+                      key={stat.name}
+                      className="db-continent-pill"
+                      style={{ color: 'var(--border-strong)' }}
+                    >
                       <WorkTypeBadge type={stat.name as any} />
-                      <span className="db-continent-count" style={{ color: 'var(--text-primary)' }}>{stat.count}</span>
+                      <span className="db-continent-count" style={{ color: 'var(--text-primary)' }}>
+                        {stat.count}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -195,9 +291,23 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
               ) : (
                 <div className="db-continent-row db-pill-row-spaced db-employment-row">
                   {employmentTypes.map((stat) => (
-                    <div key={stat.name} className="db-continent-pill" style={{ color: EMPLOYMENT_COLOR[stat.name as keyof typeof EMPLOYMENT_COLOR] }}>
-                      <div className="db-continent-dot" style={{ backgroundColor: EMPLOYMENT_COLOR[stat.name as keyof typeof EMPLOYMENT_COLOR] }} />
-                      <span className="db-continent-name">{EMPLOYMENT_LABEL[stat.name as keyof typeof EMPLOYMENT_LABEL]}</span>
+                    <div
+                      key={stat.name}
+                      className="db-continent-pill"
+                      style={{
+                        color: EMPLOYMENT_COLOR[stat.name as keyof typeof EMPLOYMENT_COLOR],
+                      }}
+                    >
+                      <div
+                        className="db-continent-dot"
+                        style={{
+                          backgroundColor:
+                            EMPLOYMENT_COLOR[stat.name as keyof typeof EMPLOYMENT_COLOR],
+                        }}
+                      />
+                      <span className="db-continent-name">
+                        {EMPLOYMENT_LABEL[stat.name as keyof typeof EMPLOYMENT_LABEL]}
+                      </span>
                       <span className="db-continent-count">{stat.count}</span>
                     </div>
                   ))}
@@ -234,9 +344,7 @@ export const WorldMapSection: React.FC<WorldMapSectionProps> = ({
         </div>
       </div>
 
-      <Tooltip id="my-tooltip">
-        {tooltipContent}
-      </Tooltip>
+      <Tooltip id="my-tooltip">{tooltipContent}</Tooltip>
     </section>
   );
 };

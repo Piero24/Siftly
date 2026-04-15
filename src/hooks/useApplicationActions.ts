@@ -37,7 +37,7 @@ export function useApplicationActions(operations: ApplicationOperations) {
   const handleStatusChange = async (id: string, status: JobStatus) => {
     try {
       await operations.updateStatus(id, status);
-      if (selectedJob?.id === id) setSelectedJob((prev) => prev ? { ...prev, status } : null);
+      if (selectedJob?.id === id) setSelectedJob((prev) => (prev ? { ...prev, status } : null));
     } catch (error: any) {
       showToast(`Failed to update status: ${error.message || 'Unknown error'}`, 'error');
     }
@@ -79,7 +79,7 @@ export function useApplicationActions(operations: ApplicationOperations) {
 
   const handleBulkStatus = async (
     updateSt: (id: string, status: JobStatus) => Promise<void>,
-    status: JobStatus,
+    status: JobStatus
   ) => {
     if (selectedIds.size === 0) return;
     const count = selectedIds.size;

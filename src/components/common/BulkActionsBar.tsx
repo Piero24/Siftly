@@ -53,7 +53,9 @@ export const BulkActionsBar: React.FC<BulkActionsBarProps> = ({
           onChange={(e) => onBulkStatusChange(e.target.value as JobStatus)}
         >
           {statusOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
         <button
@@ -61,7 +63,8 @@ export const BulkActionsBar: React.FC<BulkActionsBarProps> = ({
           disabled={selectedCount === 0}
           onClick={onApplyBulkStatus}
         >
-          <CheckCircleIcon size={14} />Change Status
+          <CheckCircleIcon size={14} />
+          Change Status
         </button>
       </div>
 
@@ -70,10 +73,14 @@ export const BulkActionsBar: React.FC<BulkActionsBarProps> = ({
           <select
             className="apple-select bulk-actions-status"
             value={linkActions.bulkLinkKind}
-            onChange={(e) => linkActions.onBulkLinkKindChange(e.target.value as 'job' | 'website' | 'linkedin')}
+            onChange={(e) =>
+              linkActions.onBulkLinkKindChange(e.target.value as 'job' | 'website' | 'linkedin')
+            }
           >
             {LINK_KIND_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
           <button
@@ -95,7 +102,8 @@ export const BulkActionsBar: React.FC<BulkActionsBarProps> = ({
           disabled={selectedCount === 0}
           onClick={onBulkDelete}
         >
-          <TrashIcon size={14} />Delete Selected
+          <TrashIcon size={14} />
+          Delete Selected
         </button>
       </div>
     </div>

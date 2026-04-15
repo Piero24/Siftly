@@ -7,13 +7,7 @@
  */
 import React from 'react';
 import { InterviewRound } from '../../../types/job';
-import {
-  PhoneIcon,
-  UserIcon,
-  MailIcon,
-  VideoIcon,
-  MapPinIcon,
-} from '../../common/Icons';
+import { PhoneIcon, UserIcon, MailIcon, VideoIcon, MapPinIcon } from '../../common/Icons';
 
 /** Sorts rounds by date and returns the index of the next upcoming round, or -1. */
 function findNextRoundIndex(sorted: InterviewRound[]): number {

@@ -23,11 +23,7 @@ const isDebug = import.meta.env.VITE_DEBUG_MODE === 'true';
  * behavior is preserved. Debug switches extension runs into dev mode.
  */
 export const DEPLOYMENT_MODE: DeploymentMode =
-  buildTarget === 'web'
-    ? 'web'
-    : isDebug
-      ? 'dev'
-      : 'extension';
+  buildTarget === 'web' ? 'web' : isDebug ? 'dev' : 'extension';
 
 // ── Auth Mode ────────────────────────────────────────────
 export type AuthMode = 'local-profile' | 'oauth' | 'all';
@@ -62,7 +58,7 @@ const CAPABILITIES_MAP: Record<DeploymentMode, DeploymentCapabilities> = {
     showLocalProfile: false,
   },
   dev: {
-    storageMode: 'local',         // default in dev; can be changed
+    storageMode: 'local', // default in dev; can be changed
     storageEditable: true,
     authMode: 'all',
     showOAuth: true,

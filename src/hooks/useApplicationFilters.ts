@@ -33,13 +33,25 @@ export const useApplicationFilters = ({
   const filterValueOptions = useMemo<SelectOption[]>(() => {
     switch (filterField) {
       case 'company':
-        return uniqueSortedValues(applications.map((app) => app.company)).map((item) => ({ value: item, label: item }));
+        return uniqueSortedValues(applications.map((app) => app.company)).map((item) => ({
+          value: item,
+          label: item,
+        }));
       case 'sector':
-        return uniqueSortedValues(applications.map((app) => app.sector)).map((item) => ({ value: item, label: item }));
+        return uniqueSortedValues(applications.map((app) => app.sector)).map((item) => ({
+          value: item,
+          label: item,
+        }));
       case 'country':
-        return uniqueSortedValues(applications.map((app) => app.country)).map((item) => ({ value: item, label: item }));
+        return uniqueSortedValues(applications.map((app) => app.country)).map((item) => ({
+          value: item,
+          label: item,
+        }));
       case 'city':
-        return uniqueSortedValues(applications.map((app) => app.city)).map((item) => ({ value: item, label: item }));
+        return uniqueSortedValues(applications.map((app) => app.city)).map((item) => ({
+          value: item,
+          label: item,
+        }));
       case 'workType':
         return WORK_TYPE_OPTIONS;
       case 'employmentType':
@@ -47,24 +59,36 @@ export const useApplicationFilters = ({
       case 'status':
         return STATUS_OPTIONS;
       case 'cvProfile': {
-        const withProfile = cvProfiles.map((profile) => ({ value: profile.id, label: profile.name }));
+        const withProfile = cvProfiles.map((profile) => ({
+          value: profile.id,
+          label: profile.name,
+        }));
         return [...withProfile, { value: '__none__', label: 'No CV Profile' }];
       }
       case 'referrerName':
         return [
-          ...uniqueSortedValues(applications.map((app) => app.referral?.referrer)).map((item) => ({ value: item, label: item })),
+          ...uniqueSortedValues(applications.map((app) => app.referral?.referrer)).map((item) => ({
+            value: item,
+            label: item,
+          })),
           { value: '__none__', label: 'No Referrer Name' },
         ];
       case 'referrerCode':
         return [
-          ...uniqueSortedValues(applications.map((app) => app.referral?.code)).map((item) => ({ value: item, label: item })),
+          ...uniqueSortedValues(applications.map((app) => app.referral?.code)).map((item) => ({
+            value: item,
+            label: item,
+          })),
           { value: '__none__', label: 'No Referrer Code' },
         ];
       case 'referrerLink':
         return [
           { value: '__has__', label: 'Has Referrer Link' },
           { value: '__none__', label: 'No Referrer Link' },
-          ...uniqueSortedValues(applications.map((app) => app.referral?.link)).map((item) => ({ value: item, label: item })),
+          ...uniqueSortedValues(applications.map((app) => app.referral?.link)).map((item) => ({
+            value: item,
+            label: item,
+          })),
         ];
       default:
         return [];
@@ -87,7 +111,9 @@ export const useApplicationFilters = ({
         case 'workType':
           return app.workType === filterValue;
         case 'employmentType':
-          return filterValue === '__none__' ? !app.employmentType : app.employmentType === filterValue;
+          return filterValue === '__none__'
+            ? !app.employmentType
+            : app.employmentType === filterValue;
         case 'status':
           return app.status === filterValue;
         case 'cvProfile':

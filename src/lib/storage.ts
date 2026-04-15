@@ -46,18 +46,22 @@ function rowToApp(row: any): JobApplication {
     },
     description: row.description,
     rating: row.rating,
-    referral: row.referral_referrer ? {
-      referrer: row.referral_referrer,
-      date: row.referral_date ?? '',
-      note: row.referral_note ?? '',
-      link: row.referral_link,
-      code: row.referral_code,
-    } : undefined,
-    recruiter: row.recruiter_name ? {
-      name: row.recruiter_name,
-      email: row.recruiter_email,
-      phone: row.recruiter_phone,
-    } : undefined,
+    referral: row.referral_referrer
+      ? {
+          referrer: row.referral_referrer,
+          date: row.referral_date ?? '',
+          note: row.referral_note ?? '',
+          link: row.referral_link,
+          code: row.referral_code,
+        }
+      : undefined,
+    recruiter: row.recruiter_name
+      ? {
+          name: row.recruiter_name,
+          email: row.recruiter_email,
+          phone: row.recruiter_phone,
+        }
+      : undefined,
     notes: row.notes,
     phoneScreens: row.phone_screens,
     interviews: row.interviews,
@@ -118,7 +122,9 @@ export class SupabaseAdapter implements StorageAdapter {
 
   async upsert(app: JobApplication): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const row = { ...appToRow(app), user_id: session?.user?.id };
     const { error } = await supabase.from('job_applications').upsert(row);
     if (error) {
@@ -147,8 +153,10 @@ export class SupabaseAdapter implements StorageAdapter {
 
   async importBatch(apps: JobApplication[]): Promise<void> {
     if (!supabase) throw new SupabaseUnconfiguredError();
-    const { data: { session } } = await supabase.auth.getSession();
-    const rows = apps.map(app => ({ ...appToRow(app), user_id: session?.user?.id }));
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const rows = apps.map((app) => ({ ...appToRow(app), user_id: session?.user?.id }));
     const { error } = await supabase.from('job_applications').upsert(rows);
     if (error) {
       logger.error('[SupabaseAdapter] importBatch:', error);
@@ -233,9 +241,13 @@ export type StorageMode = 'remote' | 'local' | 'both';
 
 export function createAdapter(mode: StorageMode): StorageAdapter {
   switch (mode) {
-    case 'remote': return new SupabaseAdapter();
-    case 'local': return new SelfHostedAdapter();
-    case 'both': return new SupabaseAdapter(); // Fallback conceptually
-    default: return new SupabaseAdapter();
+    case 'remote':
+      return new SupabaseAdapter();
+    case 'local':
+      return new SelfHostedAdapter();
+    case 'both':
+      return new SupabaseAdapter(); // Fallback conceptually
+    default:
+      return new SupabaseAdapter();
   }
 }
