@@ -113,9 +113,6 @@ const App: React.FC = () => {
         return (
           <InterviewingView
             applications={applications.filter((app) => app.status === 'interviewing')}
-            displayCurrency={currency}
-            cvProfiles={cvProfiles}
-            visibleColumns={tableDisplay.visibleColumns}
             onStatusChange={handleStatusChange}
             onRowClick={setSelectedJob}
             onDelete={handleDelete}
