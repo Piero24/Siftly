@@ -111,6 +111,13 @@ const config: Config = {
           ],
         },
         {
+          title: 'Legal',
+          items: [
+            { label: 'Privacy Policy', to: '/privacy' },
+            { label: 'Terms of Service', to: '/terms' },
+          ],
+        },
+        {
           title: 'Project',
           items: [
             { label: 'Repository', href: metadata.links.github },

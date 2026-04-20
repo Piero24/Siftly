@@ -57,7 +57,7 @@ Use this file for:
 - Version
 - Product/app names
 - Tagline and extension description
-- Shared links (GitHub/docs/support/privacy)
+- Shared links (GitHub/docs/support/privacy/terms)
 - Branding assets (logo paths and docs images)
 
 After editing metadata, run:

@@ -1,0 +1,119 @@
+import metadata from '../../../metadata.json';
+
+export const productName = metadata.product.name;
+export const supportEmail = metadata.links.support.replace('mailto:', '');
+export const supportHref = metadata.links.support;
+
+# Privacy Policy
+
+Effective date: April 20, 2026
+
+This Privacy Policy explains how {productName} ("{productName}", "we", "us", "our") collects, uses, stores, and protects personal data when you use {productName} as a Chrome extension and/or self-hosted web application.
+
+By using {productName}, you acknowledge this Privacy Policy.
+
+## 1. Scope
+
+This Privacy Policy applies to:
+
+- The {productName} browser extension
+- The {productName} self-hosted web application
+- Related documentation and support interactions
+
+It covers data processing performed by or on behalf of {productName} in connection with these services.
+
+## 2. Data We Process
+
+Depending on how you use {productName}, we may process:
+
+- Account data: email address, profile identifier, authentication provider identifier (for cloud-authenticated extension mode)
+- Job tracking data you enter or import: company, role, status, salary information, location, interview notes, links, and related metadata
+- Settings and preferences: language, theme, dashboard settings, privacy preferences, retention preferences
+- Technical data: app logs needed for reliability and security (limited and purpose-bound)
+
+## 3. Data Sources
+
+We collect data from:
+
+- You, when you enter data manually
+- Browser interactions, when you trigger extension features
+- Optional connected providers (for example OAuth identity providers), only for authentication and account linkage
+
+## 4. Why We Process Data
+
+We process data to:
+
+- Provide core job tracking functionality
+- Sync your data across devices when cloud sync is enabled
+- Secure accounts and prevent abuse
+- Improve product reliability and fix defects
+- Comply with legal obligations
+
+## 5. Legal Bases (EEA/UK)
+
+When required by applicable law, we process personal data under one or more of these legal bases:
+
+- Performance of a contract (providing the service you request)
+- Legitimate interests (service security, quality, and fraud prevention)
+- Consent (where explicitly requested)
+- Legal obligation (where required by law)
+
+## 6. Storage Modes and Retention
+
+{productName} supports different deployment modes:
+
+- Self-hosted mode: your application data is stored in your own environment (for example local SQLite via your deployment).
+- Extension cloud mode: your application data is stored in configured cloud infrastructure for sync and account access.
+
+Retention depends on your usage and settings. You can export your data and request deletion as described below.
+
+## 7. Sharing and Processors
+
+We do not sell personal data.
+
+We may share data with service providers that act as processors on our behalf, limited to what is necessary to provide the service, such as:
+
+- Authentication providers (for sign-in)
+- Database/storage providers used for sync
+- Infrastructure or operational services used to host and secure the platform
+
+We may also disclose data where required by law or to protect rights, security, and integrity.
+
+## 8. International Transfers
+
+If personal data is transferred outside your country or region, we use appropriate safeguards required by applicable law.
+
+## 9. Security
+
+We use reasonable technical and organizational measures to protect personal data from unauthorized access, alteration, disclosure, or destruction. No method of transmission or storage is fully secure, so absolute security cannot be guaranteed.
+
+## 10. Your Rights
+
+Depending on your location, you may have rights to:
+
+- Access personal data
+- Correct inaccurate data
+- Delete data
+- Restrict or object to processing
+- Data portability
+- Withdraw consent where processing is based on consent
+
+To exercise these rights, contact <a href={supportHref}>{supportEmail}</a>.
+
+## 11. Children
+
+{productName} is not intended for children under the age required by applicable law in your jurisdiction. We do not knowingly collect personal data from children in violation of applicable law.
+
+## 12. Changes to This Policy
+
+We may update this Privacy Policy from time to time. Material changes will be reflected by updating the effective date and, where appropriate, by additional notice.
+
+## 13. Contact
+
+For privacy-related questions or requests:
+
+- Email: <a href={supportHref}>{supportEmail}</a>
+
+## 14. Disclaimer
+
+This policy is provided for general informational purposes and does not constitute legal advice.
