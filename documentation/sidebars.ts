@@ -27,6 +27,11 @@ const sidebars: SidebarsConfig = {
         'user-guide/settings',
       ],
     },
+    {
+      type: 'category',
+      label: 'Legal',
+      items: ['legal/privacy-policy', 'legal/terms-of-service'],
+    },
   ],
   devSidebar: [
     {

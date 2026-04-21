@@ -113,8 +113,8 @@ const config: Config = {
         {
           title: 'Legal',
           items: [
-            { label: 'Privacy Policy', to: '/privacy' },
-            { label: 'Terms of Service', to: '/terms' },
+            { label: 'Privacy Policy', to: '/docs/legal/privacy-policy' },
+            { label: 'Terms of Service', to: '/docs/legal/terms-of-service' },
           ],
         },
         {
