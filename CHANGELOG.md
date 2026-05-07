@@ -7,11 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.2](https://github.com/Piero24/Siftly/compare/siftly-v1.0.1...siftly-v1.0.2) (2026-04-21)
 
-
 ### Features
 
-* add Privacy Policy and Terms of Service documentation ([424af4f](https://github.com/Piero24/Siftly/commit/424af4f46a59fc826fcd2b7e83684c876d192d01))
-* restructure legal documentation by adding Privacy Policy and Terms of Service files ([8523d8a](https://github.com/Piero24/Siftly/commit/8523d8a4a5d72d3718072c0304a9ecb8cdb59b0d))
+- add Privacy Policy and Terms of Service documentation ([424af4f](https://github.com/Piero24/Siftly/commit/424af4f46a59fc826fcd2b7e83684c876d192d01))
+- restructure legal documentation by adding Privacy Policy and Terms of Service files ([8523d8a](https://github.com/Piero24/Siftly/commit/8523d8a4a5d72d3718072c0304a9ecb8cdb59b0d))
 
 ## [1.0.1](https://github.com/Piero24/Siftly/compare/siftly-v1.0.0...siftly-v1.0.1) (2026-04-17)
 

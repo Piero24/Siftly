@@ -5,9 +5,7 @@
   "description": "Professional job application tracker for LinkedIn.",
   "permissions": [
     "activeTab",
-    "scripting",
-    "storage",
-    "tabs"
+    "scripting"
   ],
   "host_permissions": [
     "https://www.linkedin.com/*"
