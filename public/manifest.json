@@ -1,13 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Siftly",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Professional job application tracker for LinkedIn.",
   "permissions": [
     "activeTab",
-    "scripting",
-    "storage",
-    "tabs"
+    "scripting"
   ],
   "host_permissions": [
     "https://www.linkedin.com/*"
