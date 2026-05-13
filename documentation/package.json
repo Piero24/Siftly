@@ -40,7 +40,11 @@
     "css-minimizer-webpack-plugin": "$css-minimizer-webpack-plugin",
     "serialize-javascript": "$serialize-javascript",
     "webpack-dev-server": "$webpack-dev-server",
-    "webpackbar": "7.0.0"
+    "webpackbar": "7.0.0",
+    "@babel/plugin-transform-modules-systemjs": "^7.30.0",
+    "fast-uri": "^3.0.3",
+    "follow-redirects": "^1.15.12",
+    "postcss": "^8.5.10"
   },
   "browserslist": {
     "production": [
