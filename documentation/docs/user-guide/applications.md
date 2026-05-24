@@ -6,6 +6,8 @@ sidebar_position: 2
 
 ## Adding an Application
 
+You can automatically fill application data from job boards using the [LinkedIn Scraper](./scraper.md), or add it manually:
+
 1. Click the **+ New Application** button in the top bar.
 2. Fill in the details:
    - **Company** and **Position** (required)

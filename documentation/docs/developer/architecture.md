@@ -161,3 +161,8 @@ All message constants and type guards used by the content script are duplicated 
 | Testing       | Vitest + React Testing Library         |
 | Documentation | Docusaurus                             |
 | CI/CD         | GitHub Actions                         |
+
+## Scraper Subsystem
+
+Siftly includes a DOM-extraction scraper (`src/scraper/linkedin`) that runs as a Chrome Extension content script on supported job portals.
+For full architectural details, constraints, and data flows of this subsystem, see the [Scraper Technical Guide](./scraper.md).

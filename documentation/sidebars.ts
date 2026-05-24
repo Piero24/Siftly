@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'user-guide/dashboard',
         'user-guide/applications',
+        'user-guide/scraper',
         'user-guide/interviews',
         'user-guide/analytics',
         'user-guide/csv',
@@ -40,6 +41,7 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'developer/architecture',
+        'developer/scraper',
         'developer/storage',
         'developer/local-api',
         'developer/database',
@@ -65,7 +67,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Roadmap',
-      items: ['roadmap/linkedin-scraper', 'roadmap/linkedin-llm'],
+      items: ['roadmap/linkedin-llm'],
     },
   ],
 };

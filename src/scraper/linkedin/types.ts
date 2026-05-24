@@ -15,8 +15,6 @@ export interface RawLinkedInJob {
   position: string | null;
   /** Raw location string (e.g. "Mountain View, CA, United States"). */
   locationRaw: string | null;
-  /** Raw salary string (e.g. "$120K – $180K/yr"). */
-  salaryRaw: string | null;
   /** Full job description text. */
   description: string | null;
   /** Work type hint (e.g. "Remote", "Hybrid", "On-site"). */
@@ -31,6 +29,14 @@ export interface RawLinkedInJob {
   companyUrl: string | null;
   /** Sector / industry if available. */
   industry: string | null;
+  /** Company website URL if available. */
+  websiteUrl?: string | null;
+  /** English city name from LinkedIn's internal JSON (not the localized DOM text). */
+  locationCity?: string | null;
+  /** English country code from LinkedIn's internal JSON. */
+  locationCountryCode?: string | null;
+  /** Candidates for location parsing from the DOM lines. */
+  locationCandidates?: string[] | null;
 }
 
 /** Extraction result with metadata. */
