@@ -7,6 +7,9 @@ import {
   SearchIcon,
   SettingsIcon,
   XIcon,
+  SpinnerIcon,
+  XCircleIcon,
+  ArrowLeftIcon,
 } from '../components/common/Icons';
 import { APP_INFO, IS_DEBUG } from '../config/app';
 import {
@@ -16,12 +19,16 @@ import {
 } from '../lib/extensionPanelMessages';
 import { ManualInsertForm } from './ManualInsertForm';
 import { useAuth } from '../context/AuthContext';
+import { SIFT_SCRAPE_PAGE } from '../lib/scrapeMessages';
+import type { ScrapeResponse } from '../lib/scrapeMessages';
+import type { FormState } from '../constants/form';
 
 type PopupActionCardProps = {
   title: string;
   icon: React.ReactNode;
   onClick: () => void;
   isPlaceholder?: boolean;
+  badge?: string;
 };
 
 const PopupActionCard: React.FC<PopupActionCardProps> = ({
@@ -29,6 +36,7 @@ const PopupActionCard: React.FC<PopupActionCardProps> = ({
   icon,
   onClick,
   isPlaceholder = false,
+  badge,
 }) => {
   return (
     <button type="button" className="popup-action-card" onClick={onClick} aria-label={title}>
@@ -39,9 +47,24 @@ const PopupActionCard: React.FC<PopupActionCardProps> = ({
       <span className="popup-action-text">{title}</span>
 
       {isPlaceholder ? <span className="popup-soon-pill">Soon</span> : null}
+      {badge ? (
+        <span
+          className="popup-status-tag"
+          style={{
+            color: '#0a66c2',
+            background: 'rgba(10, 102, 194, 0.1)',
+            fontSize: '10px',
+            marginLeft: 'auto',
+          }}
+        >
+          {badge}
+        </span>
+      ) : null}
     </button>
   );
 };
+
+type PopupView = 'main' | 'manual' | 'scraping' | 'scrape-error';
 
 const Main: React.FC = () => {
   const { isDraggable } = useSettings();
@@ -60,10 +83,14 @@ const Main: React.FC = () => {
     );
   };
 
-  const [view, setView] = useState<'main' | 'manual'>('main');
+  const [view, setView] = useState<PopupView>('main');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const { isAuthenticated } = useAuth();
   const isEmbeddedPanel = new URLSearchParams(window.location.search).get('embedded') === '1';
+
+  // Scrape state
+  const [scrapeData, setScrapeData] = useState<Partial<FormState> | null>(null);
+  const [scrapeError, setScrapeError] = useState<string | null>(null);
 
   const closeEmbeddedPanel = () => {
     const closeMessage: ExtensionPanelIframeMessage = {
@@ -107,11 +134,50 @@ const Main: React.FC = () => {
   };
 
   const handleManualInsert = () => {
+    setScrapeData(null);
     setView('manual');
   };
 
-  const handleScrapePlaceholder = () => {
-    // Placeholder for upcoming scrape flow.
+  const handleScrape = () => {
+    if (!navigator.onLine) {
+      setScrapeError('No internet connection. Please verify your network and try again.');
+      setView('scrape-error');
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setScrapeError('You are logged out. Please log in from the dashboard first.');
+      setView('scrape-error');
+      return;
+    }
+
+    setView('scraping');
+    setScrapeError(null);
+
+    chrome.runtime.sendMessage(
+      { type: SIFT_SCRAPE_PAGE },
+      (response: ScrapeResponse | undefined) => {
+        const lastError = chrome.runtime.lastError;
+
+        if (lastError) {
+          setScrapeError('Could not reach the extension. Please try again.');
+          setView('scrape-error');
+          return;
+        }
+
+        if (!response || !response.success || !response.formState) {
+          setScrapeError(
+            response?.error ||
+              'Could not extract job data. Make sure you are on a LinkedIn job page.'
+          );
+          setView('scrape-error');
+          return;
+        }
+
+        setScrapeData(response.formState);
+        setView('manual');
+      }
+    );
   };
 
   const forcePopupResize = () => {
@@ -130,6 +196,105 @@ const Main: React.FC = () => {
     }
   };
 
+  // ── Scraping spinner view ──
+  if (view === 'scraping') {
+    return (
+      <div className="popup-shell">
+        <div className="popup-form-view">
+          <div
+            className="popup-form-header"
+            onPointerDown={handleDragStart}
+            style={{ cursor: isDraggable ? 'grab' : 'default', touchAction: 'none' }}
+          >
+            <button
+              type="button"
+              className="popup-icon-button"
+              onClick={() => setView('main')}
+              aria-label="Go back"
+            >
+              <ArrowLeftIcon size={18} />
+            </button>
+            <span className="popup-form-title">Scraping…</span>
+          </div>
+          <div
+            className="popup-form-body"
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              flex: 1,
+              minHeight: '200px',
+            }}
+          >
+            <div className="popup-spinner" style={{ marginBottom: '16px', color: '#0a66c2' }}>
+              <SpinnerIcon size={48} />
+            </div>
+            <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Extracting Job Data</h3>
+            <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>
+              Reading the LinkedIn job page…
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Scrape error view ──
+  if (view === 'scrape-error') {
+    return (
+      <div className="popup-shell">
+        <div className="popup-form-view">
+          <div
+            className="popup-form-header"
+            onPointerDown={handleDragStart}
+            style={{ cursor: isDraggable ? 'grab' : 'default', touchAction: 'none' }}
+          >
+            <button
+              type="button"
+              className="popup-icon-button"
+              onClick={() => setView('main')}
+              aria-label="Go back"
+            >
+              <ArrowLeftIcon size={18} />
+            </button>
+            <span className="popup-form-title">Scrape Failed</span>
+          </div>
+          <div
+            className="popup-form-body"
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              flex: 1,
+              minHeight: '200px',
+            }}
+          >
+            <XCircleIcon
+              size={48}
+              color="#d93025"
+              style={{ marginBottom: '16px', flexShrink: 0 }}
+            />
+            <h3 style={{ margin: '0 0 8px', fontSize: '16px' }}>Extraction Failed</h3>
+            <p style={{ margin: '0', fontSize: '14px', color: 'var(--text-secondary)' }}>
+              {scrapeError}
+            </p>
+          </div>
+          <div className="popup-form-footer">
+            <button
+              className="btn-apple btn-outline popup-form-btn"
+              onClick={() => setView('main')}
+            >
+              Back
+            </button>
+            <button className="btn-apple btn-primary popup-form-btn" onClick={handleScrape}>
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="popup-shell">
       {view === 'manual' ? (
@@ -138,12 +303,14 @@ const Main: React.FC = () => {
             closePopup();
           }}
           onBack={() => {
+            setScrapeData(null);
             setView('main');
             forcePopupResize();
           }}
           onSuccess={() => {
             closePopup();
           }}
+          initialData={scrapeData ?? undefined}
         />
       ) : (
         <>
@@ -230,8 +397,8 @@ const Main: React.FC = () => {
             <PopupActionCard
               title="Scrape Job Portal"
               icon={<SearchIcon size={24} />}
-              onClick={handleScrapePlaceholder}
-              isPlaceholder
+              onClick={handleScrape}
+              badge="BETA"
             />
           </div>
         </>

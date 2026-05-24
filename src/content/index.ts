@@ -286,14 +286,8 @@ if (!globalWindow.__SIFTLY_PANEL_MANAGER__?.initialized) {
 
   // ── Event Listeners ─────────────────────────────────────
 
-  // Close panel when clicking outside
-  document.addEventListener(
-    'pointerdown',
-    (event) => {
-      if (hostElement && !isInsideHost(event.target)) closePanel();
-    },
-    true
-  );
+  // We deliberately do not close the panel on outside clicks, allowing users
+  // to select text from the underlying page and copy-paste it into the manual insert form.
 
   // Close panel on Escape
   document.addEventListener(

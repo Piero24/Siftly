@@ -15,11 +15,29 @@ interface LocationSectionProps {
 }
 
 export const LocationSection: React.FC<LocationSectionProps> = ({ form, errors, setForm }) => {
-  const countryOptions = useMemo(() => getAllCountryOptions(), []);
-  const cityOptions = useMemo(
-    () => (form.country ? getCitiesForCountry(form.country) : []),
-    [form.country]
-  );
+  const countryOptions = useMemo(() => {
+    const options = [...getAllCountryOptions()];
+    if (form.country) {
+      const exists = options.some((opt) => opt.value === form.country);
+      if (!exists) {
+        options.push({ value: form.country, label: form.country });
+      }
+    }
+    return options;
+  }, [form.country]);
+
+  const cityOptions = useMemo(() => {
+    if (!form.country) return [];
+    const options = [...getCitiesForCountry(form.country)];
+    if (form.city) {
+      const normalizedCity = form.city.trim().toLowerCase();
+      const exists = options.some((opt) => opt.value.trim().toLowerCase() === normalizedCity);
+      if (!exists) {
+        options.push({ value: form.city, label: form.city });
+      }
+    }
+    return options;
+  }, [form.country, form.city]);
 
   const handleCountryChange = (countryCode: string) => {
     setForm((prev) => ({ ...prev, country: countryCode, city: '' }));

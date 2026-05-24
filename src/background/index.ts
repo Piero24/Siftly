@@ -4,10 +4,14 @@ import {
   EXTENSION_PANEL_TOGGLE,
   type ExtensionPanelRuntimeResponse,
 } from '../lib/extensionPanelMessages';
+import { registerScrapeHandler } from '../scraper/linkedin/messageHandler';
 
 const bgLogger = logger.for('Background');
 
 bgLogger.info('Siftly Background Service Worker Initialized');
+
+// Register the LinkedIn scrape handler so the popup can trigger page extraction.
+registerScrapeHandler();
 
 chrome.runtime.onInstalled.addListener(() => {
   bgLogger.info('Siftly Job Tracker Extension Installed');

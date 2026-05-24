@@ -28,8 +28,8 @@ sidebar_position: 2
 Click the Siftly icon in your toolbar to open the quick-access popup. From here you can:
 
 - Open the dashboard
-- Manually insert the job application
-- Automatically capture the job application
+- Manually insert a job application
+- Automatically capture the job application using the **Scrape Job Portal** (BETA) feature
 
 ![Siftly extension popup](/img/screenshots/extension-popup.png)
 

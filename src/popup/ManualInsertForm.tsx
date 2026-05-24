@@ -24,12 +24,15 @@ interface ManualInsertFormProps {
   onCancel: () => void;
   onBack: () => void;
   onSuccess: () => void;
+  /** Optional pre-filled data from scraping. Merged with DEFAULT_FORM_STATE. */
+  initialData?: Partial<FormState>;
 }
 
 export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   onCancel,
   onBack,
   onSuccess,
+  initialData,
 }) => {
   const {
     cvProfiles,
@@ -43,7 +46,11 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
   const { isAuthenticated } = useAuth();
   const { addApplication } = useJobApplications(autoNoResponse, autoNoResponseDays, storageMode);
 
-  const [form, setForm] = useState<FormState>({ ...DEFAULT_FORM_STATE });
+  const isFromScrape = !!initialData;
+  const [form, setForm] = useState<FormState>({
+    ...DEFAULT_FORM_STATE,
+    ...initialData,
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -281,6 +288,31 @@ export const ManualInsertForm: React.FC<ManualInsertFormProps> = ({
           <ArrowLeftIcon size={18} />
         </button>
         <span className="popup-form-title">Add Application</span>
+        {isFromScrape ? (
+          <span
+            className="popup-status-tag"
+            style={{
+              color: '#0a66c2',
+              background: 'rgba(10, 102, 194, 0.1)',
+              fontSize: '10px',
+              marginLeft: '8px',
+            }}
+          >
+            SCRAPED
+          </span>
+        ) : (
+          <span
+            className="popup-status-tag"
+            style={{
+              color: '#4b5563',
+              background: 'rgba(75, 85, 99, 0.1)',
+              fontSize: '10px',
+              marginLeft: '8px',
+            }}
+          >
+            MANUAL
+          </span>
+        )}
       </div>
 
       <div

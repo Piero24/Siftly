@@ -3,6 +3,7 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import metadata from './metadata.json';
+import { readFileSync } from 'node:fs';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, new URL('.', import.meta.url).pathname, '');
@@ -10,6 +11,15 @@ export default defineConfig(({ mode }) => {
   const isWebBuild = buildTarget === 'web';
 
   const { port: SERVER_PORT, apiBase: API_BASE, host: SERVER_HOST, protocol: SERVER_PROTOCOL } = metadata.server;
+
+  // Read scraper constants JSON at build time so it can be injected as a
+  // compile-time literal via `define`. This avoids Vite emitting a top-level
+  // `const` for a `?raw` import, which causes "Identifier already declared"
+  // errors when the Chrome Extension content script is re-injected.
+  const scraperConstantsJson = readFileSync(
+    new URL('./src/scraper/linkedin/constants.json', import.meta.url).pathname,
+    'utf-8',
+  );
 
   return {
     root: isWebBuild ? 'src/web' : '.',
@@ -23,8 +33,11 @@ export default defineConfig(({ mode }) => {
         },
       } : undefined,
     },
+    define: {
+      __SCRAPER_CONSTANTS_RAW__: JSON.stringify(scraperConstantsJson),
+    },
     build: {
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 10000,
       rollupOptions: {
         input: isWebBuild
           ? undefined
@@ -33,6 +46,7 @@ export default defineConfig(({ mode }) => {
             dashboard: new URL('./src/dashboard/index.html', import.meta.url).pathname,
             background: new URL('./src/background/index.ts', import.meta.url).pathname,
             content: new URL('./src/content/index.ts', import.meta.url).pathname,
+            linkedinScraper: new URL('./src/scraper/linkedin/contentScript.ts', import.meta.url).pathname,
           },
         output: {
           entryFileNames: 'assets/[name].js',
