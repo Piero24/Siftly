@@ -5,6 +5,19 @@ All notable changes to Siftly will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3](https://github.com/Piero24/Siftly/compare/siftly-v1.0.2...siftly-v1.0.3) (2026-05-24)
+
+
+### Features
+
+* implement LinkedIn job page scraping functionality and document… ([0c779f2](https://github.com/Piero24/Siftly/commit/0c779f24538390c7c86f9d788dfe001107847c32))
+* implement LinkedIn job page scraping functionality and documentation ([a76acf4](https://github.com/Piero24/Siftly/commit/a76acf4101841ae65b9cf1b2dc07c20390681f43))
+
+
+### Bug Fixes
+
+* update dependencies for babel plugin and fast-uri package ([15525df](https://github.com/Piero24/Siftly/commit/15525df25129bcd158b57f19ce1725d15d08566c))
+
 ## [1.0.2](https://github.com/Piero24/Siftly/compare/siftly-v1.0.1...siftly-v1.0.2) (2026-04-21)
 
 ### Features
