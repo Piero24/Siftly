@@ -126,6 +126,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
+    const cleanAuthHash = () => {
+      if (typeof window === 'undefined') return;
+      if (
+        window.location.hash.includes('access_token=') ||
+        window.location.hash.includes('refresh_token=') ||
+        window.location.hash.includes('error=')
+      ) {
+        // Strip out auth tokens from the hash, keeping any valid view hash if present (e.g., #settings)
+        const parts = window.location.hash
+          .split('#')
+          .filter(
+            (part) =>
+              part &&
+              !part.startsWith('access_token=') &&
+              !part.startsWith('refresh_token=') &&
+              !part.startsWith('error=')
+          );
+        const cleanHash = parts.length > 0 ? `#${parts[0]}` : '';
+        const cleanUrl = `${window.location.pathname}${window.location.search}${cleanHash}`;
+        window.history.replaceState(null, '', cleanUrl);
+      }
+    };
+
     const initSession = async () => {
       if (!supabase) return;
       const {
@@ -146,6 +169,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(null);
         setUser(null);
       }
+      cleanAuthHash();
       setIsLoading(false);
     };
     initSession();
@@ -160,6 +184,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setSession(s);
         setUser(s?.user ?? null);
+        cleanAuthHash();
       }
     });
 
@@ -201,8 +226,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     authLogger.info(`Initiating ${provider} sign-in...`);
 
-    // In Extension mode, the redirect URL MUST be the extension's dashboard page.
-    const redirectTo = window.location.href.split('?')[0];
+    // In Extension mode, the redirect URL MUST be the extension's dashboard page without any hash or query parameters.
+    const redirectTo =
+      typeof chrome !== 'undefined' && chrome.runtime?.getURL
+        ? chrome.runtime.getURL('src/dashboard/index.html')
+        : `${window.location.origin}${window.location.pathname}`;
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
